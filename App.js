@@ -7,6 +7,8 @@ import RankingsScreen from './src/Components/Screens/RankingsScreen';
 import ProfileScreen from './src/Components/Screens/ProfileScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+// Testing
+
 const Tab = createMaterialBottomTabNavigator();
 
 export default function App() {
