@@ -14,9 +14,12 @@
     "@react-navigation/native": "^5.0.1",
     "@react-navigation/stack": "^5.0.1",
     "expo": "~36.0.0",
+    "native-base": "^2.13.8",
     "react": "~16.9.0",
+    "react-base": "^0.2.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
+    "react-native-base": "^1.1.0",
     "react-native-gesture-handler": "~1.5.0",
     "react-native-paper": "^3.6.0",
     "react-native-reanimated": "~1.4.0",
@@ -26,8 +29,8 @@
     "react-native-web": "~0.11.7"
   },
   "devDependencies": {
-    "babel-preset-expo": "~8.0.0",
-    "@babel/core": "^7.0.0"
+    "@babel/core": "^7.0.0",
+    "babel-preset-expo": "~8.0.0"
   },
   "private": true
 }

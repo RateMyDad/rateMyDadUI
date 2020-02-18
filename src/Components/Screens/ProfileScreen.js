@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
+import { Container, Header, Left, Body, Right, Title } from 'native-base';
+
 
 export default class ProfileScreen extends Component {
   render() {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>ProfiiiLE</Text>
-      </View>
+   
+        <Container>
+        <Header>
+          <Left/>
+          <Body>
+            <Title>Profile</Title>
+          </Body>
+          <Right />
+        </Header>
+      </Container>
+      
     );
   }
 }
