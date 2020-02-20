@@ -33,7 +33,6 @@ export default function App() {
             } else if (route.name === 'Rankings') {
               size = 26;
               iconName = focused ? 'globe' : 'globe';
-  
             }
             else if (route.name == 'Profile'){
               iconName = focused ? 'user' : 'user';
