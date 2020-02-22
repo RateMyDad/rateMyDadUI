@@ -57,7 +57,7 @@ export default class TabsExample extends Component {
                 <Icon name="star" style={{ padding:5, color: '#7BCACE' }} size={20}></Icon>
                 <Text>20</Text>
             </View>
-            <Text style={{ paddingLeft:20,fontSize: 10, color: 'grey' }}>Rate</Text>
+            <Text style={{ paddingLeft:20,fontSize: 10, color: 'grey' }}>Rating</Text>
             </View>
 
             {/**Total Love stat */}

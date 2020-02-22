@@ -81,7 +81,7 @@ export default function RankingsScreen({ navigation: { navigate } }) {
             
                    <Button iconLeft small transparent>
                       <Icon name="hashtag" style={{ color: '#7BCACE' }} size={20}></Icon>
-                      <Text style={{ fontSize: 20,  color: 'black'}}>300</Text>
+                      <Text style={{ fontSize: 20,  color: 'black'}}>3</Text>
                    </Button>
                    <Text style={{ alignSelf: 'flex-end', fontSize: 10,  color: 'grey'}}>of 7.5 billion</Text>
                      
