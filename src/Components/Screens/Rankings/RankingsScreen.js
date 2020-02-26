@@ -5,7 +5,16 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LocalRanksScreen from './LocalRanksScreen';
 import { useNavigation } from '@react-navigation/native';
 
-export default function RankingsScreen({ navigation: { navigate } }) {
+export default class RankingsScreen extends Component {
+ constructor(props)
+ {
+   super(props)
+    this.state = {
+      activeIndex:0
+    }
+ }
+
+  render(){
   return (
     <Container style={{backgroundColor:"#EFFCCC"}}>
     {/**This is the header (native-base)
@@ -20,7 +29,7 @@ export default function RankingsScreen({ navigation: { navigate } }) {
       {/**Search Icon Button */}
       <Right>
         <Button transparent>
-        <Icon name="gavel" style={{ color: '#545F66' }} size={25}></Icon>
+        <Icon name="search" style={{ color: '#545F66' }} size={25}></Icon>
         </Button>
       </Right>
     </Header>
@@ -62,7 +71,7 @@ export default function RankingsScreen({ navigation: { navigate } }) {
                   <View 
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
             
-                    <Image source={require('C://rateMyDadUI/assets/dog.jpg')}
+                    <Image source={require('../../../../assets/dog.jpg')}
                     style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                     <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
@@ -104,7 +113,7 @@ export default function RankingsScreen({ navigation: { navigate } }) {
                   <View 
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
             
-                    <Image source={require('C://rateMyDadUI/assets/dog.jpg')}
+                    <Image source={require('../../../../assets/dog.jpg')}
                     style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                     <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
@@ -123,7 +132,7 @@ export default function RankingsScreen({ navigation: { navigate } }) {
             
                    <Button iconLeft small transparent>
                       <Icon name="hashtag" style={{ color: '#7BCACE' }} size={20}></Icon>
-                      <Text style={{ fontSize: 20,  color: 'black'}}>300</Text>
+                      <Text style={{ fontSize: 20,  color: 'black'}}>3</Text>
                    </Button>
                    <Text style={{ alignSelf: 'flex-end', fontSize: 10,  color: 'grey'}}>of 7.5 billion</Text>
                      
@@ -146,7 +155,7 @@ export default function RankingsScreen({ navigation: { navigate } }) {
                   <View 
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
             
-                    <Image source={require('C://rateMyDadUI/assets/dog.jpg')}
+                    <Image source={require('../../../../assets/dog.jpg')}
                     style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                     <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
@@ -165,7 +174,7 @@ export default function RankingsScreen({ navigation: { navigate } }) {
             
                    <Button iconLeft small transparent>
                       <Icon name="hashtag" style={{ color: '#7BCACE' }} size={20}></Icon>
-                      <Text style={{ fontSize: 20,  color: 'black'}}>300</Text>
+                      <Text style={{ fontSize: 20,  color: 'black'}}>3</Text>
                    </Button>
                    <Text style={{ alignSelf: 'flex-end', fontSize: 10,  color: 'grey'}}>of 7.5 billion</Text>
                      
@@ -177,7 +186,7 @@ export default function RankingsScreen({ navigation: { navigate } }) {
     </Content>
     
 </Container>
-);
+);}
 }
 
 

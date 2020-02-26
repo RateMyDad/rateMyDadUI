@@ -39,7 +39,7 @@ export default class HomeScreen extends Component
                   <View 
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
             
-                    <Image source={require('C://rateMyDadUI/assets/dog.jpg')}
+                    <Image source={require('../../../../assets/dog.jpg')}
                     style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                     <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
@@ -68,7 +68,7 @@ export default class HomeScreen extends Component
           <CardItem cardBody>
           <Image
                 style={{width: 370, height: 200}}
-                source={require('C://rateMyDadUI/assets/dog.jpg')}
+                source={require('../../../../assets/dog.jpg')}
           />
           </CardItem>
           {/*Bottom of the card (left side) */}
@@ -115,7 +115,7 @@ export default class HomeScreen extends Component
                   <View 
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
             
-                    <Image source={require('C://rateMyDadUI/assets/dog.jpg')}
+                    <Image source={require('../../../../assets/dog.jpg')}
                     style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                     <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
@@ -188,7 +188,7 @@ export default class HomeScreen extends Component
                   <View 
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
             
-                    <Image source={require('C://rateMyDadUI/assets/dog.jpg')}
+                    <Image source={require('../../../../assets/dog.jpg')}
                     style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                     <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
@@ -215,7 +215,7 @@ export default class HomeScreen extends Component
 
           {/*This is where card content goes*/}
           <CardItem cardBody>
-            <Text style={{padding:5}}>"There's something fishy going on here, or my name is Stinky Looloo, thank goodness it's not."
+            <Text style={{padding:5}}>"There's something fishy going on here or my name is Stinky Looloo,thank goodness it's not."
             </Text>
           </CardItem>
           {/*Bottom of the card (left side) */}
@@ -261,7 +261,7 @@ export default class HomeScreen extends Component
                   <View 
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
             
-                    <Image source={require('C://rateMyDadUI/assets/dog.jpg')}
+                    <Image source={require('../../../../assets/dog.jpg')}
                     style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                     <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
@@ -290,7 +290,7 @@ export default class HomeScreen extends Component
           <CardItem cardBody>
           <Image
                 style={{width: 370, height: 200}}
-                source={require('C://rateMyDadUI/assets/dog.jpg')}
+                source={require('../../../../assets/dog.jpg')}
           />
           </CardItem>
           {/*Bottom of the card (left side) */}
@@ -336,7 +336,7 @@ export default class HomeScreen extends Component
                   <View 
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
             
-                    <Image source={require('C://rateMyDadUI/assets/dog.jpg')}
+                    <Image source={require('../../../../assets/dog.jpg')}
                     style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                     <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
@@ -365,7 +365,7 @@ export default class HomeScreen extends Component
           <CardItem cardBody>
           <Image
                 style={{width: 370, height: 200}}
-                source={require('C://rateMyDadUI/assets/dog.jpg')}
+                source={require('../../../../assets/dog.jpg')}
           />
           </CardItem>
           {/*Bottom of the card (left side) */}
