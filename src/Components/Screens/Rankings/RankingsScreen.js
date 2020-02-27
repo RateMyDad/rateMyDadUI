@@ -22,6 +22,50 @@ var images = [
   require('../../../../assets/dog.jpg'),
 ]
 
+class RankingCard extends Component {
+  render() {
+    return(
+      <View style={{paddingBottom:2, alignContent:'stretch'}}>
+          <Card>
+            <CardItem>
+              <Left>
+                <View  style={{ flexDirection: 'row' }}>
+                  {/*Mini profile pic and misc info*/}
+                    <View
+                      style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
+
+                      <Image source={require('../../../../assets/dog.jpg')}
+                      style={{ width: 50, height: 50, borderRadius: 37.5 }} />
+
+                      <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
+                        <Button small dark transparent>
+                          <Text>{this.props.name}</Text>
+                        </Button>
+                        <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>from Kansas</Text>
+                      </View>
+                  </View>
+                </View>
+              </Left>
+              {/** this is the ranking */}
+              <Right>
+              <View
+                      style={{flexDirection:'column', justifyContent:'flex-start',  alignItems:'center' }}>
+
+                     <Button iconLeft small transparent>
+                        <Icon name="hashtag" style={{ color: '#7BCACE' }} size={20}></Icon>
+                        <Text style={{ fontSize: 20,  color: 'black'}}>{this.props.rank}</Text>
+                     </Button>
+                     <Text style={{ alignSelf: 'flex-end', fontSize: 10,  color: 'grey'}}>of 7.5 billion</Text>
+
+                  </View>
+              </Right>
+            </CardItem>
+          </Card>
+      </View>
+    );
+  }
+}
+
 export default class RankingsScreen extends Component {
 
  constructor(props)
@@ -169,7 +213,7 @@ export default class RankingsScreen extends Component {
         </Button>
       </Right>
     </Header>
-    
+
     {/**These are the segments...
      * in other words, theyre just buttons
      * but i want to use them to navigate
@@ -189,141 +233,20 @@ export default class RankingsScreen extends Component {
 
       <Button onPress = {() => this.segmentClicked(2)} active={this.state.activeIndex ==2} last style={{borderColor:'#545F66', }}>
         <Text style={{color:'#545F66'}}>Global</Text>
-      </Button>      
+      </Button>
     </Segment>
 
     <Content padder>
-   
-    {/**These are the individual dads, ranked 
-     * (presented in cards which are react-base
-     * componenets)
-    */}
-    <View style={{paddingBottom:2, alignContent:'stretch'}}> 
-        <Card>
-          <CardItem>
-            <Left>
-              <View  style={{ flexDirection: 'row' }}>
-                {/*Mini profile pic and misc info*/}
-                  <View 
-                    style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
-            
-                    <Image source={require('../../../../assets/dog.jpg')}
-                    style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
-                    <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
-                      <Button small dark transparent>
-                        <Text>Courage T. Dog</Text>
-                      </Button>
-                      <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>from Kansas</Text>
-                    </View>
-                </View>
-              </View>
-            </Left>
-            {/** this is the ranking */}
-            <Right>
-            <View 
-                    style={{flexDirection:'column', justifyContent:'flex-start',  alignItems:'center' }}>
-            
-                   <Button iconLeft small transparent>
-                      <Icon name="hashtag" style={{ color: '#7BCACE' }} size={20}></Icon>
-                      <Text style={{ fontSize: 20,  color: 'black'}}>3</Text>
-                   </Button>
-                   <Text style={{ alignSelf: 'flex-end', fontSize: 10,  color: 'grey'}}>of 7.5 billion</Text>
-                     
-                </View>
-            </Right>
-          </CardItem> 
-        </Card>
-        </View>
+      <RankingCard name="Courage T. Dog" rank="3"></RankingCard>
+      <RankingCard name="Bob Johnson" rank="1456"></RankingCard>
+      <RankingCard name="Nate Norris" rank="12"></RankingCard>
+      <RankingCard name="James Jimbotron" rank="98"></RankingCard>
+      <RankingCard name="Julia 'Julia Gall' Gall" rank="97"></RankingCard>
+      <RankingCard name="Godfrey Muganda" rank="1"></RankingCard>
 
-         {/**These are the individual dads, ranked 
-     * (presented in cards which are react-base
-     * componenets)
-    */}
-    <View style={{paddingBottom:2, alignContent:'stretch'}}> 
-        <Card>
-          <CardItem>
-            <Left>
-              <View  style={{ flexDirection: 'row' }}>
-                {/*Mini profile pic and misc info*/}
-                  <View 
-                    style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
-            
-                    <Image source={require('../../../../assets/dog.jpg')}
-                    style={{ width: 50, height: 50, borderRadius: 37.5 }} />
-
-                    <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
-                      <Button small dark transparent>
-                        <Text>Courage T. Dog</Text>
-                      </Button>
-                      <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>from Kansas</Text>
-                    </View>
-                </View>
-              </View>
-            </Left>
-            {/** this is the ranking */}
-            <Right>
-            <View 
-                    style={{flexDirection:'column', justifyContent:'flex-start',  alignItems:'center' }}>
-            
-                   <Button iconLeft small transparent>
-                      <Icon name="hashtag" style={{ color: '#7BCACE' }} size={20}></Icon>
-                      <Text style={{ fontSize: 20,  color: 'black'}}>3</Text>
-                   </Button>
-                   <Text style={{ alignSelf: 'flex-end', fontSize: 10,  color: 'grey'}}>of 7.5 billion</Text>
-                     
-                </View>
-            </Right>
-          </CardItem> 
-        </Card>
-        </View>
-
-       {/**These are the individual dads, ranked 
-     * (presented in cards which are react-base
-     * componenets)
-    */}
-    <View style={{paddingBottom:2, alignContent:'stretch'}}> 
-        <Card>
-          <CardItem>
-            <Left>
-              <View  style={{ flexDirection: 'row' }}>
-                {/*Mini profile pic and misc info*/}
-                  <View 
-                    style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
-            
-                    <Image source={require('../../../../assets/dog.jpg')}
-                    style={{ width: 50, height: 50, borderRadius: 37.5 }} />
-
-                    <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
-                      <Button small dark transparent>
-                        <Text>Courage T. Dog</Text>
-                      </Button>
-                      <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>from Kansas</Text>
-                    </View>
-                </View>
-              </View>
-            </Left>
-            {/** this is the ranking */}
-            <Right>
-            <View 
-                    style={{flexDirection:'column', justifyContent:'flex-start',  alignItems:'center' }}>
-            
-                   <Button iconLeft small transparent>
-                      <Icon name="hashtag" style={{ color: '#7BCACE' }} size={20}></Icon>
-                      <Text style={{ fontSize: 20,  color: 'black'}}>3</Text>
-                   </Button>
-                   <Text style={{ alignSelf: 'flex-end', fontSize: 10,  color: 'grey'}}>of 7.5 billion</Text>
-                     
-                </View>
-            </Right>
-          </CardItem> 
-        </Card>
-        </View>
-        {this.renderSection()}
     </Content>
-    
+
 </Container>
 );}
 }
-
-
