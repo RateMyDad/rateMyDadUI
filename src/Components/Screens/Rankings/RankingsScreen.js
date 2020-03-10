@@ -6,6 +6,14 @@ import LocalRanksScreen from './LocalRanksScreen';
 import { useNavigation } from '@react-navigation/native';
 
 class RankingCard extends Component {
+  constructor(props) {
+    super(props); 
+
+    this.state = {
+      profiles: []
+    };
+  }
+
   render() {
     return(
       <View style={{paddingBottom:2, alignContent:'stretch'}}>
@@ -54,64 +62,146 @@ export default class RankingsScreen extends Component {
  {
    super(props)
     this.state = {
-      activeIndex:0
+      activeIndex:0,
+      ratings: []
     }
+ }
+ 
+ /*
+ componentDidMount() { 
+    var profileRatings = getRatings(); 
+
+    this.setState({ ratings: profileRatings }); 
+ }
+ */
+
+ componentDidMount() {
+    fetch("http://172.17.38.148:82/dad_profile/ratings")
+      .then(response => {
+        return response.json(); 
+      })
+      .then(data => {
+        this.setState({ ratings: data })
+      })
+ }
+
+ 
+ createRankingCard(profile) {
+  let name = profile.name.first + " " + profile.name.last;
+  let rank = profile.meta.rating; 
+
+   return (
+     <RankingCard name={name} rank={rank} />
+   )
  }
 
   render(){
-  return (
-    <Container style={{backgroundColor:"#EFFCCC"}}>
-    {/**This is the header (native-base)
-     * You should be able to navigate
-     * using these 'segments'
-     */}
-    <Header hasSegment >
-      <Left/>
-      <Body>
-        <Title>Rankings</Title>
-      </Body>
-      {/**Search Icon Button */}
-      <Right>
-        <Button transparent>
-        <Icon name="search" style={{ color: '#545F66' }} size={25}></Icon>
-        </Button>
-      </Right>
-    </Header>
+    let ratings = this.state.ratings; 
+    console.log("Profile ratings: "); 
+    console.log(ratings); 
 
-    {/**These are the segments...
-     * in other words, theyre just buttons
-     * but i want to use them to navigate
-     * not to a new screen (because this isnt
-     * the look we're going for though) but just
-     * to change the content area of this screen
-    */}
-    <Segment>
-      <Button first style={{borderColor:'#545F66', }} >
-       <Text style={{color:'#545F66'}}>Local</Text>
+    // Need this b/c the component re-renders once the state is set in componentDidMount().  
+    if (ratings.length !== 0) {
+      ratings = ratings.reverse(); 
+      return (
+        <Container style={{backgroundColor:"#EFFCCC"}}>
+        {/**This is the header (native-base)
+         * You should be able to navigate
+         * using these 'segments'
+         */}
+        <Header hasSegment >
+          <Left/>
+          <Body>
+            <Title>Rankings</Title>
+          </Body>
+          {/**Search Icon Button */}
+          <Right>
+            <Button transparent>
+            <Icon name="search" style={{ color: '#545F66' }} size={25}></Icon>
+            </Button>
+          </Right>
+        </Header>
+    
+        {/**These are the segments...
+         * in other words, theyre just buttons
+         * but i want to use them to navigate
+         * not to a new screen (because this isnt
+         * the look we're going for though) but just
+         * to change the content area of this screen
+        */}
+        <Segment>
+          <Button first style={{borderColor:'#545F66', }} >
+           <Text style={{color:'#545F66'}}>Local</Text>
+    
+          </Button>
+    
+          <Button style={{borderColor:'#545F66', }}>
+            <Text style={{color:'#545F66'}}>Regional</Text>
+          </Button>
+    
+          <Button last style={{borderColor:'#545F66', }}>
+            <Text style={{color:'#545F66'}}>Global</Text>
+          </Button>
+        </Segment>
+    
+        {/* Show each dad profile's rating. */}
+        <Content padder>
+          {ratings.map(this.createRankingCard)}
+        </Content>
+    
+      </Container>
+      );
+    }
 
-      </Button>
+    // If the data from the fetch is not present (first time component renders).   
+    else {
+      return (
+        <Container style={{backgroundColor:"#EFFCCC"}}>
+        {/**This is the header (native-base)
+         * You should be able to navigate
+         * using these 'segments'
+         */}
+        <Header hasSegment >
+          <Left/>
+          <Body>
+            <Title>Rankings</Title>
+          </Body>
+          {/**Search Icon Button */}
+          <Right>
+            <Button transparent>
+            <Icon name="search" style={{ color: '#545F66' }} size={25}></Icon>
+            </Button>
+          </Right>
+        </Header>
+    
+        {/**These are the segments...
+         * in other words, theyre just buttons
+         * but i want to use them to navigate
+         * not to a new screen (because this isnt
+         * the look we're going for though) but just
+         * to change the content area of this screen
+        */}
+        <Segment>
+          <Button first style={{borderColor:'#545F66', }} >
+           <Text style={{color:'#545F66'}}>Local</Text>
+    
+          </Button>
+    
+          <Button style={{borderColor:'#545F66', }}>
+            <Text style={{color:'#545F66'}}>Regional</Text>
+          </Button>
+    
+          <Button last style={{borderColor:'#545F66', }}>
+            <Text style={{color:'#545F66'}}>Global</Text>
+          </Button>
+        </Segment>
+    
+        <Content padder>
 
-      <Button style={{borderColor:'#545F66', }}>
-        <Text style={{color:'#545F66'}}>Regional</Text>
-      </Button>
-
-      <Button last style={{borderColor:'#545F66', }}>
-        <Text style={{color:'#545F66'}}>Global</Text>
-      </Button>
-    </Segment>
-
-    <Content padder>
-
-      <RankingCard name="Courage T. Dog" rank="3"></RankingCard>
-      <RankingCard name="Bob Johnson" rank="1456"></RankingCard>
-      <RankingCard name="Nate Norris" rank="12"></RankingCard>
-      <RankingCard name="James Jimbotron" rank="98"></RankingCard>
-      <RankingCard name="Julia 'Julia Gall' Gall" rank="97"></RankingCard>
-      <RankingCard name="Godfrey Muganda" rank="1"></RankingCard>
-
-
-    </Content>
-
-</Container>
-);}
+        </Content>
+    
+      </Container>
+      );
+    }
+  }
 }
