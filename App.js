@@ -48,7 +48,6 @@ export default function App() {
         <Tab.Screen name="Home" component={HomeScreen} options={{ title: null }}/>
         <Tab.Screen name="Rankings" component={RankingsScreen} options={{ title: null }}/>
         <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: null }}/>
-
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -9,6 +9,8 @@ import {
 import { Container, Header, Tab, Tabs, TabHeading, Title, Content, Card, CardItem, Thumbnail, Text, Button, Right, Left, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 var { height, width } = Dimensions.get('window');
+var skillLevel = 28+28;
+
 
 var images = [
   require('../../../../assets/dog.jpg'),
@@ -25,7 +27,38 @@ var images = [
   require('../../../../assets/dog.jpg'),
 ]
 
-export default class TabsExample extends Component {
+//This renders each skill takes type of skill and skill number variable
+class Skill extends Component {
+  render() {
+    var skillName = "grilling";
+    var iconName = "";
+    if(skillName == "grilling")
+    {
+      iconName = "free-code-camp";
+    }
+    return(
+      <View>
+      {/*This is each icon and skill bar*/}
+        <View
+        style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
+          <Icon name = {iconName} style={{paddingTop:10}} size={30}></Icon>
+
+          <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around', paddingLeft:15, paddingTop:13}} >
+            <View style={styles.skillBar}>
+              <View style={styles.skillBarEmpty}/>
+              <View style={styles.skillBarFill} />
+              <View style={{position:'absolute',left:skillLevel - 13, top:2.5}}>
+                <Text style={{fontSize:11,color:'black'}}>1</Text>
+              </View>   
+            </View>       
+          </View>
+      </View>    
+    </View>
+    );
+  }
+}
+
+export default class ProfileScreen extends Component {
   constructor(props)
   {
     super(props)
@@ -33,14 +66,14 @@ export default class TabsExample extends Component {
        activeIndex:0
      }
   }
-
   segmentClicked(index) {
     this.setState({
         activeIndex: index
     })
   }
 
-  renderSectionOne() {
+  //these will be the grid of photos
+  renderPictures() {
     return images.map((image, index) => {
         return (
             <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
@@ -49,30 +82,27 @@ export default class TabsExample extends Component {
                     alignSelf: 'stretch',
                     width: undefined,
                     height: undefined,
-
                 }}
-                    source={image}>
+                source={image}>
                 </Image>
-
             </View>
         )
     })
 
 }
-  renderSection() {
-
-    if (this.state.activeIndex == 0) {
-
-        return (
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-
-          {this.renderSectionOne()}
-        </View>
-        )
-    }
-    else if (this.state.activeIndex == 1) {
-        return (
-        <View style={{paddingBottom:2, alignContent:'stretch'}}> 
+//renders each section based on button clicked
+renderSection() {
+  //show grid of pictures
+  if (this.state.activeIndex == 0) {
+    return (
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+      {this.renderPictures()}
+    </View>)
+  }
+  //show dad posts
+  else if (this.state.activeIndex == 1) {
+    return (
+      <View style={{paddingBottom:2, alignContent:'stretch'}}> 
         <Card>
           <CardItem>
             <Left>
@@ -80,7 +110,6 @@ export default class TabsExample extends Component {
                 {/*Mini profile pic and misc info*/}
                   <View 
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
-            
                     <Image source={require('../../../../assets/dog.jpg')}
                     style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
@@ -95,9 +124,7 @@ export default class TabsExample extends Component {
             </Left>
             {/** this is the 'up-vote' button */}
             <Right>
-            <View 
-                    style={{paddingTop:5,flex:1, alignItems: 'flex-end',  justifyContent: 'flex-start', flexDirection: 'column' }}>
-            
+            <View style={{paddingTop:5,flex:1, alignItems: 'flex-end',  justifyContent: 'flex-start', flexDirection: 'column' }}>
                    <Button iconLeft small transparent>
                       <Icon name="arrow-circle-up" style={{ color: '#829399' }} size={30}></Icon>
                    </Button>
@@ -106,11 +133,10 @@ export default class TabsExample extends Component {
             </Right>
           </CardItem>
 
-          {/*This is where card content goes*/}
+          {/*This is where post content goes*/}
           <CardItem cardBody>
           <Image style={{width: 370, height: 200}}
-                source={require('../../../../assets/dog.jpg')}
-          />
+                source={require('../../../../assets/dog.jpg')}/>
           </CardItem>
           {/*Bottom of the card (left side) */}
           <CardItem>
@@ -144,20 +170,30 @@ export default class TabsExample extends Component {
         </View>
         )
     }
+    //if the skill tab is selected
     else if (this.state.activeIndex == 2) {
       return(
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-
-      {this.renderSectionOne()}
-      </View>)
+        <View style={{paddingBottom:2, alignContent:'stretch', flexDirection:'column'}}>
+        <Card>
+          <CardItem>
+            <View style={{flexDirection:'column'}}>
+            {/*Show Skills*/}
+            <Skill name="Courage T. Dog" rank="3"></Skill>
+            <Skill name="Courage T. Dog" rank="3"></Skill>
+            <Skill name="Courage T. Dog" rank="3"></Skill>
+            <Skill name="Courage T. Dog" rank="3"></Skill>
+            <Skill name="Courage T. Dog" rank="3"></Skill>
+            </View>
+          </CardItem>
+        </Card>
+    </View>)
     }
 }
-  render() {
+//this is the top bar of the screen
+render() {
     return (
       <Container>
         <Header>
-        <Left>
-        </Left>
         <Body>
           <Title>C. Dog</Title>
         </Body>
@@ -220,28 +256,6 @@ export default class TabsExample extends Component {
             <Text style={{ paddingLeft:20,fontSize: 10, color: 'grey' }}>Global</Text>
             </View>
         </View>
-
-        {/**Edit profile and Settings Buttons
-        <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingTop: 10 }}>
-
-            <View
-                style={{ flexDirection: 'row' }}>
-
-                {/** Edit profile takes up 3/4th 
-                <Button bordered dark
-                    style={{ flex: 3, marginLeft: 10, paddingTop:4, justifyContent: 'center', height: 30 }}><Text>Edit Profile</Text></Button>
-
-
-                {/** Settings takes up  1/4th place 
-                <Button bordered dark style={{
-                    flex: 1,
-                    height: 30,
-                    marginRight: 10, marginLeft: 5,
-                    justifyContent: 'center'
-                }}>
-                    <Icon name="globe" style={{ color: 'black' }} size={17}></Icon></Button>
-            </View>
-        </View>{/**End edit profile**/}
             </View>
         </View>
 
@@ -274,3 +288,35 @@ export default class TabsExample extends Component {
     );
   }
 }
+const styles = StyleSheet.create
+({
+  
+  skillBar: {
+  },
+  skillBarEmpty: {
+    width: 280,
+    height: 20,
+    borderRadius:10,
+    borderWidth:2,
+    borderColor: 'black',
+  },
+  skillBarFill: {
+    position: 'absolute',
+    top:1,
+    left:1,
+    width: skillLevel,
+    height: 18,
+    borderRadius:10,
+    borderWidth:2,
+    backgroundColor: '#B1CC74',
+  },
+  yinyangAfter: {
+    position: 'absolute',
+    left: 28,
+    top:2,
+    width: 3,
+    height: 16,
+    backgroundColor: 'gray',
+    opacity:0.5,
+  }
+});
