@@ -63,7 +63,8 @@ export default class RankingsScreen extends Component {
    super(props)
     this.state = {
       activeIndex:0,
-      ratings: []
+      ratings: [],
+      globalRatings: []
     }
  }
  
@@ -76,15 +77,59 @@ export default class RankingsScreen extends Component {
  */
 
  componentDidMount() {
-    fetch("http://172.17.38.148:82/dad_profile/ratings")
-      .then(response => {
-        return response.json(); 
-      })
-      .then(data => {
-        this.setState({ ratings: data })
-      })
+  // NOTE: You'll have to change this IP address to get it to work on your machine.
+  fetch("http://10.0.0.180:82/dad_profile/ratings")
+    .then(response => {
+      return response.json(); 
+    })
+    .then(data => {
+      this.setState({ globalRatings: data.reverse() }); 
+
+      var filter = "Global"; 
+      this.filterRatings(filter); 
+    })
  }
 
+ filterRatings(filter) {
+    var ratings = this.state.globalRatings; 
+
+    var zip = 60491; 
+    var myFirstZipDigit = String(zip).charAt(0); 
+
+    var regionalRatings = []
+    var localRatings = []
+
+    if (filter === "Regional") {
+      for (var i = 0 ; i < ratings.length; i++) {
+        var currentZip = ratings[i].zip; 
+
+        var currentFirstZipDigit = undefined;
+        if (currentZip !== undefined) {
+          currentFirstZipDigit = String(currentZip).charAt(0);
+        } 
+
+        if (myFirstZipDigit === currentFirstZipDigit) {
+          regionalRatings.push(ratings[i]);
+        }
+      }
+
+      this.setState({ ratings: regionalRatings })
+    }
+
+    else if (filter === "Local") {
+      for (var i = 0; i < ratings.length; i++) {
+        if (zip === ratings[i].zip) {
+          localRatings.push(ratings[i]);
+        }
+      }
+
+      this.setState({ ratings: localRatings });
+    }
+
+    else {
+      this.setState({ ratings: ratings });
+    }
+ }
  
  createRankingCard(profile) {
   let name = profile.name.first + " " + profile.name.last;
@@ -102,7 +147,6 @@ export default class RankingsScreen extends Component {
 
     // Need this b/c the component re-renders once the state is set in componentDidMount().  
     if (ratings.length !== 0) {
-      ratings = ratings.reverse(); 
       return (
         <Container style={{backgroundColor:"#EFFCCC"}}>
         {/**This is the header (native-base)
@@ -130,16 +174,19 @@ export default class RankingsScreen extends Component {
          * to change the content area of this screen
         */}
         <Segment>
-          <Button first style={{borderColor:'#545F66', }} >
+          <Button first style={{borderColor:'#545F66', }} 
+           onPress={() => this.filterRatings("Local")}>
            <Text style={{color:'#545F66'}}>Local</Text>
     
           </Button>
     
-          <Button style={{borderColor:'#545F66', }}>
+          <Button style={{borderColor:'#545F66', }}
+            onPress={() => this.filterRatings("Regional")}>
             <Text style={{color:'#545F66'}}>Regional</Text>
           </Button>
     
-          <Button last style={{borderColor:'#545F66', }}>
+          <Button last style={{borderColor:'#545F66', }}
+            onPress={() => this.filterRatings("Global")}>
             <Text style={{color:'#545F66'}}>Global</Text>
           </Button>
         </Segment>
