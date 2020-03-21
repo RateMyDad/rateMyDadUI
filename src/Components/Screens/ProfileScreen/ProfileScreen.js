@@ -8,6 +8,9 @@ import {
 } from "react-native";
 import { Container, Header, Tab, Tabs, TabHeading, Title, Content, Card, CardItem, Thumbnail, Text, Button, Right, Left, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
+import Popup from "../Popup"
+
 var { height, width } = Dimensions.get('window');
 
 var images = [
@@ -30,7 +33,8 @@ export default class TabsExample extends Component {
   {
     super(props)
      this.state = {
-       activeIndex:0
+       activeIndex: 0,
+       modalVisible: false
      }
   }
 
@@ -38,6 +42,11 @@ export default class TabsExample extends Component {
     this.setState({
         activeIndex: index
     })
+  }
+
+  // Inspired by this source: https://reactnative.dev/docs/modal
+  showPopup(visible){
+    this.setState({modalVisible: visible});
   }
 
   renderSectionOne() {
@@ -157,6 +166,7 @@ export default class TabsExample extends Component {
   render() {
     return (
       <Container>
+        <Popup modalVisible={this.state.modalVisible}/>
         <Header>
         <Left>
         </Left>
@@ -164,7 +174,8 @@ export default class TabsExample extends Component {
           <Title>C. Dog</Title>
         </Body>
         <Right>
-          <Button transparent>
+          <Button transparent
+            onPress = {() => this.showPopup(!this.state.modalVisible)}>
             <Icon name="bars" size={21} />
           </Button>
         </Right>
