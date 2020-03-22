@@ -10,6 +10,7 @@ import { Container, Header, Tab, Tabs, TabHeading, Title, Content, Card, CardIte
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Popup from "../Popup"
+// import "../../../styles/common.css"
 
 var { height, width } = Dimensions.get('window');
 
@@ -46,6 +47,8 @@ export default class TabsExample extends Component {
 
   // Inspired by this source: https://reactnative.dev/docs/modal
   showPopup(visible){
+    console.log("Inside of showPopup() function")
+    console.log(visible);
     this.setState({modalVisible: visible});
   }
 
@@ -164,6 +167,8 @@ export default class TabsExample extends Component {
     }
 }
   render() {
+    console.log("Profile screen modal visibility:")
+    console.log(this.state.modalVisible);
     return (
       <Container>
         <Popup modalVisible={this.state.modalVisible}/>
