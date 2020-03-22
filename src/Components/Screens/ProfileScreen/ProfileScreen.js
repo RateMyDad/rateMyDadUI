@@ -33,6 +33,9 @@ export default class TabsExample extends Component {
   constructor(props)
   {
     super(props)
+
+    this.updateParent = this.updateParent.bind(this);
+
      this.state = {
        activeIndex: 0,
        modalVisible: false
@@ -45,11 +48,14 @@ export default class TabsExample extends Component {
     })
   }
 
-  // Inspired by this source: https://reactnative.dev/docs/modal
-  showPopup(visible){
-    console.log("Inside of showPopup() function")
-    console.log(visible);
-    this.setState({modalVisible: visible});
+  updateParent() {
+    console.log("Inside of updateParent() function"); 
+
+    this.setState({ modalVisible: false });
+  }
+
+  showPopup(){
+    this.setState({ modalVisible: true });
   }
 
   renderSectionOne() {
@@ -167,11 +173,11 @@ export default class TabsExample extends Component {
     }
 }
   render() {
-    console.log("Profile screen modal visibility:")
-    console.log(this.state.modalVisible);
     return (
       <Container>
-        <Popup modalVisible={this.state.modalVisible}/>
+        <Popup 
+          modalVisible={this.state.modalVisible}
+          updateParent={this.updateParent}/>
         <Header>
         <Left>
         </Left>
@@ -180,7 +186,7 @@ export default class TabsExample extends Component {
         </Body>
         <Right>
           <Button transparent
-            onPress = {() => this.showPopup(!this.state.modalVisible)}>
+            onPress = {() => this.showPopup()}>
             <Icon name="bars" size={21} />
           </Button>
         </Right>
