@@ -8,6 +8,8 @@ export default class Popup extends Component {
 
         this.state = {
             visibility: props.modalVisible,
+            firstName: "",
+            lastName: "",
             grilling: "1",
             cooking: "1", 
             bags: "1", 
@@ -25,7 +27,10 @@ export default class Popup extends Component {
             stealth_food_preparation: "1", 
             tech: "1", 
             furniture_assembly: "1", 
-            photography: "1"
+            photography: "1",
+            country: "",
+            region: "",
+            zip: ""
         };
     }
 
@@ -48,6 +53,46 @@ export default class Popup extends Component {
         this.props.updateParent(); 
     }
 
+    createDadProfile() {
+        let dadProfile = {
+            name: {
+                firstName: this.state.firstName,
+                lastName: this.state.lastName
+            },
+
+            skills: {
+                grilling: this.state.grilling, 
+                cooking: this.state.cooking, 
+                bags: this.state.bags, 
+                golf: this.state.golf, 
+                softball: this.state.softball, 
+                coaching: this.state.coaching, 
+                generosity: this.state.generosity, 
+                looks: this.state.looks, 
+                dad_factor: this.state.dad_factor, 
+                fantasy_football: this.state.fantasy_football, 
+                humor: this.state.humor, 
+                emotional_stability: this.state.emotional_stability, 
+                handiness: this.state.handiness, 
+                kids: this.state.kids, 
+                stealth_food_preparation: this.state.stealth_food_preparation, 
+                tech: this.state.tech, 
+                furniture_assembly: this.state.furniture_assembly, 
+                photography: this.state.photography 
+            },
+
+            zip: this.state.zip,
+
+            location: {
+                country: this.state.country, 
+                region: this.state.region
+            }
+        }
+
+        console.log("Dad profile:");
+        console.log(dadProfile); 
+    }
+
     render() {
         return (
             <Modal 
@@ -64,11 +109,13 @@ export default class Popup extends Component {
                             <Text style={{ fontWeight: "bold" }}>First Name</Text>
                             <TextInput placeholder="First Name Here"
                                 placeholderTextColor="black"
+                                onChangeText={(text) => this.setState({ firstName: text })}
                                 style={{ backgroundColor: "white", height: 20, width: 300, marginBottom: 15, borderWidth: 1, borderRadius: 20, fontSize: 12, textAlign: "center", borderColor: "black" }}/>
 
                             <Text style={{ fontWeight: "bold" }}>Last Name</Text>
                             <TextInput placeholder="Last Name Here"
                                 placeholderTextColor="black"
+                                onChangeText={(text) => this.setState({ lastName: text })}
                                 style={{ backgroundColor: "white", height: 20, width: 300, marginBottom: 40, borderWidth: 1, borderRadius: 20, fontSize: 12, textAlign: "center", borderColor: "black" }}/>
 
                             <Text style={{ fontWeight: "bold", fontSize: 25, marginBottom: 20 }}>Skills Ratings</Text>
@@ -456,20 +503,24 @@ export default class Popup extends Component {
                             <Text style={{ fontWeight: "bold" }}>Country</Text>
                             <TextInput placeholder="Country Here"
                                 placeholderTextColor="black"
+                                onChangeText={(text) => this.setState({ country: text })}
                                 style={{ backgroundColor: "white", height: 20, width: 300, marginBottom: 40, borderWidth: 1, borderRadius: 20, fontSize: 12, textAlign: "center", borderColor: "black" }}/>
 
                             <Text style={{ fontWeight: "bold" }}>Region</Text>
                             <TextInput placeholder=" Region Here"
                                 placeholderTextColor="black"
+                                onChangeText={(text) => this.setState({ region: text })}
                                 style={{ backgroundColor: "white", height: 20, width: 300, marginBottom: 40, borderWidth: 1, borderRadius: 20, fontSize: 12, textAlign: "center", borderColor: "black" }}/>
 
                             <Text style={{ fontWeight: "bold" }}>Zip Code</Text>
                             <TextInput placeholder="Zip Code Here"
                                 placeholderTextColor="black"
+                                onChangeText={(text) => this.setState({ zip: text })}
                                 style={{ backgroundColor: "white", height: 20, width: 300, marginBottom: 40, borderWidth: 1, borderRadius: 20, fontSize: 12, textAlign: "center", borderColor: "black" }}/>
 
                             <Body style={{ justifyContent: "center", alignItems: "center"}}>
                                 <Button block
+                                    onPress={() => this.createDadProfile()}
                                     style={{ marginBottom: 400, width: "50%"}}>
                                         <Text style={{ right: "50%", fontWeight: "bold"}}>Create Dad Profile</Text>
                                 </Button>
