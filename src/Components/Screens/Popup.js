@@ -1,5 +1,6 @@
 import React, {Component} from "react"; 
-import {Modal, Text, Alert, View, TextInput, Button, Picker, ScrollView} from "react-native";
+import {Modal, Text, Alert, View, TextInput, ScrollView} from "react-native";
+import {Picker, Icon, Button, Body} from "native-base";
 
 export default class Popup extends Component {
     constructor(props) {
@@ -52,14 +53,14 @@ export default class Popup extends Component {
             <Modal 
                 visible = {this.state.visibility}> 
                 <View style={{marginTop: 75, height: "100%", alignItems: "center", backgroundColor: "#EFFCCC"}}>
-                    <Button
+                    <Button block danger
                         onPress={() => this.closePopup()}
-                        title="<"
-                        color="red"
-                        style={{ width: "25%" }}/>
+                        style={{ width: "15%", alignItems: "center" }}>
+                        <Text style={{ fontWeight: "bold", fontSize: 30}}>{"<"}</Text>
+                    </Button>
                     <Text style={{ marginTop: 50, fontSize: 30, fontWeight: "bold" }}>Create your dad profile here!</Text>
-                    <ScrollView>
-                        <View style={{ marginTop: 25, alignItems: "center", overflow: "auto"}}>
+                    <ScrollView style={{ width: "100%" }}>
+                        <View style={{ marginTop: 25, justifyContent: "center", alignItems: "center", overflow: "auto"}}>
                             <Text style={{ fontWeight: "bold" }}>First Name</Text>
                             <TextInput placeholder="First Name Here"
                                 placeholderTextColor="black"
@@ -68,331 +69,411 @@ export default class Popup extends Component {
                             <Text style={{ fontWeight: "bold" }}>Last Name</Text>
                             <TextInput placeholder="Last Name Here"
                                 placeholderTextColor="black"
-                                style={{ backgroundColor: "white", height: 20, width: 300, marginBottom: 15, borderWidth: 1, borderRadius: 20, fontSize: 12, textAlign: "center", borderColor: "black" }}/>
+                                style={{ backgroundColor: "white", height: 20, width: 300, marginBottom: 40, borderWidth: 1, borderRadius: 20, fontSize: 12, textAlign: "center", borderColor: "black" }}/>
 
-                            <Text style={{ fontSize: 25, fontWeight: "bold", top: 60}}>Skills Ratings</Text>
-                            <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Grilling</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.grilling) || "1"} 
-                                    onValueChange={(value) => this.setState({ grilling: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold", fontSize: 25, marginBottom: 20 }}>Skills Ratings</Text>
 
-                            <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Cooking</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.cooking) || "1"} 
-                                    onValueChange={(value) => this.setState({ cooking: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Grilling</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.grilling) || "1"} 
+                                onValueChange={(value) => this.setState({ grilling: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Bags</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.bags) || "1"} 
-                                    onValueChange={(value) => this.setState({ bags: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Cooking</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.cooking) || "1"} 
+                                onValueChange={(value) => this.setState({ cooking: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Golf</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.golf) || "1"} 
-                                    onValueChange={(value) => this.setState({ golf: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Bags</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.bags) || "1"} 
+                                onValueChange={(value) => this.setState({ bags: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Softball</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.softball) || "1"} 
-                                    onValueChange={(value) => this.setState({ softball: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Golf</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.golf) || "1"} 
+                                onValueChange={(value) => this.setState({ golf: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Softball</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.softball) || "1"} 
-                                    onValueChange={(value) => this.setState({ softball: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Softball</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.softball) || "1"} 
+                                onValueChange={(value) => this.setState({ softball: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Coaching</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.coaching) || "1"} 
-                                    onValueChange={(value) => this.setState({ coaching: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Coaching</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.coaching) || "1"} 
+                                onValueChange={(value) => this.setState({ coaching: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Generosity</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.generosity) || "1"} 
-                                    onValueChange={(value) => this.setState({ generosity: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Generosity</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.generosity) || "1"} 
+                                onValueChange={(value) => this.setState({ generosity: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Looks</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.looks) || "1"} 
-                                    onValueChange={(value) => this.setState({ looks: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Looks</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.looks) || "1"} 
+                                onValueChange={(value) => this.setState({ looks: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Dad Factor</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.dad_factor) || "1"} 
-                                    onValueChange={(value) => this.setState({ dad_factor: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Dad Factor</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.dad_factor) || "1"} 
+                                onValueChange={(value) => this.setState({ dad_factor: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", alignItems: "center"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Fantasy Football</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.fantasy_football) || "1"} 
-                                    onValueChange={(value) => this.setState({ fantasy_football: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Fantasy Football</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.fantasy_football) || "1"} 
+                                onValueChange={(value) => this.setState({ fantasy_football: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", alignItems: "center"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Humor</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.humor) || "1"} 
-                                    onValueChange={(value) => this.setState({ humor: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Humor</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.humor) || "1"} 
+                                onValueChange={(value) => this.setState({ humor: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", alignItems: "center"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Emotional Stability</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.emotional_stability) || "1"} 
-                                    onValueChange={(value) => this.setState({ emotional_stability: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Emotional Stability</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.emotional_stability) || "1"} 
+                                onValueChange={(value) => this.setState({ emotional_stability: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", alignItems: "center"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Handiness</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.hadiness) || "1"} 
-                                    onValueChange={(value) => this.setState({ handiness: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Handiness</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.handiness) || "1"} 
+                                onValueChange={(value) => this.setState({ handiness: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", alignItems: "center"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Kid Skills</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.kids) || "1"} 
-                                    onValueChange={(value) => this.setState({ kids: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Kid Skills</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.kids) || "1"} 
+                                onValueChange={(value) => this.setState({ kids: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", alignItems: "center"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Stealth Food Prep</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.stealth_food_preparation) || "1"} 
-                                    onValueChange={(value) => this.setState({ stealth_food_preparation: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Stealth Food Preparation</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.stealth_food_preparation) || "1"} 
+                                onValueChange={(value) => this.setState({ stealth_food_preparation: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", alignItems: "center"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Technology</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.tech) || "1"} 
-                                    onValueChange={(value) => this.setState({ tech: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Technology</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.tech) || "1"} 
+                                onValueChange={(value) => this.setState({ tech: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", alignItems: "center"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Furniture Assembly</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.furniture_assembly) || "1"} 
-                                    onValueChange={(value) => this.setState({ furniture_assembly: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Furniture Assembly</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.furniture_assembly) || "1"} 
+                                onValueChange={(value) => this.setState({ furniture_assembly: value })}
+                                style={{ marginBottom: 15 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
 
-                            <View style={{ flexDirection: "row", alignItems: "center"}}>
-                                <Text style={{ fontWeight: "bold", marginTop: "60%", right: "15%" }}>Photography</Text>
-                                {/* Inspired by this source: https://stackoverflow.com/questions/37597665/how-to-make-react-native-picker-stay-at-newly-selected-option */}
-                                <Picker 
-                                    selectedValue={(this.state && this.state.photography) || "1"} 
-                                    onValueChange={(value) => this.setState({ photography: value })}
-                                    style={{ height: 100, width: 100 }}>
-                                    <Picker.Item label="1" value="1"/>
-                                    <Picker.Item label="2" value="2"/>
-                                    <Picker.Item label="3" value="3"/>
-                                    <Picker.Item label="4" value="4"/>
-                                    <Picker.Item label="5" value="5"/>
-                                    <Picker.Item label="6" value="6"/>
-                                    <Picker.Item label="7" value="7"/>
-                                </Picker>
-                            </View>
+                            <Text style={{ fontWeight: "bold" }}>Photography</Text>
+                            <Picker
+                                mode="dropdown"
+                                placeholder="Click here to rate this skill"
+                                iosIcon={<Icon name="arrow-down"/>}
+                                borderWidth="10"
+                                borderColor="1"
+                                borderRadius="20"
+                                selectedValue={(this.state && this.state.photography) || "1"} 
+                                onValueChange={(value) => this.setState({ photography: value })}
+                                style={{ marginBottom: 40 }}>
+                                
+                                <Picker.Item label="1" value="1"/>
+                                <Picker.Item label="2" value="2"/>
+                                <Picker.Item label="3" value="3"/>
+                                <Picker.Item label="4" value="4"/>
+                                <Picker.Item label="5" value="5"/>
+                                <Picker.Item label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                            </Picker>
+
+                            <Text style={{ fontWeight: "bold", fontSize: 25, marginBottom: 20 }}>Location Info</Text>
+                            
+                            <Text style={{ fontWeight: "bold" }}>Country</Text>
+                            <TextInput placeholder="Country Here"
+                                placeholderTextColor="black"
+                                style={{ backgroundColor: "white", height: 20, width: 300, marginBottom: 40, borderWidth: 1, borderRadius: 20, fontSize: 12, textAlign: "center", borderColor: "black" }}/>
+
+                            <Text style={{ fontWeight: "bold" }}>Region</Text>
+                            <TextInput placeholder=" Region Here"
+                                placeholderTextColor="black"
+                                style={{ backgroundColor: "white", height: 20, width: 300, marginBottom: 40, borderWidth: 1, borderRadius: 20, fontSize: 12, textAlign: "center", borderColor: "black" }}/>
+
+                            <Text style={{ fontWeight: "bold" }}>Zip Code</Text>
+                            <TextInput placeholder="Zip Code Here"
+                                placeholderTextColor="black"
+                                style={{ backgroundColor: "white", height: 20, width: 300, marginBottom: 40, borderWidth: 1, borderRadius: 20, fontSize: 12, textAlign: "center", borderColor: "black" }}/>
+
+                            <Body style={{ justifyContent: "center", alignItems: "center"}}>
+                                <Button block
+                                    style={{ marginBottom: 400, width: "50%"}}>
+                                        <Text style={{ right: "50%", fontWeight: "bold"}}>Create Dad Profile</Text>
+                                </Button>
+                            </Body>
                         </View>
                     </ScrollView>
                 </View>
