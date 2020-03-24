@@ -134,383 +134,413 @@ export default class Popup extends Component {
 
                             <Text style={{ fontWeight: "bold", fontSize: 25, marginBottom: 20 }}>Skills Ratings</Text>
 
-                            <Text style={{ fontWeight: "bold" }}>Grilling</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.grilling) || "1"} 
-                                onValueChange={(value) => this.setState({ grilling: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Grilling</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.grilling) || "1"} 
+                                        onValueChange={(value) => this.setState({ grilling: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Cooking</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.cooking) || "1"} 
-                                onValueChange={(value) => this.setState({ cooking: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Cooking</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.cooking) || "1"} 
+                                        onValueChange={(value) => this.setState({ cooking: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Bags</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.bags) || "1"} 
-                                onValueChange={(value) => this.setState({ bags: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Bags</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.bags) || "1"} 
+                                        onValueChange={(value) => this.setState({ bags: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
+                            </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Golf</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.golf) || "1"} 
-                                onValueChange={(value) => this.setState({ golf: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Golf</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.golf) || "1"} 
+                                        onValueChange={(value) => this.setState({ golf: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Softball</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.softball) || "1"} 
-                                onValueChange={(value) => this.setState({ softball: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Softball</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.softball) || "1"} 
+                                        onValueChange={(value) => this.setState({ softball: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Coaching</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.coaching) || "1"} 
-                                onValueChange={(value) => this.setState({ coaching: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Coaching</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.coaching) || "1"} 
+                                        onValueChange={(value) => this.setState({ coaching: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
+                            </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Generosity</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.generosity) || "1"} 
-                                onValueChange={(value) => this.setState({ generosity: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Generosity</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.generosity) || "1"} 
+                                        onValueChange={(value) => this.setState({ generosity: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Looks</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.looks) || "1"} 
-                                onValueChange={(value) => this.setState({ looks: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Looks</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.looks) || "1"} 
+                                        onValueChange={(value) => this.setState({ looks: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Dad Factor</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.dad_factor) || "1"} 
-                                onValueChange={(value) => this.setState({ dad_factor: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Dad Factor</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.dad_factor) || "1"} 
+                                        onValueChange={(value) => this.setState({ dad_factor: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
+                            </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Fantasy Football</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.fantasy_football) || "1"} 
-                                onValueChange={(value) => this.setState({ fantasy_football: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Fantasy Football</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.fantasy_football) || "1"} 
+                                        onValueChange={(value) => this.setState({ fantasy_football: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Humor</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.humor) || "1"} 
-                                onValueChange={(value) => this.setState({ humor: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Humor</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.humor) || "1"} 
+                                        onValueChange={(value) => this.setState({ humor: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Emotional Stability</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.emotional_stability) || "1"} 
-                                onValueChange={(value) => this.setState({ emotional_stability: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Emotional Stability</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.emotional_stability) || "1"} 
+                                        onValueChange={(value) => this.setState({ emotional_stability: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
+                            </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Handiness</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.handiness) || "1"} 
-                                onValueChange={(value) => this.setState({ handiness: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Handiness</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.handiness) || "1"} 
+                                        onValueChange={(value) => this.setState({ handiness: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Kid Skills</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.kids) || "1"} 
-                                onValueChange={(value) => this.setState({ kids: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Kid Skills</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.kids) || "1"} 
+                                        onValueChange={(value) => this.setState({ kids: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Stealth Food Preparation</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.stealth_food_preparation) || "1"} 
-                                onValueChange={(value) => this.setState({ stealth_food_preparation: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Stealth Food Prep</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.stealth_food_preparation) || "1"} 
+                                        onValueChange={(value) => this.setState({ stealth_food_preparation: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
+                            </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Technology</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.tech) || "1"} 
-                                onValueChange={(value) => this.setState({ tech: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Technology</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.tech) || "1"} 
+                                        onValueChange={(value) => this.setState({ tech: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Furniture Assembly</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.furniture_assembly) || "1"} 
-                                onValueChange={(value) => this.setState({ furniture_assembly: value })}
-                                style={{ marginBottom: 15 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Furniture Assembly</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.furniture_assembly) || "1"} 
+                                        onValueChange={(value) => this.setState({ furniture_assembly: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
 
-                            <Text style={{ fontWeight: "bold" }}>Photography</Text>
-                            <Picker
-                                mode="dropdown"
-                                placeholder="Click here to rate this skill"
-                                iosIcon={<Icon name="arrow-down"/>}
-                                borderWidth="10"
-                                borderColor="1"
-                                borderRadius="20"
-                                selectedValue={(this.state && this.state.photography) || "1"} 
-                                onValueChange={(value) => this.setState({ photography: value })}
-                                style={{ marginBottom: 40 }}>
-                                
-                                <Picker.Item label="1" value="1"/>
-                                <Picker.Item label="2" value="2"/>
-                                <Picker.Item label="3" value="3"/>
-                                <Picker.Item label="4" value="4"/>
-                                <Picker.Item label="5" value="5"/>
-                                <Picker.Item label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                            </Picker>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{ fontWeight: "bold" }}>Photography</Text>
+                                    <Picker
+                                        mode="dropdown"
+                                        placeholder="Click here to rate this skill"
+                                        iosIcon={<Icon name="arrow-down"/>}
+                                        borderWidth="10"
+                                        borderColor="1"
+                                        borderRadius="20"
+                                        selectedValue={(this.state && this.state.photography) || "1"} 
+                                        onValueChange={(value) => this.setState({ photography: value })}>
+                                        
+                                        <Picker.Item label="1" value="1"/>
+                                        <Picker.Item label="2" value="2"/>
+                                        <Picker.Item label="3" value="3"/>
+                                        <Picker.Item label="4" value="4"/>
+                                        <Picker.Item label="5" value="5"/>
+                                        <Picker.Item label="6" value="6"/>
+                                        <Picker.Item label="7" value="7"/>
+                                    </Picker>
+                                </View>
+                            </View>
 
                             <Text style={{ fontWeight: "bold", fontSize: 25, marginBottom: 20 }}>Location Info</Text>
                             

@@ -140,7 +140,7 @@ export default class RankingsScreen extends Component {
    )
  }
 
-  render(){
+  render() {
     let ratings = this.state.ratings; 
     console.log("Profile ratings: "); 
     console.log(ratings); 
