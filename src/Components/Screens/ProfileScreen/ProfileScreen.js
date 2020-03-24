@@ -84,38 +84,38 @@ export default class TabsExample extends Component {
 
           {this.renderSectionOne()}
         </View>
-        
+
         )
 
     }
     else if (this.state.activeIndex == 1) {
         return (
-        <View style={{paddingBottom:2, alignContent:'stretch'}}> 
+        <View style={{paddingBottom:2, alignContent:'stretch'}}>
         <Card>
           <CardItem>
             <Left>
               <View  style={{ flexDirection: 'row' }}>
                 {/*Mini profile pic and misc info*/}
-                  <View 
+                  <View
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
-            
-                    <Image source={require('../../../../assets/dog.jpg')}
+
+                    <Image source={images[0]}
                     style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                     <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
                       <Button small dark transparent>
                         <Text>Courage T. Dog</Text>
                       </Button>
-                      <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>Rank #3 Global</Text>
+                      <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>Rank #8 Global</Text>
                     </View>
                 </View>
               </View>
             </Left>
             {/** this is the 'up-vote' button */}
             <Right>
-            <View 
+            <View
                     style={{paddingTop:5,flex:1, alignItems: 'flex-end',  justifyContent: 'flex-start', flexDirection: 'column' }}>
-            
+
                    <Button iconLeft small transparent>
                       <Icon name="arrow-circle-up" style={{ color: '#829399' }} size={30}></Icon>
                    </Button>
@@ -139,7 +139,7 @@ export default class TabsExample extends Component {
               <Icon name="heart" style={{ color: '#7BCACE' }} size={25}></Icon>
                 <Text style={{padding:0 ,color:'black'}}>4 million</Text>
               </Button>
-            
+
               <Button transparent>
                 <Icon name="comment" style={{ color: '#7BCACE' }} size={25}></Icon>
                 <Text style={{padding:0 ,color:'black'}}>1.2 million</Text>
@@ -149,9 +149,9 @@ export default class TabsExample extends Component {
 
             {/**Just the downvote button (right side) */}
             <Right>
-            <View 
+            <View
                     style={{paddingTop:5,flex:1, alignItems: 'flex-end',  justifyContent: 'flex-start', flexDirection: 'column' }}>
-            
+
                    <Button iconLeft small transparent>
                       <Icon name="arrow-circle-down" style={{ color: '#829399' }} size={30}></Icon>
                    </Button>
@@ -171,9 +171,22 @@ export default class TabsExample extends Component {
     }
 }
   render() {
+
+    var profileHeaderStatsViewStyle = {
+      flexDirection:'column',
+      justifyContent:'flex-start',
+      alignItems:'center'
+    }
+
+    var profileHeaderStatsIconStyle = {
+      padding:5,
+      color: '#7BCACE',
+      fontSize: 20
+    }
+
     return (
       <Container>
-        <Popup 
+        <Popup
           modalVisible={this.state.modalVisible}
           updateParent={this.updateParent}/>
         <Header>
@@ -192,54 +205,52 @@ export default class TabsExample extends Component {
 
       {/*Content of profile*/}
       <Content style={{backgroundColor:'#EFFCCC'}} >
-        <View style={{ backgroundColor: 'white',paddingTop: 5, borderTopWidth: 5, borderTopColor: '#B1CC74'  }}>
+        <View style={{ backgroundColor: 'white', borderTopWidth: 5, borderTopColor: '#B1CC74'  }}>
 
         {/** User Photo Stats**/}
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
 
          {/**User photo takes 1/3rd of view horizontally **/}
-        <View
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start', paddingBottom:5 }}>
-            <Image source={require('../../../../assets/dog.jpg')}
-            style={{ width: 75, height: 75, borderRadius: 37.5 }} />
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start', paddingBottom: 0 }}>
+            <Image source={images[0]} style={{ width: 75, height: 75, borderRadius: 37.5 }} />
         </View>
 
         {/**User Stats take 2/3rd of view horizontally **/}
-        <View style={{ flex: 3 }}>
+        <View style={{ flex: 3, backgroundColor: 'white', flexDirection: "row", alignItems: 'center'}}>
 
         {/** Stats **/}
         <View
             style={{
+                flex: 3,
                 flexDirection: 'row',
-                justifyContent: 'space-around',
-                alignItems: 'flex-end'
+                justifyContent: 'space-around'
             }}>
 
             {/**Rating Stat */}
-            <View style={{flexDirection:'column', justifyContent:'flex-start',  alignItems:'center' }}>
-            <View style={{ alignItems: 'center', flexDirection:"row"}}>
-                <Icon name="star" style={{ padding:5, color: '#7BCACE' }} size={20}></Icon>
-                <Text>20</Text>
-            </View>
-            <Text style={{ paddingLeft:20,fontSize: 10, color: 'grey' }}>Rating</Text>
+            <View style={profileHeaderStatsViewStyle}>
+              <View style={{ alignItems: 'center', flexDirection:"row"}}>
+                  <Icon name="star" style={profileHeaderStatsIconStyle}></Icon>
+                  <Text style={{fontSize: 20}}>20</Text>
+              </View>
+              <Text style={{ paddingLeft:0, fontSize: 10, color: 'grey'}}>Rating</Text>
             </View>
 
             {/**Total Love stat */}
-            <View style={{flexDirection:'column', justifyContent:'flex-start', alignItems:'center' }}>
-            <View style={{ alignItems: 'center', flexDirection:"row"}}>
-                <Icon name="heart" style={{ padding:5, color: '#7BCACE' }} size={17}></Icon>
-                <Text>2,000</Text>
+            <View style={profileHeaderStatsViewStyle}>
+              <View style={{ alignItems: 'center', flexDirection:"row"}}>
+                  <Icon name="heart" style={profileHeaderStatsIconStyle}></Icon>
+                  <Text style={{fontSize: 20}}>2,000</Text>
+              </View>
+              <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Love</Text>
             </View>
-            <Text style={{ paddingLeft:20,fontSize: 10, color: 'grey' }}>Love</Text>
-            </View>
-            
+
             {/**Rank stat */}
-            <View style={{flexDirection:'column', justifyContent:'flex-start',  alignItems:'center' }}>
+            <View style={profileHeaderStatsViewStyle}>
             <View style={{ alignItems: 'center', flexDirection:"row"}}>
-                <Icon name="hashtag" style={{ padding:5, color: '#7BCACE' }} size={17}></Icon>
-                <Text>3</Text>
+                <Icon name="hashtag" style={profileHeaderStatsIconStyle}></Icon>
+                <Text style={{fontSize: 20}}>3560</Text>
             </View>
-            <Text style={{ paddingLeft:20,fontSize: 10, color: 'grey' }}>Global</Text>
+            <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Global</Text>
             </View>
         </View>
 
@@ -249,12 +260,12 @@ export default class TabsExample extends Component {
             <View
                 style={{ flexDirection: 'row' }}>
 
-                {/** Edit profile takes up 3/4th 
+                {/** Edit profile takes up 3/4th
                 <Button bordered dark
                     style={{ flex: 3, marginLeft: 10, paddingTop:4, justifyContent: 'center', height: 30 }}><Text>Edit Profile</Text></Button>
 
 
-                {/** Settings takes up  1/4th place 
+                {/** Settings takes up  1/4th place
                 <Button bordered dark style={{
                     flex: 1,
                     height: 30,
@@ -267,7 +278,7 @@ export default class TabsExample extends Component {
             </View>
         </View>
 
-        <View style={{ padding: 10, borderTopWidth:1, borderTopColor:'#eae5e5' }}>
+        <View style={{ padding: 10, paddingTop: 30, paddingBottom: 15, borderTopWidth:1, borderTopColor:'#eae5e5' }}>
             <View style={{ paddingHorizontal: 10 }}>
                 <Text style={{ paddingBottom:5, fontWeight: 'bold' }}>Courage T. Dog</Text>
                 <Text>This is my dad, Courage. He's pretty cool.</Text>
@@ -280,7 +291,7 @@ export default class TabsExample extends Component {
         <View style={{ backgroundColor:'#7BCACE', flexDirection: 'row', justifyContent: 'space-around', borderTopWidth: 1, borderTopColor: '#eae5e5' }}>
             <Button transparent onPress = {() => this.segmentClicked(0)} active={this.state.activeIndex ==0}  >
             <Icon name="image" style={[this.state.activeIndex == 0 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
-                
+
             </Button>
             <Button transparent onPress = {() => this.segmentClicked(1)} active={this.state.activeIndex ==1}>
             <Icon name="comment" style={[this.state.activeIndex == 1 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
