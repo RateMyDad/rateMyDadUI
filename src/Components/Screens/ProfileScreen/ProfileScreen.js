@@ -49,8 +49,6 @@ export default class TabsExample extends Component {
   }
 
   updateParent() {
-    console.log("Inside of updateParent() function"); 
-
     this.setState({ modalVisible: false });
   }
 

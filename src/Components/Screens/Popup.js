@@ -8,6 +8,7 @@ export default class Popup extends Component {
 
         this.state = {
             visibility: props.modalVisible,
+            profileStatus: 0,
             firstName: "",
             lastName: "",
             grilling: "1",
@@ -35,15 +36,28 @@ export default class Popup extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        /*
+        fetch("http://10.0.0.180:82/user/check_status")
+        .then(response => {
+            return response.json(); 
+        })
+        .then(data => {
+            if (data === "You must be logged in to use this feature.") {
+                this.setState({ profileStatus: 0 })
+            }
+
+            else if (data === "You already have a profile created!") {
+                this.setState({ profileStatus: 1 })
+            }
+
+            else {
+                this.setState({ profileStatus: 2 })
+            }
+        })
+        */ 
+
         if (prevProps.modalVisible !== this.props.modalVisible) {
             this.setState({ visibility: this.props.modalVisible })
-        }
-
-        else {
-            console.log("Previous props:")
-            console.log(prevProps); 
-            console.log("Current props:")
-            console.log(this.props);
         }
     }
 
@@ -61,27 +75,27 @@ export default class Popup extends Component {
             },
 
             skills: {
-                grilling: this.state.grilling, 
-                cooking: this.state.cooking, 
-                bags: this.state.bags, 
-                golf: this.state.golf, 
-                softball: this.state.softball, 
-                coaching: this.state.coaching, 
-                generosity: this.state.generosity, 
-                looks: this.state.looks, 
-                dad_factor: this.state.dad_factor, 
-                fantasy_football: this.state.fantasy_football, 
-                humor: this.state.humor, 
-                emotional_stability: this.state.emotional_stability, 
-                handiness: this.state.handiness, 
-                kids: this.state.kids, 
-                stealth_food_preparation: this.state.stealth_food_preparation, 
-                tech: this.state.tech, 
-                furniture_assembly: this.state.furniture_assembly, 
-                photography: this.state.photography 
+                grilling: parseInt(this.state.grilling), 
+                cooking: parseInt(this.state.cooking), 
+                bags: parseInt(this.state.bags), 
+                golf: parseInt(this.state.golf), 
+                softball: parseInt(this.state.softball), 
+                coaching: parseInt(this.state.coaching), 
+                generosity: parseInt(this.state.generosity), 
+                looks: parseInt(this.state.looks), 
+                dad_factor: parseInt(this.state.dad_factor), 
+                fantasy_football: parseInt(this.state.fantasy_football), 
+                humor: parseInt(this.state.humor), 
+                emotional_stability: parseInt(this.state.emotional_stability), 
+                handiness: parseInt(this.state.handiness), 
+                kids: parseInt(this.state.kids), 
+                stealth_food_preparation: parseInt(this.state.stealth_food_preparation), 
+                tech: parseInt(this.state.tech), 
+                furniture_assembly: parseInt(this.state.furniture_assembly), 
+                photography: parseInt(this.state.photography)
             },
 
-            zip: this.state.zip,
+            zip: parseInt(this.state.zip),
 
             location: {
                 country: this.state.country, 
