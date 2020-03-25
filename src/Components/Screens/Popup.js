@@ -14,12 +14,12 @@ class SkillRatingSelection extends Component {
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <Text style={{ fontWeight: "bold", marginBottom: 5 }}>{this.props.skillName}</Text>
             <Text>{_this.state[this.props.skill]}</Text>
-            <Slider 
+            <Slider
                 width={"90%"}
                 minimumValue={1}
-                maximumValue={7}
+                maximumValue={66}
                 step={1}
-                onValueChange={(value) => _this.setState({ [this.props.skill]: value })}
+                onValueChange={(value) => _this.setState({ [this.props.skill]: Math.floor(value/11) + 1})}
             />
         </View>
     )
@@ -144,7 +144,7 @@ export default class Popup extends Component {
           fontSize: 18,
           textAlign: "center",
           borderColor: "#dae6ba",
-          color: "#aaa"
+          color: "#aaa",
         }
 
         return (
@@ -222,19 +222,21 @@ export default class Popup extends Component {
 
                             <Text style={{ fontWeight: "bold" }}>Country</Text>
                             <TextInput placeholder="Country Here"
-                                onChangeText={(text) => this.setState({ country: text })}
-                                style={inputBoxStyle}/>
+                              placeholderTextColor="#ccc"
+                              onChangeText={(text) => this.setState({ country: text })}
+                              style={inputBoxStyle}/>
 
                             <Text style={{ fontWeight: "bold" }}>Region</Text>
                             <TextInput placeholder=" Region Here"
-                                onChangeText={(text) => this.setState({ region: text })}
-                                style={inputBoxStyle}/>
+                              placeholderTextColor="#ccc"
+                              onChangeText={(text) => this.setState({ region: text })}
+                              style={inputBoxStyle}/>
 
                             <Text style={{ fontWeight: "bold" }}>Zip Code</Text>
                             <TextInput placeholder="Zip Code Here"
+                                placeholderTextColor="#ccc"
                                 onChangeText={(text) => this.setState({ zip: text })}
                                 style={inputBoxStyle}/>
-
                             <Body style={{ justifyContent: "center", alignItems: "center"}}>
                                 <Button block
                                     onPress={() => this.createDadProfile()}
