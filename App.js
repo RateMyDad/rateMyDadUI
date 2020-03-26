@@ -19,21 +19,21 @@ export default function App() {
         initialRouteName="Home"
         activeColor="#515D35"
         inactiveColor="#FFFAFA"
-        barStyle={{ backgroundColor: '#B1CC74'}}
+        barStyle={{backgroundColor: '#B1CC74'}}
 
         screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => 
+          tabBarIcon: ({ focused, color, size }) =>
           {
             let iconName;
             size = 25;
-            if (route.name === 'Home') 
+            if (route.name === 'Home')
             {
-              size = 22;
+              size = 25;
               iconName = focused ? 'newspaper-o' : 'newspaper-o';
-            } 
-            else if (route.name === 'Rankings') 
+            }
+            else if (route.name === 'Rankings')
             {
-              size = 26;
+              size = 25;
               iconName = focused ? 'globe' : 'globe';
             }
             else if (route.name == 'Profile')
@@ -43,7 +43,12 @@ export default function App() {
             // You can return any component that you like here!
             return <Icon name={iconName} size={size} color={color} />;
           },
-        })}>
+        })}
+        
+        tabBarOptions = {{
+          showLabel: false
+        }}
+        >
 
         <Tab.Screen name="Home" component={HomeScreen} options={{ title: null }}/>
         <Tab.Screen name="Rankings" component={RankingsScreen} options={{ title: null }}/>
@@ -53,14 +58,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create
-({
-  container: 
-  {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
