@@ -2,11 +2,7 @@ import React, { Component } from 'react';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Text, Title, Left, Body, Right, Segment } from 'native-base';
 import { Image, View,Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import LocalRanksScreen from './LocalRanksScreen';
-import { useNavigation } from '@react-navigation/native';
 var { height, width } = Dimensions.get('window');
-
-
 var images = [
   require('../../../../assets/dog.jpg'),
   require('../../../../assets/dog.jpg'),
@@ -22,6 +18,7 @@ var images = [
   require('../../../../assets/dog.jpg'),
 ]
 
+//each ranking card, it takes name, rank, and location variable 
 class RankingCard extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +34,7 @@ class RankingCard extends Component {
           <Card>
             <CardItem>
               <Left>
-                <View  style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row' }}>
                   {/*Mini profile pic and misc info*/}
                     <View
                       style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
@@ -49,23 +46,21 @@ class RankingCard extends Component {
                         <Button small dark transparent>
                           <Text>{this.props.name}</Text>
                         </Button>
-                        <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>from Kansas</Text>
+                        <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>{this.props.location}</Text>
                       </View>
                   </View>
                 </View>
               </Left>
+
               {/** this is the ranking */}
               <Right>
-              <View
-                      style={{flexDirection:'column', justifyContent:'flex-start',  alignItems:'center' }}>
-
-                     <Button iconLeft small transparent>
-                        <Icon name="hashtag" style={{ color: '#7BCACE' }} size={20}></Icon>
-                        <Text style={{ fontSize: 20,  color: 'black'}}>{this.props.rank}</Text>
-                     </Button>
-                     <Text style={{ alignSelf: 'flex-end', fontSize: 10,  color: 'grey'}}>of 7.5 billion</Text>
-
-                  </View>
+              <View style={{flexDirection:'column', justifyContent:'flex-start',  alignItems:'center' }}>
+                <Button iconLeft small transparent>
+                  <Icon name="hashtag" style={{ color: '#7BCACE' }} size={20}></Icon>
+                  <Text style={{ fontSize: 20,  color: 'black'}}>{this.props.rank}</Text>
+                </Button>
+                <Text style={{ alignSelf: 'flex-end', fontSize: 10,  color: 'grey'}}>of 7.5 billion</Text>
+              </View>
               </Right>
             </CardItem>
           </Card>
@@ -89,10 +84,10 @@ export default class RankingsScreen extends Component {
  /*
  componentDidMount() {
     var profileRatings = getRatings();
-
     this.setState({ ratings: profileRatings });
  }
  */
+
 
 componentDidMount() {
   var server_url = "http://99.60.8.214:82"
@@ -105,7 +100,6 @@ componentDidMount() {
     })
     .then(data => {
       this.setState({ globalRatings: data.reverse() });
-
       var filter = "Global";
       this.filterRatings(filter);
     })
@@ -166,7 +160,6 @@ componentDidMount() {
      <RankingCard name={name} rank={rank} key={id}/>
    )
  }
-
   render() {
     let ratings = this.state.ratings;
     console.log("Profile ratings: ");
