@@ -8,6 +8,10 @@ import {
 } from "react-native";
 import { Container, Header, Tab, Tabs, TabHeading, Title, Content, Card, CardItem, Thumbnail, Text, Button, Right, Left, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
+import Popup from "../Popup"
+// import "../../../styles/common.css"
+
 var { height, width } = Dimensions.get('window');
 var skillLevel = 28+28;
 
@@ -185,8 +189,12 @@ export default class ProfileScreen extends Component {
   constructor(props)
   {
     super(props)
+
+    this.updateParent = this.updateParent.bind(this);
+
      this.state = {
-       activeIndex:0
+       activeIndex: 0,
+       modalVisible: false
      }
   }
   segmentClicked(index) {
@@ -195,8 +203,16 @@ export default class ProfileScreen extends Component {
     })
   }
 
+  updateParent() {
+    this.setState({ modalVisible: false });
+  }
+
+  showPopup(){
+    this.setState({ modalVisible: true });
+  }
   //these will be the grid of photos
   renderPictures() {
+
     return images.map((image, index) => {
         return (
             <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
@@ -213,6 +229,7 @@ export default class ProfileScreen extends Component {
     })
 
 }
+
 //renders each section based on button clicked
 renderSection() {
   //show grid of pictures
@@ -233,21 +250,23 @@ renderSection() {
                 {/*Mini profile pic and misc info*/}
                   <View
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
-                    <Image source={require('../../../../assets/dog.jpg')}
-                    style={{ width: 50, height: 50, borderRadius: 37.5 }} />
+      
+                    <Image source={images[0]} style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                     <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
                       <Button small dark transparent>
                         <Text>Courage T. Dog</Text>
                       </Button>
-                      <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>Rank #3 Global</Text>
+                      <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>Rank #8 Global</Text>
                     </View>
                 </View>
               </View>
             </Left>
             {/** this is the 'up-vote' button */}
             <Right>
+
             <View style={{paddingTop:5,flex:1, alignItems: 'flex-end',  justifyContent: 'flex-start', flexDirection: 'column' }}>
+
                    <Button iconLeft small transparent>
                       <Icon name="arrow-circle-up" style={{ color: '#829399' }} size={30}></Icon>
                    </Button>
@@ -321,10 +340,25 @@ renderSection() {
       )
     }
 }
-//this is the top bar of the screen
-render() {
+  render() {
+
+    var profileHeaderStatsViewStyle = {
+      flexDirection:'column',
+      justifyContent:'flex-start',
+      alignItems:'center'
+    }
+
+    var profileHeaderStatsIconStyle = {
+      padding:5,
+      color: '#7BCACE',
+      fontSize: 20
+    }
+    
     return (
       <Container>
+        <Popup
+          modalVisible={this.state.modalVisible}
+          updateParent={this.updateParent}/>
         <Header>
           <Left>
 
@@ -333,7 +367,8 @@ render() {
           <Title>C. Dog</Title>
         </Body>
         <Right>
-          <Button transparent>
+          <Button transparent
+            onPress = {() => this.showPopup()}>
             <Icon name="bars" size={21} />
           </Button>
         </Right>
@@ -341,60 +376,80 @@ render() {
 
       {/*Content of profile*/}
       <Content style={{backgroundColor:'#EFFCCC'}} >
-        <View style={{ backgroundColor: 'white',paddingTop: 5, borderTopWidth: 5, borderTopColor: '#B1CC74'  }}>
+        <View style={{ backgroundColor: 'white', borderTopWidth: 5, borderTopColor: '#B1CC74'  }}>
 
         {/** User Photo Stats**/}
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
 
          {/**User photo takes 1/3rd of view horizontally **/}
-        <View
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start', paddingBottom:5 }}>
-            <Image source={require('../../../../assets/dog.jpg')}
-            style={{ width: 75, height: 75, borderRadius: 37.5 }} />
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start', paddingBottom: 0 }}>
+            <Image source={images[0]} style={{ width: 75, height: 75, borderRadius: 37.5 }} />
         </View>
 
         {/**User Stats take 2/3rd of view horizontally **/}
-        <View style={{ flex: 3 }}>
+        <View style={{ flex: 3, backgroundColor: 'white', flexDirection: "row", alignItems: 'center'}}>
 
         {/** Stats **/}
         <View
             style={{
+                flex: 3,
                 flexDirection: 'row',
-                justifyContent: 'space-around',
-                alignItems: 'flex-end'
+                justifyContent: 'space-around'
             }}>
 
             {/**Rating Stat */}
-            <View style={{flexDirection:'column', justifyContent:'flex-start',  alignItems:'center' }}>
-            <View style={{ alignItems: 'center', flexDirection:"row"}}>
-                <Icon name="star" style={{ padding:5, color: '#7BCACE' }} size={20}></Icon>
-                <Text>20</Text>
-            </View>
-            <Text style={{ paddingLeft:20,fontSize: 10, color: 'grey' }}>Rating</Text>
+            <View style={profileHeaderStatsViewStyle}>
+              <View style={{ alignItems: 'center', flexDirection:"row"}}>
+                  <Icon name="star" style={profileHeaderStatsIconStyle}></Icon>
+                  <Text style={{fontSize: 20}}>20</Text>
+              </View>
+              <Text style={{ paddingLeft:0, fontSize: 10, color: 'grey'}}>Rating</Text>
             </View>
 
             {/**Total Love stat */}
-            <View style={{flexDirection:'column', justifyContent:'flex-start', alignItems:'center' }}>
-            <View style={{ alignItems: 'center', flexDirection:"row"}}>
-                <Icon name="heart" style={{ padding:5, color: '#7BCACE' }} size={17}></Icon>
-                <Text>2,000</Text>
-            </View>
-            <Text style={{ paddingLeft:20,fontSize: 10, color: 'grey' }}>Love</Text>
+            <View style={profileHeaderStatsViewStyle}>
+              <View style={{ alignItems: 'center', flexDirection:"row"}}>
+                  <Icon name="heart" style={profileHeaderStatsIconStyle}></Icon>
+                  <Text style={{fontSize: 20}}>2,000</Text>
+              </View>
+              <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Love</Text>
             </View>
 
             {/**Rank stat */}
-            <View style={{flexDirection:'column', justifyContent:'flex-start',  alignItems:'center' }}>
+            <View style={profileHeaderStatsViewStyle}>
             <View style={{ alignItems: 'center', flexDirection:"row"}}>
-                <Icon name="hashtag" style={{ padding:5, color: '#7BCACE' }} size={17}></Icon>
-                <Text>3</Text>
+                <Icon name="hashtag" style={profileHeaderStatsIconStyle}></Icon>
+                <Text style={{fontSize: 20}}>3560</Text>
             </View>
-            <Text style={{ paddingLeft:20,fontSize: 10, color: 'grey' }}>Global</Text>
-            </View>
-        </View>
+            <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Global</Text>
             </View>
         </View>
 
-        <View style={{ padding: 10, borderTopWidth:1, borderTopColor:'#eae5e5' }}>
+        {/**Edit profile and Settings Buttons
+        <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingTop: 10 }}>
+
+            <View
+                style={{ flexDirection: 'row' }}>
+
+                {/** Edit profile takes up 3/4th
+                <Button bordered dark
+                    style={{ flex: 3, marginLeft: 10, paddingTop:4, justifyContent: 'center', height: 30 }}><Text>Edit Profile</Text></Button>
+
+
+                {/** Settings takes up  1/4th place
+                <Button bordered dark style={{
+                    flex: 1,
+                    height: 30,
+                    marginRight: 10, marginLeft: 5,
+                    justifyContent: 'center'
+                }}>
+                    <Icon name="globe" style={{ color: 'black' }} size={17}></Icon></Button>
+            </View>
+        </View>{/**End edit profile**/}
+            </View>
+        </View>
+
+        <View style={{ padding: 10, paddingTop: 30, paddingBottom: 15, borderTopWidth:1, borderTopColor:'#eae5e5' }}>
             <View style={{ paddingHorizontal: 10 }}>
                 <Text style={{ paddingBottom:5, fontWeight: 'bold' }}>Courage T. Dog</Text>
                 <Text>This is my dad, Courage. He's pretty cool.</Text>
@@ -404,6 +459,7 @@ render() {
 
         {/**Buttons to navigate to different screens: media, quotes, and skills */}
         <View>
+
         <View style={{ flexDirection: 'row', justifyContent: 'stretch', borderTopWidth: 1, borderTopColor: '#eae5e5' }}>
 
             <Button transparent onPress = {() => this.segmentClicked(0)} active={this.state.activeIndex == 0} style = {this.state.activeIndex == 0 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
