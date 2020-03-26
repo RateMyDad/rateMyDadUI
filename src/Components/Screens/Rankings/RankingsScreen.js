@@ -76,8 +76,8 @@ export default class RankingsScreen extends Component {
  }
  */
 
- componentDidMount() {
-   var server_url = "http://99.60.8.214:82"
+componentDidMount() {
+  var server_url = "http://99.60.8.214:82"
   // NOTE: You'll have to change this IP address to get it to work on your machine.
   console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings")
   fetch(server_url + "/dad_profile/ratings")
@@ -91,9 +91,11 @@ export default class RankingsScreen extends Component {
       var filter = "Global";
       this.filterRatings(filter);
     })
- }
+}
 
  filterRatings(filter) {
+    console.log("Inside of filterRatings() function"); 
+ 
     var ratings = this.state.globalRatings;
 
     var zip = 60491;
@@ -130,7 +132,10 @@ export default class RankingsScreen extends Component {
     }
 
     else {
+      console.log("Ratings:"); 
+      console.log(ratings); 
       this.setState({ ratings: ratings });
+      console.log("Inside of 'Global' condition"); 
     }
  }
 
@@ -178,18 +183,18 @@ export default class RankingsScreen extends Component {
          * to change the content area of this screen
         */}
         <Segment>
-          <Button first style={{borderColor:'#545F66', }}
+          <Button first style={{borderColor:'#545F66'}}
            onPress={() => this.filterRatings("Local")}>
            <Text style={{color:'#545F66'}}>Local</Text>
 
           </Button>
 
-          <Button style={{borderColor:'#545F66', }}
+          <Button style={{borderColor:'#545F66'}}
             onPress={() => this.filterRatings("Regional")}>
             <Text style={{color:'#545F66'}}>Regional</Text>
           </Button>
 
-          <Button last style={{borderColor:'#545F66', }}
+          <Button last style={{borderColor:'#545F66'}}
             onPress={() => this.filterRatings("Global")}>
             <Text style={{color:'#545F66'}}>Global</Text>
           </Button>
@@ -233,16 +238,19 @@ export default class RankingsScreen extends Component {
          * to change the content area of this screen
         */}
         <Segment>
-          <Button first style={{borderColor:'#545F66', }} >
+          <Button first style={{borderColor:'#545F66'}} 
+           onPress={() => this.filterRatings("Local")}>
            <Text style={{color:'#545F66'}}>Local</Text>
 
           </Button>
 
-          <Button style={{borderColor:'#545F66', }}>
+          <Button style={{borderColor:'#545F66'}}
+            onPress={() => this.filterRatings("Regional")}>
             <Text style={{color:'#545F66'}}>Regional</Text>
           </Button>
 
-          <Button last style={{borderColor:'#545F66', }}>
+          <Button last style={{borderColor:'#545F66'}}
+            onPress={() => this.filterRatings("Global")}>
             <Text style={{color:'#545F66'}}>Global</Text>
           </Button>
         </Segment>
