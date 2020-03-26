@@ -11,6 +11,61 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 var { height, width } = Dimensions.get('window');
 var skillLevel = 28+28;
 
+var buttonColor = {color: 'red'}
+
+const styles = StyleSheet.create
+({
+
+  skillBar: {
+  },
+
+  skillBarEmpty: {
+    width: '100%',
+    height: '100%',
+    borderRadius:5,
+    borderWidth:1,
+    borderColor: 'black',
+  },
+
+  skillBarFill: {
+    position: 'absolute',
+    zIndex: -1,
+    width: skillLevel,
+    height: '100%',
+    borderRadius:3,
+    borderWidth:0,
+    backgroundColor: '#B1CC74',
+  },
+
+  yinyangAfter: {
+    position: 'absolute',
+    left: 28,
+    top:2,
+    width: 3,
+    height: 16,
+    backgroundColor: 'gray',
+    opacity:0.5,
+  },
+
+  profileNavButton: {
+
+  },
+
+  profileNavButtonActive: {
+    flex: 1,
+    justifyContent: 'center',
+    borderRadius: 0,
+    backgroundColor: '#70b8bc'
+  },
+
+  profileNavButtonInactive: {
+    flex: 1,
+    justifyContent: 'center',
+    borderRadius: 0,
+    backgroundColor: '#7BCACE'
+  }
+
+});
 
 var images = [
   require('../../../../assets/dog.jpg'),
@@ -30,7 +85,7 @@ var images = [
 //This renders each skill takes type of skill and skill number variable
 class Skill extends Component {
   render() {
-    
+
     var iconName = "";
     if(this.props.thisSkill == "grilling")
     {
@@ -102,22 +157,25 @@ class Skill extends Component {
     }
 
     return(
-      <View>
+      <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-start', height: 30, marginBottom: 10}}>
       {/*This is each icon and skill bar*/}
-        <View
-        style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
-          <Icon name = {iconName} style={{paddingTop:10}} size={30}></Icon>
+        <View style={{justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}>
 
-          <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around', paddingLeft:15, paddingTop:13}} >
+          <View style = {{position: 'relative', paddingRight: 10, justifySelf: 'flex-start', flexBasis: '12%'}}>
+            <Icon name = {iconName} style={{fontSize: 25}}></Icon>
+          </View>
+
+          <View  style={{float: 'right', width: 250}} >
             <View style={styles.skillBar}>
               <View style={styles.skillBarEmpty}/>
               <View style={styles.skillBarFill} />
               <View style={{position:'absolute',left:skillLevel - 13, top:2.5}}>
-                <Text style={{fontSize:11,color:'black'}}>1</Text>
-              </View>   
-            </View>       
+                <Text style={{fontSize:15, color:'black'}}>1</Text>
+              </View>
+            </View>
           </View>
-      </View>    
+
+      </View>
     </View>
     );
   }
@@ -167,13 +225,13 @@ renderSection() {
   //show dad posts
   else if (this.state.activeIndex == 1) {
     return (
-      <View style={{paddingBottom:2, alignContent:'stretch'}}> 
+      <View style={{paddingBottom:2, alignContent:'stretch'}}>
         <Card>
           <CardItem>
             <Left>
               <View  style={{ flexDirection: 'row' }}>
                 {/*Mini profile pic and misc info*/}
-                  <View 
+                  <View
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
                     <Image source={require('../../../../assets/dog.jpg')}
                     style={{ width: 50, height: 50, borderRadius: 37.5 }} />
@@ -212,7 +270,7 @@ renderSection() {
               <Icon name="heart" style={{ color: '#7BCACE' }} size={25}></Icon>
                 <Text style={{padding:0 ,color:'black'}}>4 million</Text>
               </Button>
-            
+
               <Button transparent>
                 <Icon name="comment" style={{ color: '#7BCACE' }} size={25}></Icon>
                 <Text style={{padding:0 ,color:'black'}}>1.2 million</Text>
@@ -222,9 +280,9 @@ renderSection() {
 
             {/**Just the downvote button (right side) */}
             <Right>
-            <View 
+            <View
                     style={{paddingTop:5,flex:1, alignItems: 'flex-end',  justifyContent: 'flex-start', flexDirection: 'column' }}>
-            
+
                    <Button iconLeft small transparent>
                       <Icon name="arrow-circle-down" style={{ color: '#829399' }} size={30}></Icon>
                    </Button>
@@ -238,32 +296,29 @@ renderSection() {
     //if the skill tab is selected
     else if (this.state.activeIndex == 2) {
       return(
-        <View style={{paddingBottom:2, alignContent:'stretch', flexDirection:'column'}}>
-        <Card>
-          <CardItem>
-            <View style={{flexDirection:'column'}}>
-            {/*Show Skills*/}
-            <Skill thisSkill="grilling"></Skill>
-            <Skill thisSkill="cooking"></Skill>
-            <Skill thisSkill="bags"></Skill>
-            <Skill thisSkill="golf"></Skill>
-            <Skill thisSkill="softball"></Skill>
-            <Skill thisSkill="coaching"></Skill>
-            <Skill thisSkill="generosity"></Skill>
-            <Skill thisSkill="looks"></Skill>
-            <Skill thisSkill="dad factor"></Skill>
-            <Skill thisSkill="fantasy football"></Skill>
-            <Skill thisSkill="humor"></Skill>
-            <Skill thisSkill="emotional stability"></Skill>
-            <Skill thisSkill="handiness"></Skill>
-            <Skill thisSkill="kid skills"></Skill>
-            <Skill thisSkill="stealth food prep"></Skill>
-            <Skill thisSkill="technology"></Skill>
-            <Skill thisSkill="furniture assembly"></Skill>
-            </View>
-          </CardItem>
-        </Card>
-    </View>)
+        <View style={{paddingBottom:2, paddingLeft: '5%', paddingTop: '10%', alignContent:'flex-start', flexDirection:'column'}}>
+
+              {/*Show Skills*/}
+              <Skill thisSkill="grilling"></Skill>
+              <Skill thisSkill="cooking"></Skill>
+              <Skill thisSkill="bags"></Skill>
+              <Skill thisSkill="golf"></Skill>
+              <Skill thisSkill="softball"></Skill>
+              <Skill thisSkill="coaching"></Skill>
+              <Skill thisSkill="generosity"></Skill>
+              <Skill thisSkill="looks"></Skill>
+              <Skill thisSkill="dad factor"></Skill>
+              <Skill thisSkill="fantasy football"></Skill>
+              <Skill thisSkill="humor"></Skill>
+              <Skill thisSkill="emotional stability"></Skill>
+              <Skill thisSkill="handiness"></Skill>
+              <Skill thisSkill="kid skills"></Skill>
+              <Skill thisSkill="stealth food prep"></Skill>
+              <Skill thisSkill="technology"></Skill>
+              <Skill thisSkill="furniture assembly"></Skill>
+
+        </View>
+      )
     }
 }
 //this is the top bar of the screen
@@ -272,7 +327,7 @@ render() {
       <Container>
         <Header>
           <Left>
-            
+
           </Left>
         <Body>
           <Title>C. Dog</Title>
@@ -326,7 +381,7 @@ render() {
             </View>
             <Text style={{ paddingLeft:20,fontSize: 10, color: 'grey' }}>Love</Text>
             </View>
-            
+
             {/**Rank stat */}
             <View style={{flexDirection:'column', justifyContent:'flex-start',  alignItems:'center' }}>
             <View style={{ alignItems: 'center', flexDirection:"row"}}>
@@ -349,17 +404,20 @@ render() {
 
         {/**Buttons to navigate to different screens: media, quotes, and skills */}
         <View>
-        <View style={{ backgroundColor:'#7BCACE', flexDirection: 'row', justifyContent: 'space-around', borderTopWidth: 1, borderTopColor: '#eae5e5' }}>
-            <Button transparent onPress = {() => this.segmentClicked(0)} active={this.state.activeIndex ==0}  >
-            <Icon name="image" style={[this.state.activeIndex == 0 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
-                
+        <View style={{ flexDirection: 'row', justifyContent: 'stretch', borderTopWidth: 1, borderTopColor: '#eae5e5' }}>
+
+            <Button transparent onPress = {() => this.segmentClicked(0)} active={this.state.activeIndex == 0} style = {this.state.activeIndex == 0 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
+            <Icon name="gavel" style={[this.state.activeIndex == 0 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
             </Button>
-            <Button transparent onPress = {() => this.segmentClicked(1)} active={this.state.activeIndex ==1}>
-            <Icon name="comment" style={[this.state.activeIndex == 1 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
+
+            <Button transparent onPress = {() => this.segmentClicked(1)} active={this.state.activeIndex == 1} style = {this.state.activeIndex == 1 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
+            <Icon name="image" style={[this.state.activeIndex == 1 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
             </Button>
-            <Button transparent onPress = {() => this.segmentClicked(2)} active={this.state.activeIndex ==2}>
-            <Icon name="gavel" style={[this.state.activeIndex == 2 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
+
+            <Button transparent onPress = {() => this.segmentClicked(2)} active={this.state.activeIndex == 2} style = {this.state.activeIndex == 2 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
+            <Icon name="comment" style={[this.state.activeIndex == 2 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
             </Button>
+
         </View>
         {this.renderSection()}
         </View>
@@ -368,35 +426,3 @@ render() {
     );
   }
 }
-const styles = StyleSheet.create
-({
-  
-  skillBar: {
-  },
-  skillBarEmpty: {
-    width: 280,
-    height: 20,
-    borderRadius:10,
-    borderWidth:2,
-    borderColor: 'black',
-  },
-  skillBarFill: {
-    position: 'absolute',
-    top:1,
-    left:1,
-    width: skillLevel,
-    height: 18,
-    borderRadius:10,
-    borderWidth:2,
-    backgroundColor: '#B1CC74',
-  },
-  yinyangAfter: {
-    position: 'absolute',
-    left: 28,
-    top:2,
-    width: 3,
-    height: 16,
-    backgroundColor: 'gray',
-    opacity:0.5,
-  }
-});
