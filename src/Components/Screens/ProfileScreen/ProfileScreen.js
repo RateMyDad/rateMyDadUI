@@ -30,12 +30,77 @@ var images = [
 //This renders each skill takes type of skill and skill number variable
 class Skill extends Component {
   render() {
-    var skillName = "grilling";
+    
     var iconName = "";
-    if(skillName == "grilling")
+    if(this.props.thisSkill == "grilling")
     {
       iconName = "free-code-camp";
     }
+    else if(this.props.thisSkill == "cooking")
+    {
+      iconName = "cutlery";
+    }
+    else if(this.props.thisSkill == "bags")
+    {
+      iconName = "square-o";
+    }
+    else if(this.props.thisSkill == "golf")
+    {
+      iconName = "flag-o";
+    }
+    else if(this.props.thisSkill == "softball")
+    {
+      iconName = "diamond";
+    }
+    else if(this.props.thisSkill == "coaching")
+    {
+      iconName = "comments-o";
+    }
+    else if(this.props.thisSkill == "generosity")
+    {
+      iconName = "connectdevelop";
+    }
+    else if(this.props.thisSkill == "looks")
+    {
+      iconName = "heartbeat";
+    }
+    else if(this.props.thisSkill == "dad factor")
+    {
+      iconName = "hand-spock-o";
+    }
+    else if(this.props.thisSkill == "fantasy football")
+    {
+      iconName = "lemon-o";
+    }
+    else if(this.props.thisSkill == "humor")
+    {
+      iconName = "smile-o";
+    }
+    else if(this.props.thisSkill == "emotional stability")
+    {
+      iconName = "compress";
+    }
+    else if(this.props.thisSkill == "handiness")
+    {
+      iconName = "bath";
+    }
+    else if(this.props.thisSkill == "kid skills")
+    {
+      iconName = "child";
+    }
+    else if(this.props.thisSkill == "stealth food prep")
+    {
+      iconName = "apple";
+    }
+    else if(this.props.thisSkill == "technology")
+    {
+      iconName = "mobile";
+    }
+    else if(this.props.thisSkill == "furniture assembly")
+    {
+      iconName = "chain-broken";
+    }
+
     return(
       <View>
       {/*This is each icon and skill bar*/}
@@ -178,11 +243,23 @@ renderSection() {
           <CardItem>
             <View style={{flexDirection:'column'}}>
             {/*Show Skills*/}
-            <Skill name="Courage T. Dog" rank="3"></Skill>
-            <Skill name="Courage T. Dog" rank="3"></Skill>
-            <Skill name="Courage T. Dog" rank="3"></Skill>
-            <Skill name="Courage T. Dog" rank="3"></Skill>
-            <Skill name="Courage T. Dog" rank="3"></Skill>
+            <Skill thisSkill="grilling"></Skill>
+            <Skill thisSkill="cooking"></Skill>
+            <Skill thisSkill="bags"></Skill>
+            <Skill thisSkill="golf"></Skill>
+            <Skill thisSkill="softball"></Skill>
+            <Skill thisSkill="coaching"></Skill>
+            <Skill thisSkill="generosity"></Skill>
+            <Skill thisSkill="looks"></Skill>
+            <Skill thisSkill="dad factor"></Skill>
+            <Skill thisSkill="fantasy football"></Skill>
+            <Skill thisSkill="humor"></Skill>
+            <Skill thisSkill="emotional stability"></Skill>
+            <Skill thisSkill="handiness"></Skill>
+            <Skill thisSkill="kid skills"></Skill>
+            <Skill thisSkill="stealth food prep"></Skill>
+            <Skill thisSkill="technology"></Skill>
+            <Skill thisSkill="furniture assembly"></Skill>
             </View>
           </CardItem>
         </Card>
@@ -194,6 +271,9 @@ render() {
     return (
       <Container>
         <Header>
+          <Left>
+            
+          </Left>
         <Body>
           <Title>C. Dog</Title>
         </Body>
