@@ -84,9 +84,7 @@ export default class TabsExample extends Component {
 
           {this.renderSectionOne()}
         </View>
-
         )
-
     }
     else if (this.state.activeIndex == 1) {
         return (
@@ -286,7 +284,7 @@ export default class TabsExample extends Component {
         </View>
         </View>
 
-        {/**Buttonnnns to navigate to different screens: media, quotes, and skills */}
+        {/**Buttons to navigate to different screens: media, quotes, and skills */}
         <View>
         <View style={{ backgroundColor:'#7BCACE', flexDirection: 'row', justifyContent: 'space-around', borderTopWidth: 1, borderTopColor: '#eae5e5' }}>
             <Button transparent onPress = {() => this.segmentClicked(0)} active={this.state.activeIndex ==0}  >

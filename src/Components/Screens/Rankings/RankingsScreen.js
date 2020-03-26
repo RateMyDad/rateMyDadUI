@@ -1,9 +1,26 @@
 import React, { Component } from 'react';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Text, Title, Left, Body, Right, Segment } from 'native-base';
-import { Image, View } from 'react-native';
+import { Image, View,Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LocalRanksScreen from './LocalRanksScreen';
 import { useNavigation } from '@react-navigation/native';
+var { height, width } = Dimensions.get('window');
+
+
+var images = [
+  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/dog.jpg'),
+]
 
 class RankingCard extends Component {
   constructor(props) {
@@ -58,6 +75,7 @@ class RankingCard extends Component {
 }
 
 export default class RankingsScreen extends Component {
+
  constructor(props)
  {
    super(props)
@@ -138,7 +156,7 @@ componentDidMount() {
       console.log("Inside of 'Global' condition"); 
     }
  }
-
+  
  createRankingCard(profile) {
   let name = profile.name.first + " " + profile.name.last;
   let rank = profile.meta.rating;
