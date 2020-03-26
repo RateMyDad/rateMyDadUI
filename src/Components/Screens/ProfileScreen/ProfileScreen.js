@@ -233,14 +233,14 @@ export default class ProfileScreen extends Component {
 //renders each section based on button clicked
 renderSection() {
   //show grid of pictures
-  if (this.state.activeIndex == 0) {
+  if (this.state.activeIndex == 1) {
     return (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
       {this.renderPictures()}
     </View>)
   }
   //show dad posts
-  else if (this.state.activeIndex == 1) {
+  else if (this.state.activeIndex == 2) {
     return (
       <View style={{paddingBottom:2, alignContent:'stretch'}}>
         <Card>
@@ -250,7 +250,7 @@ renderSection() {
                 {/*Mini profile pic and misc info*/}
                   <View
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
-      
+
                     <Image source={images[0]} style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                     <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
@@ -313,7 +313,7 @@ renderSection() {
         )
     }
     //if the skill tab is selected
-    else if (this.state.activeIndex == 2) {
+    else if (this.state.activeIndex == 0) {
       return(
         <View style={{paddingBottom:2, paddingLeft: '5%', paddingTop: '10%', alignContent:'flex-start', flexDirection:'column'}}>
 
@@ -353,7 +353,7 @@ renderSection() {
       color: '#7BCACE',
       fontSize: 20
     }
-    
+
     return (
       <Container>
         <Popup
