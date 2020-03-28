@@ -13,6 +13,63 @@ import Popup from "../Popup"
 // import "../../../styles/common.css"
 
 var { height, width } = Dimensions.get('window');
+var skillLevel = 28+28;
+
+var buttonColor = {color: 'red'}
+
+const styles = StyleSheet.create
+({
+
+  skillBar: {
+  },
+
+  skillBarEmpty: {
+    width: '100%',
+    height: '100%',
+    borderRadius:5,
+    borderWidth:1,
+    borderColor: 'black',
+  },
+
+  skillBarFill: {
+    position: 'absolute',
+    zIndex: -1,
+    width: skillLevel,
+    height: '100%',
+    borderRadius:3,
+    borderWidth:0,
+    backgroundColor: '#B1CC74',
+  },
+
+  yinyangAfter: {
+    position: 'absolute',
+    left: 28,
+    top:2,
+    width: 3,
+    height: 16,
+    backgroundColor: 'gray',
+    opacity:0.5,
+  },
+
+  profileNavButton: {
+
+  },
+
+  profileNavButtonActive: {
+    flex: 1,
+    justifyContent: 'center',
+    borderRadius: 0,
+    backgroundColor: '#70b8bc'
+  },
+
+  profileNavButtonInactive: {
+    flex: 1,
+    justifyContent: 'center',
+    borderRadius: 0,
+    backgroundColor: '#7BCACE'
+  }
+
+});
 
 var images = [
   require('../../../../assets/dog.jpg'),
@@ -29,7 +86,106 @@ var images = [
   require('../../../../assets/dog.jpg'),
 ]
 
-export default class TabsExample extends Component {
+//This renders each skill takes type of skill and skill number variable
+class Skill extends Component {
+  render() {
+
+    var iconName = "";
+    if(this.props.thisSkill == "grilling")
+    {
+      iconName = "free-code-camp";
+    }
+    else if(this.props.thisSkill == "cooking")
+    {
+      iconName = "cutlery";
+    }
+    else if(this.props.thisSkill == "bags")
+    {
+      iconName = "square-o";
+    }
+    else if(this.props.thisSkill == "golf")
+    {
+      iconName = "flag-o";
+    }
+    else if(this.props.thisSkill == "softball")
+    {
+      iconName = "diamond";
+    }
+    else if(this.props.thisSkill == "coaching")
+    {
+      iconName = "comments-o";
+    }
+    else if(this.props.thisSkill == "generosity")
+    {
+      iconName = "connectdevelop";
+    }
+    else if(this.props.thisSkill == "looks")
+    {
+      iconName = "heartbeat";
+    }
+    else if(this.props.thisSkill == "dad factor")
+    {
+      iconName = "hand-spock-o";
+    }
+    else if(this.props.thisSkill == "fantasy football")
+    {
+      iconName = "lemon-o";
+    }
+    else if(this.props.thisSkill == "humor")
+    {
+      iconName = "smile-o";
+    }
+    else if(this.props.thisSkill == "emotional stability")
+    {
+      iconName = "compress";
+    }
+    else if(this.props.thisSkill == "handiness")
+    {
+      iconName = "bath";
+    }
+    else if(this.props.thisSkill == "kid skills")
+    {
+      iconName = "child";
+    }
+    else if(this.props.thisSkill == "stealth food prep")
+    {
+      iconName = "apple";
+    }
+    else if(this.props.thisSkill == "technology")
+    {
+      iconName = "mobile";
+    }
+    else if(this.props.thisSkill == "furniture assembly")
+    {
+      iconName = "chain-broken";
+    }
+
+    return(
+      <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-start', height: 30, marginBottom: 10}}>
+      {/*This is each icon and skill bar*/}
+        <View style={{justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}>
+
+          <View style = {{position: 'relative', paddingRight: 10, justifySelf: 'flex-start', flexBasis: '12%'}}>
+            <Icon name = {iconName} style={{fontSize: 25}}></Icon>
+          </View>
+
+          <View  style={{float: 'right', width: 250}} >
+            <View style={styles.skillBar}>
+              <View style={styles.skillBarEmpty}/>
+              <View style={styles.skillBarFill} />
+              <View style={{position:'absolute',left:skillLevel - 13, top:2.5}}>
+                <Text style={{fontSize:15, color:'black'}}>1</Text>
+              </View>
+            </View>
+          </View>
+
+      </View>
+    </View>
+    );
+  }
+}
+
+export default class ProfileScreen extends Component {
   constructor(props)
   {
     super(props)
@@ -41,7 +197,6 @@ export default class TabsExample extends Component {
        modalVisible: false
      }
   }
-
   segmentClicked(index) {
     this.setState({
         activeIndex: index
@@ -55,8 +210,9 @@ export default class TabsExample extends Component {
   showPopup(){
     this.setState({ modalVisible: true });
   }
+  //these will be the grid of photos
+  renderPictures() {
 
-  renderSectionOne() {
     return images.map((image, index) => {
         return (
             <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
@@ -65,30 +221,28 @@ export default class TabsExample extends Component {
                     alignSelf: 'stretch',
                     width: undefined,
                     height: undefined,
-
                 }}
-                    source={image}>
+                source={image}>
                 </Image>
-
             </View>
         )
     })
 
 }
-  renderSection() {
 
-    if (this.state.activeIndex == 0) {
-
-        return (
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-
-          {this.renderSectionOne()}
-        </View>
-        )
-    }
-    else if (this.state.activeIndex == 1) {
-        return (
-        <View style={{paddingBottom:2, alignContent:'stretch'}}>
+//renders each section based on button clicked
+renderSection() {
+  //show grid of pictures
+  if (this.state.activeIndex == 1) {
+    return (
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+      {this.renderPictures()}
+    </View>)
+  }
+  //show dad posts
+  else if (this.state.activeIndex == 2) {
+    return (
+      <View style={{paddingBottom:2, alignContent:'stretch'}}>
         <Card>
           <CardItem>
             <Left>
@@ -97,8 +251,7 @@ export default class TabsExample extends Component {
                   <View
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
 
-                    <Image source={images[0]}
-                    style={{ width: 50, height: 50, borderRadius: 37.5 }} />
+                    <Image source={images[0]} style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                     <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
                       <Button small dark transparent>
@@ -111,8 +264,8 @@ export default class TabsExample extends Component {
             </Left>
             {/** this is the 'up-vote' button */}
             <Right>
-            <View
-                    style={{paddingTop:5,flex:1, alignItems: 'flex-end',  justifyContent: 'flex-start', flexDirection: 'column' }}>
+
+            <View style={{paddingTop:5,flex:1, alignItems: 'flex-end',  justifyContent: 'flex-start', flexDirection: 'column' }}>
 
                    <Button iconLeft small transparent>
                       <Icon name="arrow-circle-up" style={{ color: '#829399' }} size={30}></Icon>
@@ -122,11 +275,10 @@ export default class TabsExample extends Component {
             </Right>
           </CardItem>
 
-          {/*This is where card content goes*/}
+          {/*This is where post content goes*/}
           <CardItem cardBody>
           <Image style={{width: 370, height: 200}}
-                source={require('../../../../assets/dog.jpg')}
-          />
+                source={require('../../../../assets/dog.jpg')}/>
           </CardItem>
           {/*Bottom of the card (left side) */}
           <CardItem>
@@ -160,12 +312,32 @@ export default class TabsExample extends Component {
         </View>
         )
     }
-    else if (this.state.activeIndex == 2) {
+    //if the skill tab is selected
+    else if (this.state.activeIndex == 0) {
       return(
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+        <View style={{paddingBottom:2, paddingLeft: '5%', paddingTop: '10%', alignContent:'flex-start', flexDirection:'column'}}>
 
-      {this.renderSectionOne()}
-      </View>)
+              {/*Show Skills*/}
+              <Skill thisSkill="grilling"></Skill>
+              <Skill thisSkill="cooking"></Skill>
+              <Skill thisSkill="bags"></Skill>
+              <Skill thisSkill="golf"></Skill>
+              <Skill thisSkill="softball"></Skill>
+              <Skill thisSkill="coaching"></Skill>
+              <Skill thisSkill="generosity"></Skill>
+              <Skill thisSkill="looks"></Skill>
+              <Skill thisSkill="dad factor"></Skill>
+              <Skill thisSkill="fantasy football"></Skill>
+              <Skill thisSkill="humor"></Skill>
+              <Skill thisSkill="emotional stability"></Skill>
+              <Skill thisSkill="handiness"></Skill>
+              <Skill thisSkill="kid skills"></Skill>
+              <Skill thisSkill="stealth food prep"></Skill>
+              <Skill thisSkill="technology"></Skill>
+              <Skill thisSkill="furniture assembly"></Skill>
+
+        </View>
+      )
     }
 }
   render() {
@@ -188,8 +360,9 @@ export default class TabsExample extends Component {
           modalVisible={this.state.modalVisible}
           updateParent={this.updateParent}/>
         <Header>
-        <Left>
-        </Left>
+          <Left>
+
+          </Left>
         <Body>
           <Title>C. Dog</Title>
         </Body>
@@ -286,17 +459,21 @@ export default class TabsExample extends Component {
 
         {/**Buttons to navigate to different screens: media, quotes, and skills */}
         <View>
-        <View style={{ backgroundColor:'#7BCACE', flexDirection: 'row', justifyContent: 'space-around', borderTopWidth: 1, borderTopColor: '#eae5e5' }}>
-            <Button transparent onPress = {() => this.segmentClicked(0)} active={this.state.activeIndex ==0}  >
-            <Icon name="image" style={[this.state.activeIndex == 0 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
 
+        <View style={{ flexDirection: 'row', justifyContent: 'stretch', borderTopWidth: 1, borderTopColor: '#eae5e5' }}>
+
+            <Button transparent onPress = {() => this.segmentClicked(0)} active={this.state.activeIndex == 0} style = {this.state.activeIndex == 0 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
+            <Icon name="gavel" style={[this.state.activeIndex == 0 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
             </Button>
-            <Button transparent onPress = {() => this.segmentClicked(1)} active={this.state.activeIndex ==1}>
-            <Icon name="comment" style={[this.state.activeIndex == 1 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
+
+            <Button transparent onPress = {() => this.segmentClicked(1)} active={this.state.activeIndex == 1} style = {this.state.activeIndex == 1 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
+            <Icon name="image" style={[this.state.activeIndex == 1 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
             </Button>
-            <Button transparent onPress = {() => this.segmentClicked(2)} active={this.state.activeIndex ==2}>
-            <Icon name="gavel" style={[this.state.activeIndex == 2 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
+
+            <Button transparent onPress = {() => this.segmentClicked(2)} active={this.state.activeIndex == 2} style = {this.state.activeIndex == 2 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
+            <Icon name="comment" style={[this.state.activeIndex == 2 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
             </Button>
+
         </View>
         {this.renderSection()}
         </View>

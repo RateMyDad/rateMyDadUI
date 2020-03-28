@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Modal, Text, Alert, View, TextInput, ScrollView, Slider} from "react-native";
-import {Picker, Icon, Button, Body} from "native-base";
+import {Picker, Icon, Button, Body, Header, Left, Right, Title} from "native-base";
 
 class SkillRatingSelection extends Component {
 
@@ -150,13 +150,20 @@ export default class Popup extends Component {
         return (
             <Modal
                 visible = {this.state.visibility}>
-                <View style={{marginTop: 75, height: "100%", alignItems: "center", backgroundColor: "#EFFCCC"}}>
-                    <Button block danger
-                        onPress={() => this.closePopup()}
-                        style={{ width: "15%", alignItems: "center" }}>
-                        <Text style={{ fontWeight: "bold", fontSize: 30}}>{"<"}</Text>
+                <Header>
+                  <Left style={{flex:1}}>
+                    <Button transparent
+                      onPress = {() => this.closePopup()}>
+                      <Icon name="ios-arrow-back" style={{color: "black", fontSize: 25, paddingLeft: 15}} />
                     </Button>
-                    <Text style={{ marginTop: 20, fontSize: 30, fontWeight: "bold" }}>Create your dad profile here!</Text>
+                  </Left>
+                  <Body style = {{flex: 2}}>
+                    <Title>Create a Dad Profile</Title>
+                  </Body>
+                  <Right style = {{flex: 1}}>
+                  </Right>
+                </Header>
+                <View style={{marginTop: 0, height: "100%", alignItems: "center", backgroundColor: "#EFFCCC"}}>
                     <ScrollView style={{ width: "100%" }}>
                         <View style={{ marginTop: 25, justifyContent: "center", alignItems: "center", overflow: "auto"}}>
                             <Text style={{ fontWeight: "bold" }}>First Name</Text>
