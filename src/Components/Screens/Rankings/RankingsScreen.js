@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Text, Title, Left, Body, Right, Segment } from 'native-base';
 import { Image, View,Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { getStatus } from "../../../model";
 var { height, width } = Dimensions.get('window');
 var images = [
   require('../../../../assets/dog.jpg'),
@@ -92,7 +93,7 @@ export default class RankingsScreen extends Component {
 componentDidMount() {
   var server_url = "http://99.60.8.214:82"
   // NOTE: You'll have to change this IP address to get it to work on your machine.
-  console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings")
+  console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
   fetch(server_url + "/dad_profile/ratings")
     .then(response => {
       console.log("[Ranking] Recieved server response.")
@@ -161,6 +162,8 @@ componentDidMount() {
    )
  }
   render() {
+    console.log(this.props.title); 
+    console.log(this.props.options); 
     let ratings = this.state.ratings;
     console.log("Profile ratings: ");
     console.log(ratings);
