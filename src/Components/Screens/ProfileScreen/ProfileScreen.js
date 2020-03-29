@@ -199,9 +199,12 @@ export default class ProfileScreen extends Component {
        modalVisible: false,
        status: 0, 
        username: "",
-       password: ""
+       password: "",
+       bottomMessage: "",
+       postLoginUsername: ""
      }
   }
+
   segmentClicked(index) {
     this.setState({
         activeIndex: index
@@ -252,6 +255,7 @@ export default class ProfileScreen extends Component {
     };
 
     var server_url = "http://99.60.8.214:82";
+
     fetch(server_url + "/user/login", {
       method: 'POST', 
       headers: {
@@ -262,11 +266,15 @@ export default class ProfileScreen extends Component {
     .then((response) => {
       if (response.status === 200) {
         this.checkStatus(); 
+        this.setState({ postLoginUsername: username });
       }
 
       else {
         console.log("Invalid login"); 
+        this.setState({ username: "", password: "", bottomMessage: "The username or password was incorrect." });
       }
+
+      return response.json();
     })
   }
 
@@ -287,10 +295,12 @@ export default class ProfileScreen extends Component {
     .then((response) => {
       if (response.status === 200) {
         console.log("Profile created!");
+        this.login();
       }
 
       else {
         console.log("Something went wrong.");
+        this.setState({ username: "", password: "", bottomMessage: "Username already exists." })
       }
     })
   }
@@ -395,14 +405,16 @@ renderSection() {
                 <TextInput placeholder="Username"
                     placeholderTextColor="#ccc"
                     onChangeText={(text) => this.setState({ username: text })}
-                    style={inputBoxStyle}/>
+                    style={inputBoxStyle}
+                    value={this.state.username}/>
 
               <Text style={{ fontWeight: "bold" }}>Password</Text>
                 <TextInput placeholder="Password"
                     secureTextEntry={true}
                     placeholderTextColor="#ccc"
                     onChangeText={(text) => this.setState({ password: text })}
-                    style={inputBoxStyle}/>
+                    style={inputBoxStyle}
+                    value={this.state.password}/>
 
               <Body style={{ marginTop: 15, flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                 <Button success
@@ -417,6 +429,8 @@ renderSection() {
                     <Text style={{ fontWeight: "bold"}}>Create Account</Text>
                 </Button>
               </Body>
+
+              <Text style={{ color: "red" }}>{this.state.bottomMessage}</Text>
             </View>
           </Content>
         </Container>
@@ -440,7 +454,10 @@ renderSection() {
         <Container>
           <Popup
             modalVisible={this.state.modalVisible}
-            updateParent={this.updateParent}/>
+            updateParent={this.updateParent}
+            checkStatus={this.checkStatus}
+            status={this.state.status}
+            username={this.state.postLoginUsername}/>
           <Header>
             <Left>
   
