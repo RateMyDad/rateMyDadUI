@@ -193,6 +193,7 @@ export default class ProfileScreen extends Component {
     super(props)
 
     this.updateParent = this.updateParent.bind(this);
+    this.checkStatus = this.checkStatus.bind(this); 
 
      this.state = {
        activeIndex: 0,
@@ -224,7 +225,7 @@ export default class ProfileScreen extends Component {
   }
 
   checkStatus() {
-    var server_url = "http://99.60.8.214:82";
+    var server_url = "http://10.0.0.180:82";
     fetch(server_url + "/user/check_status")
     .then(response => {
       return response.json();
@@ -253,8 +254,11 @@ export default class ProfileScreen extends Component {
       "username": this.state.username,
       "password": this.state.password
     };
+    console.log("Login username:"); 
+    console.log(this.state.username); 
+    let loginUsername = this.state.username; 
 
-    var server_url = "http://99.60.8.214:82";
+    var server_url = "http://10.0.0.180:82";
 
     fetch(server_url + "/user/login", {
       method: 'POST', 
@@ -266,7 +270,9 @@ export default class ProfileScreen extends Component {
     .then((response) => {
       if (response.status === 200) {
         this.checkStatus(); 
-        this.setState({ postLoginUsername: username });
+        this.setState({ postLoginUsername: loginUsername });
+        console.log("Response postLoginUsername: ");
+        console.log(this.state.postLoginUsername); 
       }
 
       else {
@@ -284,7 +290,7 @@ export default class ProfileScreen extends Component {
       "password": this.state.password
     };
 
-    var server_url = "http://99.60.8.214:82";
+    var server_url = "http://10.0.0.180:82";
     fetch(server_url + "/user/register", {
       method: 'POST', 
       headers: {
@@ -450,6 +456,8 @@ renderSection() {
         fontSize: 20
       }
   
+      console.log("Post Login Username:");
+      console.log(this.state.postLoginUsername); 
       return (
         <Container>
           <Popup

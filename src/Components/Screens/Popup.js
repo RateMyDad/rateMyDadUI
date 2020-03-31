@@ -131,7 +131,7 @@ export default class Popup extends Component {
 
         console.log(dadProfile); 
 
-        var server_url = "http://99.60.8.214:82";
+        var server_url = "http://10.0.0.180:82";
         fetch(server_url + "/dad_profile/create", {
             method: 'POST', 
             headers: {
@@ -151,8 +151,8 @@ export default class Popup extends Component {
             return response.json();
         })
         .then(data => {
-            console.log(data); 
-            
+            console.log(data);
+            this.props.checkStatus();              
         })
     }
 
@@ -163,7 +163,19 @@ export default class Popup extends Component {
             return (
                 <Modal
                     visible = {this.state.visibility}>
-                    <Text style={{ marginTop: 15 }}>You already have a dad profile created!</Text>
+                    <Header>
+                        <Left style={{flex:1}}>
+                          <Button transparent
+                            onPress = {() => this.closePopup()}>
+                            <Icon name="ios-arrow-back" style={{color: "black", fontSize: 25, paddingLeft: 15}} />
+                          </Button>
+                        </Left>
+                        <Body style = {{flex: 2}}>
+                          <Title>Profile already created!</Title>
+                        </Body>
+                        <Right style = {{flex: 1}}>
+                        </Right>
+                    </Header>
                 </Modal>
             )
         }
@@ -283,7 +295,8 @@ export default class Popup extends Component {
                                       style={inputBoxStyle}/>
                                   <Body style={{ justifyContent: "center", alignItems: "center"}}>
                                       <Button block
-                                          onPress={() => this.createDadProfile()}
+                                          onPress={() => {
+                                              this.createDadProfile();}}
                                           style={{ marginBottom: 400, width: "50%"}}>
                                               <Text style={{ right: "50%", fontWeight: "bold"}}>Create Dad Profile</Text>
                                       </Button>
