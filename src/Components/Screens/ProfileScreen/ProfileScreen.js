@@ -225,7 +225,7 @@ export default class ProfileScreen extends Component {
   }
 
   checkStatus() {
-    var server_url = "http://10.0.0.180:82";
+    var server_url = "http://99.60.8.214:82";
     fetch(server_url + "/user/check_status")
     .then(response => {
       return response.json();
@@ -258,7 +258,7 @@ export default class ProfileScreen extends Component {
     console.log(this.state.username); 
     let loginUsername = this.state.username; 
 
-    var server_url = "http://10.0.0.180:82";
+    var server_url = "http://99.60.8.214:82";
 
     fetch(server_url + "/user/login", {
       method: 'POST', 
@@ -290,7 +290,7 @@ export default class ProfileScreen extends Component {
       "password": this.state.password
     };
 
-    var server_url = "http://10.0.0.180:82";
+    var server_url = "http://99.60.8.214:82";
     fetch(server_url + "/user/register", {
       method: 'POST', 
       headers: {

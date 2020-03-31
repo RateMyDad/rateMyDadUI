@@ -131,7 +131,7 @@ export default class Popup extends Component {
 
         console.log(dadProfile); 
 
-        var server_url = "http://10.0.0.180:82";
+        var server_url = "http://99.60.8.214:82";
         fetch(server_url + "/dad_profile/create", {
             method: 'POST', 
             headers: {

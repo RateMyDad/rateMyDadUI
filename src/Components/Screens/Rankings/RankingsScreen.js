@@ -91,7 +91,7 @@ export default class RankingsScreen extends Component {
 
 
 componentDidMount() {
-  var server_url = "http://10.0.0.180:82"
+  var server_url = "http://99.60.8.214:82"
   // NOTE: You'll have to change this IP address to get it to work on your machine.
   console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
   fetch(server_url + "/dad_profile/ratings")
