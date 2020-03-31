@@ -78,7 +78,9 @@ export default class RankingsScreen extends Component {
     this.state = {
       activeIndex:0,
       ratings: [],
-      globalRatings: []
+      globalRatings: [],
+      status: 0, 
+      message: ""
     }
  }
 
@@ -106,7 +108,33 @@ componentDidMount() {
     })
 }
 
+checkStatus() {
+  var server_url = "http://99.60.8.214:82";
+  fetch(server_url + "/user/check_status")
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    let message = data.message;
+    // 0 if not logged in.
+    if (message === "You must be logged in to use this feature.") {
+        this.setState({ status: 0 })
+    }
+
+    // 1 if logged in and dad profile created.
+    else if (message === "You already have a profile created!") {
+        this.setState({ status: 1 })
+    }
+
+    // 2 if logged in but no dad profile created.
+    else {
+        this.setState({ status: 2 })
+    }
+  })
+}
+
  filterRatings(filter) {
+    this.checkStatus(); 
     console.log("Inside of filterRatings() function"); 
  
     var ratings = this.state.globalRatings;
@@ -117,7 +145,7 @@ componentDidMount() {
     var regionalRatings = []
     var localRatings = []
 
-    if (filter === "Regional") {
+    if (filter === "Regional" && this.state.status !== 0) {
       for (var i = 0 ; i < ratings.length; i++) {
         var currentZip = ratings[i].zip;
 
@@ -131,23 +159,31 @@ componentDidMount() {
         }
       }
 
-      this.setState({ ratings: regionalRatings })
+      this.setState({ ratings: regionalRatings, message: "" })
     }
 
-    else if (filter === "Local") {
+    else if (filter === "Regional" && this.state.status === 0) {
+      this.setState({ ratings: [], message: "You must be logged in to access this feature."});
+    }
+
+    else if (filter === "Local" && this.state.status !== 0) {
       for (var i = 0; i < ratings.length; i++) {
         if (zip === ratings[i].zip) {
           localRatings.push(ratings[i]);
         }
       }
 
-      this.setState({ ratings: localRatings });
+      this.setState({ ratings: localRatings, message: "" });
+    }
+
+    else if (filter === "Local" && this.state.status === 0) {
+      this.setState({ ratings: [], message: "You must be logged in to access this feature."});
     }
 
     else {
       console.log("Ratings:"); 
       console.log(ratings); 
-      this.setState({ ratings: ratings });
+      this.setState({ ratings: ratings, message: "" });
       console.log("Inside of 'Global' condition"); 
     }
  }
@@ -270,7 +306,7 @@ componentDidMount() {
         </Segment>
 
         <Content padder>
-
+          <Text style={{ color: "red" }}>{this.state.message}</Text>
         </Content>
 
       </Container>
