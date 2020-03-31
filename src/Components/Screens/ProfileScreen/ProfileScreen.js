@@ -9,8 +9,8 @@ import {
 import { Container, Header, Tab, Tabs, TabHeading, Title, Content, Card, CardItem, Thumbnail, Text, Button, Right, Left, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 var { height, width } = Dimensions.get('window');
-var skillLevel = 28+28;
-
+//the 1 here can be anything from 1-7
+var skillLevel = 1*30;
 
 var images = [
   require('../../../../assets/dog.jpg'),
@@ -100,7 +100,8 @@ class Skill extends Component {
     {
       iconName = "chain-broken";
     }
-
+    
+    
     return(
       <View>
       {/*This is each icon and skill bar*/}
@@ -111,8 +112,10 @@ class Skill extends Component {
           <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around', paddingLeft:15, paddingTop:13}} >
             <View style={styles.skillBar}>
               <View style={styles.skillBarEmpty}/>
+              {/*This is the green space*/}
               <View style={styles.skillBarFill} />
-              <View style={{position:'absolute',left:skillLevel - 13, top:2.5}}>
+              {/*This is the green space*/}
+              <View style={{position:'absolute',left:skillLevel-13, top:2.5}}>
                 <Text style={{fontSize:11,color:'black'}}>1</Text>
               </View>   
             </View>       
@@ -243,7 +246,7 @@ renderSection() {
           <CardItem>
             <View style={{flexDirection:'column'}}>
             {/*Show Skills*/}
-            <Skill thisSkill="grilling"></Skill>
+            <Skill thisSkill="grilling" level="56"></Skill>
             <Skill thisSkill="cooking"></Skill>
             <Skill thisSkill="bags"></Skill>
             <Skill thisSkill="golf"></Skill>
