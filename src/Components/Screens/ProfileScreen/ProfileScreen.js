@@ -4,17 +4,19 @@ import {
   StyleSheet,
   Image,
   Dimensions,
+  TextInput,
   FlatList
 } from "react-native";
 import { Container, Header, Tab, Tabs, TabHeading, Title, Content, Card, CardItem, Thumbnail, Text, Button, Right, Left, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import { getStatus } from "../../../model";
 import Popup from "../Popup"
 // import "../../../styles/common.css"
 
 var { height, width } = Dimensions.get('window');
 var skillLevel = 28+28;
-
+var server_url = "http://99.60.8.214:82";
 var buttonColor = {color: 'red'}
 
 const styles = StyleSheet.create
@@ -34,7 +36,6 @@ const styles = StyleSheet.create
   skillBarFill: {
     position: 'absolute',
     zIndex: -1,
-    width: skillLevel,
     height: '100%',
     borderRadius:3,
     borderWidth:0,
@@ -159,7 +160,8 @@ class Skill extends Component {
     {
       iconName = "chain-broken";
     }
-
+    var barWidth = (this.props.skillAmt/10) * 100 + "%"
+    console.log("[Skill] Bar width: " + barWidth)
     return(
       <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-start', height: 30, marginBottom: 10}}>
       {/*This is each icon and skill bar*/}
@@ -172,9 +174,18 @@ class Skill extends Component {
           <View  style={{float: 'right', width: 250}} >
             <View style={styles.skillBar}>
               <View style={styles.skillBarEmpty}/>
-              <View style={styles.skillBarFill} />
+              {/* Had trouble using the styles object and only changing the width style inline */}
+              <View style={
+                { position: 'absolute',
+                  zIndex: -1,
+                  height: '100%',
+                  width: barWidth,
+                  borderRadius:3,
+                  borderWidth:0,
+                  backgroundColor: '#B1CC74'
+                }} />
               <View style={{position:'absolute',left:skillLevel - 13, top:2.5}}>
-                <Text style={{fontSize:15, color:'black'}}>1</Text>
+                <Text style={{fontSize:15, color:'black'}}>{this.props.skillAmt}</Text>
               </View>
             </View>
           </View>
@@ -191,12 +202,42 @@ export default class ProfileScreen extends Component {
     super(props)
 
     this.updateParent = this.updateParent.bind(this);
+    this.checkStatus = this.checkStatus.bind(this);
 
      this.state = {
        activeIndex: 0,
-       modalVisible: false
+       modalVisible: false,
+       status: 0,
+       username: "",
+       password: "",
+       bottomMessage: "",
+       postLoginUsername: "",
+       profile : {
+         name : "",
+         skills: {
+          "grilling": 0,
+          "cooking": 0,
+          "bags": 0,
+          "softball": 0,
+          "coaching": 0,
+          "generosity": 0,
+          "looks": 0,
+          "dad_factor": 0,
+          "fantasy_football": 0,
+          "humor": 0,
+          "emotional_stability": 0,
+          "handiness": 0,
+          "kids": 0,
+          "stealth_food_preparation": 0,
+          "tech": 0,
+          "furniture_assembly": 0,
+          "photography": 0
+         }
+       }
      }
+
   }
+
   segmentClicked(index) {
     this.setState({
         activeIndex: index
@@ -210,6 +251,129 @@ export default class ProfileScreen extends Component {
   showPopup(){
     this.setState({ modalVisible: true });
   }
+
+  componentDidMount() {
+    this.checkStatus();
+  }
+
+  checkStatus() {
+    var server_url = "http://99.60.8.214:82";
+    fetch(server_url + "/user/check_status")
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      let message = data.message;
+      // 0 if not logged in.
+      if (message === "You must be logged in to use this feature.") {
+          this.setState({ status: 0 })
+      }
+
+      // 1 if logged in and dad profile created.
+      else if (message === "You already have a profile created!") {
+
+          this.setState({ status: 1 })
+          this.updateProfile()
+
+      }
+
+      // 2 if logged in but no dad profile created.
+      else {
+          this.setState({ status: 2 })
+      }
+    })
+  }
+
+  login() {
+    let data = {
+      "username": this.state.username,
+      "password": this.state.password
+    };
+    console.log("Login username:");
+    console.log(this.state.username);
+    let loginUsername = this.state.username;
+
+    var server_url = "http://99.60.8.214:82";
+
+    fetch(server_url + "/user/login", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        this.checkStatus();
+        this.setState({ postLoginUsername: loginUsername });
+        console.log("Response postLoginUsername: ");
+        console.log(this.state.postLoginUsername);
+      }
+
+      else {
+        console.log("Invalid login");
+        this.setState({ username: "", password: "", bottomMessage: "The username or password was incorrect." });
+      }
+
+      return response.json();
+    })
+  }
+
+  createAccount() {
+    let data = {
+      "username": this.state.username,
+      "password": this.state.password
+    };
+
+    fetch(server_url + "/user/register", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        console.log("Profile created!");
+        this.login();
+      }
+
+      else {
+        console.log("Something went wrong.");
+        this.setState({ username: "", password: "", bottomMessage: "Username already exists." })
+      }
+    })
+  }
+
+  updateProfile() {
+    console.log("Updating profile.")
+    if(this.state.status  == 1){
+
+      console.log("Retrieving dad profile for user.")
+      try {
+        fetch(server_url + "/dad_profile/me", {method: 'POST'}).then(response => {
+          return response.json()
+        }).then(data => {
+          console.log(data)
+          this.setState({
+            profile: {
+              name: data.name.first + " " + data.name.last,
+              skills: data.skills
+            }
+
+          })
+
+          console.log("State profile:")
+          console.log(this.state)
+        })
+      } catch (e) {
+        console.log("Unable to parse JSON")
+        console.log(e)
+      }
+
+    }
+  }
+
   //these will be the grid of photos
   renderPictures() {
 
@@ -235,82 +399,16 @@ renderSection() {
   //show grid of pictures
   if (this.state.activeIndex == 1) {
     return (
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-      {this.renderPictures()}
-    </View>)
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+        <Text>This feature is coming soon!</Text>
+      </View>)
   }
   //show dad posts
   else if (this.state.activeIndex == 2) {
     return (
       <View style={{paddingBottom:2, alignContent:'stretch'}}>
-        <Card>
-          <CardItem>
-            <Left>
-              <View  style={{ flexDirection: 'row' }}>
-                {/*Mini profile pic and misc info*/}
-                  <View
-                    style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
-
-                    <Image source={images[0]} style={{ width: 50, height: 50, borderRadius: 37.5 }} />
-
-                    <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
-                      <Button small dark transparent>
-                        <Text>Courage T. Dog</Text>
-                      </Button>
-                      <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>Rank #8 Global</Text>
-                    </View>
-                </View>
-              </View>
-            </Left>
-            {/** this is the 'up-vote' button */}
-            <Right>
-
-            <View style={{paddingTop:5,flex:1, alignItems: 'flex-end',  justifyContent: 'flex-start', flexDirection: 'column' }}>
-
-                   <Button iconLeft small transparent>
-                      <Icon name="arrow-circle-up" style={{ color: '#829399' }} size={30}></Icon>
-                   </Button>
-                      <Text style={{ alignSelf: 'flex-end', fontSize: 10,  paddingRight:3, paddingTop:3, color: 'grey'}}>300</Text>
-                </View>
-            </Right>
-          </CardItem>
-
-          {/*This is where post content goes*/}
-          <CardItem cardBody>
-          <Image style={{width: 370, height: 200}}
-                source={require('../../../../assets/dog.jpg')}/>
-          </CardItem>
-          {/*Bottom of the card (left side) */}
-          <CardItem>
-            {/*Left side contains hearts/comments buttons */}
-            <Left>
-              <View style={{flexDirection:'row'}}>
-              <Button transparent>
-              <Icon name="heart" style={{ color: '#7BCACE' }} size={25}></Icon>
-                <Text style={{padding:0 ,color:'black'}}>4 million</Text>
-              </Button>
-
-              <Button transparent>
-                <Icon name="comment" style={{ color: '#7BCACE' }} size={25}></Icon>
-                <Text style={{padding:0 ,color:'black'}}>1.2 million</Text>
-              </Button>
-              </View>
-            </Left>
-
-            {/**Just the downvote button (right side) */}
-            <Right>
-            <View
-                    style={{paddingTop:5,flex:1, alignItems: 'flex-end',  justifyContent: 'flex-start', flexDirection: 'column' }}>
-
-                   <Button iconLeft small transparent>
-                      <Icon name="arrow-circle-down" style={{ color: '#829399' }} size={30}></Icon>
-                   </Button>
-                </View>
-            </Right>
-          </CardItem>
-        </Card>
-        </View>
-        )
+        <Text>This feature is coming soon!</Text>
+      </View>)
     }
     //if the skill tab is selected
     else if (this.state.activeIndex == 0) {
@@ -318,167 +416,236 @@ renderSection() {
         <View style={{paddingBottom:2, paddingLeft: '5%', paddingTop: '10%', alignContent:'flex-start', flexDirection:'column'}}>
 
               {/*Show Skills*/}
-              <Skill thisSkill="grilling"></Skill>
-              <Skill thisSkill="cooking"></Skill>
-              <Skill thisSkill="bags"></Skill>
-              <Skill thisSkill="golf"></Skill>
-              <Skill thisSkill="softball"></Skill>
-              <Skill thisSkill="coaching"></Skill>
-              <Skill thisSkill="generosity"></Skill>
-              <Skill thisSkill="looks"></Skill>
-              <Skill thisSkill="dad factor"></Skill>
-              <Skill thisSkill="fantasy football"></Skill>
-              <Skill thisSkill="humor"></Skill>
-              <Skill thisSkill="emotional stability"></Skill>
-              <Skill thisSkill="handiness"></Skill>
-              <Skill thisSkill="kid skills"></Skill>
-              <Skill thisSkill="stealth food prep"></Skill>
-              <Skill thisSkill="technology"></Skill>
-              <Skill thisSkill="furniture assembly"></Skill>
-
+              <Skill thisSkill="grilling" skillAmt = {this.state.profile.skills["grilling"]}></Skill>
+              <Skill thisSkill="cooking" skillAmt = {this.state.profile.skills["cooking"]}></Skill>
+              <Skill thisSkill="bags" skillAmt = {this.state.profile.skills["bags"]}></Skill>
+              <Skill thisSkill="softball" skillAmt = {this.state.profile.skills["softball"]}></Skill>
+              <Skill thisSkill="coaching" skillAmt = {this.state.profile.skills["coaching"]}></Skill>
+              <Skill thisSkill="generosity" skillAmt = {this.state.profile.skills["generosity"]}></Skill>
+              <Skill thisSkill="looks" skillAmt = {this.state.profile.skills["looks"]}></Skill>
+              <Skill thisSkill="dad factor" skillAmt = {this.state.profile.skills["dad_factor"]}></Skill>
+              <Skill thisSkill="fantasy football" skillAmt = {this.state.profile.skills["fantasy_football"]}></Skill>
+              <Skill thisSkill="humor" skillAmt = {this.state.profile.skills["humor"]}></Skill>
+              <Skill thisSkill="emotional stability" skillAmt = {this.state.profile.skills["emotional_stability"]}></Skill>
+              <Skill thisSkill="handiness" skillAmt = {this.state.profile.skills["handiness"]}></Skill>
+              <Skill thisSkill="kid skills" skillAmt = {this.state.profile.skills["kids"]}></Skill>
+              <Skill thisSkill="stealth food prep" skillAmt = {this.state.profile.skills["stealth_food_preparation"]}></Skill>
+              <Skill thisSkill="technology" skillAmt = {this.state.profile.skills["tech"]}></Skill>
+              <Skill thisSkill="furniture assembly" skillAmt = {this.state.profile.skills["furniture_assembly"]}></Skill>
         </View>
       )
     }
 }
   render() {
+    let status = this.state.status;
+    console.log("Status in render: " + status);
 
-    var profileHeaderStatsViewStyle = {
-      flexDirection:'column',
-      justifyContent:'flex-start',
-      alignItems:'center'
+    if (status === 0) {
+      var inputBoxStyle = {
+        backgroundColor: "#f3fcd9",
+        height: 45,
+        marginTop: 10,
+        width: 300,
+        marginBottom: 15,
+        borderLeftWidth: 5,
+        borderRadius: 0,
+        padding: 10,
+        fontSize: 18,
+        textAlign: "center",
+        borderColor: "#dae6ba",
+        color: "#aaa",
+      }
+
+      return (
+        <Container>
+          <Header>
+            <Body>
+              <Title>You must be logged in to use this feature.</Title>
+            </Body>
+          </Header>
+
+          <Content>
+            <View style={{ alignItems: "center", marginTop: 30 }}>
+              <Text style={{ fontWeight: "bold", fontSize: 30, marginBottom: 15 }}>Login</Text>
+
+              <Text style={{ fontWeight: "bold" }}>Username</Text>
+                <TextInput placeholder="Username"
+                    placeholderTextColor="#ccc"
+                    onChangeText={(text) => this.setState({ username: text })}
+                    style={inputBoxStyle}
+                    value={this.state.username}/>
+
+              <Text style={{ fontWeight: "bold" }}>Password</Text>
+                <TextInput placeholder="Password"
+                    secureTextEntry={true}
+                    placeholderTextColor="#ccc"
+                    onChangeText={(text) => this.setState({ password: text })}
+                    style={inputBoxStyle}
+                    value={this.state.password}/>
+
+              <Body style={{ marginTop: 15, flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                <Button success
+                    style={{ marginBottom: 20, width: "40%"}}
+                    onPress={() => this.login()}>
+                    <Text style={{ fontWeight: "bold", left: 45}}>Login</Text>
+                </Button>
+                <Text> </Text>
+                <Button block
+                    style={{ marginBottom: 20, width: "40%"}}
+                    onPress={() => this.createAccount()}>
+                    <Text style={{ fontWeight: "bold"}}>Create Account</Text>
+                </Button>
+              </Body>
+
+              <Text style={{ color: "red" }}>{this.state.bottomMessage}</Text>
+            </View>
+          </Content>
+        </Container>
+      )
     }
 
-    var profileHeaderStatsIconStyle = {
-      padding:5,
-      color: '#7BCACE',
-      fontSize: 20
+    else {
+      var profileHeaderStatsViewStyle = {
+        flexDirection:'column',
+        justifyContent:'flex-start',
+        alignItems:'center'
+      }
+
+      var profileHeaderStatsIconStyle = {
+        padding:5,
+        color: '#7BCACE',
+        fontSize: 20
+      }
+
+      return (
+        <Container>
+          <Popup
+            modalVisible={this.state.modalVisible}
+            updateParent={this.updateParent}
+            checkStatus={this.checkStatus}
+            status={this.state.status}
+            username={this.state.postLoginUsername}/>
+          <Header>
+            <Left>
+
+            </Left>
+          <Body>
+            <Title>Dad Profile</Title>
+          </Body>
+          <Right>
+            <Button transparent
+              onPress = {() => this.showPopup()}>
+              <Icon name="bars" size={21} />
+            </Button>
+          </Right>
+        </Header>
+
+        {/*Content of profile*/}
+        <Content style={{backgroundColor:'#EFFCCC'}} >
+          <View style={{ backgroundColor: 'white', borderTopWidth: 5, borderTopColor: '#B1CC74'  }}>
+
+          {/** User Photo Stats**/}
+          <View style={{ flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
+
+           {/**User photo takes 1/3rd of view horizontally **/}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start', paddingBottom: 0 }}>
+              <Image source={images[0]} style={{ width: 75, height: 75, borderRadius: 37.5 }} />
+          </View>
+
+          {/**User Stats take 2/3rd of view horizontally **/}
+          <View style={{ flex: 3, backgroundColor: 'white', flexDirection: "row", alignItems: 'center'}}>
+
+          {/** Stats **/}
+          <View
+              style={{
+                  flex: 3,
+                  flexDirection: 'row',
+                  justifyContent: 'space-around'
+              }}>
+
+              {/**Rating Stat */}
+              <View style={profileHeaderStatsViewStyle}>
+                <View style={{ alignItems: 'center', flexDirection:"row"}}>
+                    <Icon name="star" style={profileHeaderStatsIconStyle}></Icon>
+                    <Text style={{fontSize: 20}}>20</Text>
+                </View>
+                <Text style={{ paddingLeft:0, fontSize: 10, color: 'grey'}}>Rating</Text>
+              </View>
+
+              {/**Total Love stat */}
+              <View style={profileHeaderStatsViewStyle}>
+                <View style={{ alignItems: 'center', flexDirection:"row"}}>
+                    <Icon name="heart" style={profileHeaderStatsIconStyle}></Icon>
+                    <Text style={{fontSize: 20}}>2,000</Text>
+                </View>
+                <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Love</Text>
+              </View>
+
+              {/**Rank stat */}
+              <View style={profileHeaderStatsViewStyle}>
+              <View style={{ alignItems: 'center', flexDirection:"row"}}>
+                  <Icon name="hashtag" style={profileHeaderStatsIconStyle}></Icon>
+                  <Text style={{fontSize: 20}}>3560</Text>
+              </View>
+              <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Global</Text>
+              </View>
+          </View>
+
+          {/**Edit profile and Settings Buttons
+          <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingTop: 10 }}>
+
+              <View
+                  style={{ flexDirection: 'row' }}>
+
+                  {/** Edit profile takes up 3/4th
+                  <Button bordered dark
+                      style={{ flex: 3, marginLeft: 10, paddingTop:4, justifyContent: 'center', height: 30 }}><Text>Edit Profile</Text></Button>
+
+
+                  {/** Settings takes up  1/4th place
+                  <Button bordered dark style={{
+                      flex: 1,
+                      height: 30,
+                      marginRight: 10, marginLeft: 5,
+                      justifyContent: 'center'
+                  }}>
+                      <Icon name="globe" style={{ color: 'black' }} size={17}></Icon></Button>
+              </View>
+          </View>{/**End edit profile**/}
+              </View>
+          </View>
+
+          <View style={{ padding: 10, paddingTop: 30, paddingBottom: 15, borderTopWidth:1, borderTopColor:'#eae5e5' }}>
+              <View style={{ paddingHorizontal: 10 }}>
+                  <Text style={{ paddingBottom:5, fontWeight: 'bold' }}>{this.state.profile.name}</Text>
+                  <Text>This is my dad, Courage. He's pretty cool.</Text>
+              </View>
+          </View>
+          </View>
+
+          {/**Buttons to navigate to different screens: media, quotes, and skills */}
+          <View>
+
+          <View style={{ flexDirection: 'row', justifyContent: 'stretch', borderTopWidth: 1, borderTopColor: '#eae5e5' }}>
+
+              <Button transparent onPress = {() => this.segmentClicked(0)} active={this.state.activeIndex == 0} style = {this.state.activeIndex == 0 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
+              <Icon name="gavel" style={[this.state.activeIndex == 0 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
+              </Button>
+
+              <Button transparent onPress = {() => this.segmentClicked(1)} active={this.state.activeIndex == 1} style = {this.state.activeIndex == 1 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
+              <Icon name="image" style={[this.state.activeIndex == 1 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
+              </Button>
+
+              <Button transparent onPress = {() => this.segmentClicked(2)} active={this.state.activeIndex == 2} style = {this.state.activeIndex == 2 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
+              <Icon name="comment" style={[this.state.activeIndex == 2 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
+              </Button>
+
+          </View>
+          {this.renderSection()}
+          </View>
+        </Content>
+        </Container>
+      );
     }
-
-    return (
-      <Container>
-        <Popup
-          modalVisible={this.state.modalVisible}
-          updateParent={this.updateParent}/>
-        <Header>
-          <Left>
-
-          </Left>
-        <Body>
-          <Title>C. Dog</Title>
-        </Body>
-        <Right>
-          <Button transparent
-            onPress = {() => this.showPopup()}>
-            <Icon name="bars" size={21} />
-          </Button>
-        </Right>
-      </Header>
-
-      {/*Content of profile*/}
-      <Content style={{backgroundColor:'#EFFCCC'}} >
-        <View style={{ backgroundColor: 'white', borderTopWidth: 5, borderTopColor: '#B1CC74'  }}>
-
-        {/** User Photo Stats**/}
-        <View style={{ flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
-
-         {/**User photo takes 1/3rd of view horizontally **/}
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start', paddingBottom: 0 }}>
-            <Image source={images[0]} style={{ width: 75, height: 75, borderRadius: 37.5 }} />
-        </View>
-
-        {/**User Stats take 2/3rd of view horizontally **/}
-        <View style={{ flex: 3, backgroundColor: 'white', flexDirection: "row", alignItems: 'center'}}>
-
-        {/** Stats **/}
-        <View
-            style={{
-                flex: 3,
-                flexDirection: 'row',
-                justifyContent: 'space-around'
-            }}>
-
-            {/**Rating Stat */}
-            <View style={profileHeaderStatsViewStyle}>
-              <View style={{ alignItems: 'center', flexDirection:"row"}}>
-                  <Icon name="star" style={profileHeaderStatsIconStyle}></Icon>
-                  <Text style={{fontSize: 20}}>20</Text>
-              </View>
-              <Text style={{ paddingLeft:0, fontSize: 10, color: 'grey'}}>Rating</Text>
-            </View>
-
-            {/**Total Love stat */}
-            <View style={profileHeaderStatsViewStyle}>
-              <View style={{ alignItems: 'center', flexDirection:"row"}}>
-                  <Icon name="heart" style={profileHeaderStatsIconStyle}></Icon>
-                  <Text style={{fontSize: 20}}>2,000</Text>
-              </View>
-              <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Love</Text>
-            </View>
-
-            {/**Rank stat */}
-            <View style={profileHeaderStatsViewStyle}>
-            <View style={{ alignItems: 'center', flexDirection:"row"}}>
-                <Icon name="hashtag" style={profileHeaderStatsIconStyle}></Icon>
-                <Text style={{fontSize: 20}}>3560</Text>
-            </View>
-            <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Global</Text>
-            </View>
-        </View>
-
-        {/**Edit profile and Settings Buttons
-        <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingTop: 10 }}>
-
-            <View
-                style={{ flexDirection: 'row' }}>
-
-                {/** Edit profile takes up 3/4th
-                <Button bordered dark
-                    style={{ flex: 3, marginLeft: 10, paddingTop:4, justifyContent: 'center', height: 30 }}><Text>Edit Profile</Text></Button>
-
-
-                {/** Settings takes up  1/4th place
-                <Button bordered dark style={{
-                    flex: 1,
-                    height: 30,
-                    marginRight: 10, marginLeft: 5,
-                    justifyContent: 'center'
-                }}>
-                    <Icon name="globe" style={{ color: 'black' }} size={17}></Icon></Button>
-            </View>
-        </View>{/**End edit profile**/}
-            </View>
-        </View>
-
-        <View style={{ padding: 10, paddingTop: 30, paddingBottom: 15, borderTopWidth:1, borderTopColor:'#eae5e5' }}>
-            <View style={{ paddingHorizontal: 10 }}>
-                <Text style={{ paddingBottom:5, fontWeight: 'bold' }}>Courage T. Dog</Text>
-                <Text>This is my dad, Courage. He's pretty cool.</Text>
-            </View>
-        </View>
-        </View>
-
-        {/**Buttons to navigate to different screens: media, quotes, and skills */}
-        <View>
-
-        <View style={{ flexDirection: 'row', justifyContent: 'stretch', borderTopWidth: 1, borderTopColor: '#eae5e5' }}>
-
-            <Button transparent onPress = {() => this.segmentClicked(0)} active={this.state.activeIndex == 0} style = {this.state.activeIndex == 0 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
-            <Icon name="gavel" style={[this.state.activeIndex == 0 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
-            </Button>
-
-            <Button transparent onPress = {() => this.segmentClicked(1)} active={this.state.activeIndex == 1} style = {this.state.activeIndex == 1 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
-            <Icon name="image" style={[this.state.activeIndex == 1 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
-            </Button>
-
-            <Button transparent onPress = {() => this.segmentClicked(2)} active={this.state.activeIndex == 2} style = {this.state.activeIndex == 2 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
-            <Icon name="comment" style={[this.state.activeIndex == 2 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
-            </Button>
-
-        </View>
-        {this.renderSection()}
-        </View>
-      </Content>
-      </Container>
-    );
   }
 }

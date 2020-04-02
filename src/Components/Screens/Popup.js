@@ -93,9 +93,11 @@ export default class Popup extends Component {
 
     createDadProfile() {
         let dadProfile = {
+            username: this.props.username,
+
             name: {
-                firstName: this.state.firstName,
-                lastName: this.state.lastName
+                first: this.state.firstName,
+                last: this.state.lastName
             },
 
             skills: {
@@ -127,134 +129,183 @@ export default class Popup extends Component {
             }
         }
 
-        console.log("Dad profile:");
-        console.log(dadProfile);
+        console.log(dadProfile); 
+
+        var server_url = "http://99.60.8.214:82";
+        fetch(server_url + "/dad_profile/create", {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dadProfile)
+        })
+        .then((response) => {
+            if (response.status === 400) {
+                console.log("Something went wrong!")
+            }
+
+            else if (response.status === 200) {
+                console.log("Dad profile successfully created!");
+            }
+
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            this.props.checkStatus();              
+        })
     }
 
     render() {
-        var inputBoxStyle = {
-          backgroundColor: "#f3fcd9",
-          height: 45,
-          marginTop: 10,
-          width: 300,
-          marginBottom: 15,
-          borderLeftWidth: 5,
-          borderRadius: 0,
-          padding: 10,
-          fontSize: 18,
-          textAlign: "center",
-          borderColor: "#dae6ba",
-          color: "#aaa",
+        let status = this.props.status; 
+
+        if (status === 1) {
+            return (
+                <Modal
+                    visible = {this.state.visibility}>
+                    <Header>
+                        <Left style={{flex:1}}>
+                          <Button transparent
+                            onPress = {() => this.closePopup()}>
+                            <Icon name="ios-arrow-back" style={{color: "black", fontSize: 25, paddingLeft: 15}} />
+                          </Button>
+                        </Left>
+                        <Body style = {{flex: 2}}>
+                          <Title>Profile already created!</Title>
+                        </Body>
+                        <Right style = {{flex: 1}}>
+                        </Right>
+                    </Header>
+                </Modal>
+            )
         }
 
-        return (
-            <Modal
-                visible = {this.state.visibility}>
-                <Header>
-                  <Left style={{flex:1}}>
-                    <Button transparent
-                      onPress = {() => this.closePopup()}>
-                      <Icon name="ios-arrow-back" style={{color: "black", fontSize: 25, paddingLeft: 15}} />
-                    </Button>
-                  </Left>
-                  <Body style = {{flex: 2}}>
-                    <Title>Create a Dad Profile</Title>
-                  </Body>
-                  <Right style = {{flex: 1}}>
-                  </Right>
-                </Header>
-                <View style={{marginTop: 0, height: "100%", alignItems: "center", backgroundColor: "#EFFCCC"}}>
-                    <ScrollView style={{ width: "100%" }}>
-                        <View style={{ marginTop: 25, justifyContent: "center", alignItems: "center", overflow: "auto"}}>
-                            <Text style={{ fontWeight: "bold" }}>First Name</Text>
-                            <TextInput placeholder="First Name"
-                                placeholderTextColor="#ccc"
-                                onChangeText={(text) => this.setState({ firstName: text })}
-                                style={inputBoxStyle}/>
-
-                            <Text style={{ fontWeight: "bold" }}>Last Name</Text>
-                            <TextInput placeholder="Last Name"
-                                placeholderTextColor="#ccc"
-                                onChangeText={(text) => this.setState({ lastName: text })}
-                                style={inputBoxStyle}/>
-
-                            <Text style={{ fontWeight: "bold", fontSize: 25, marginBottom: 20 }}>Skills Ratings</Text>
-
-                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
-                                <SkillRatingSelection skillName = "Grilling" skill = "grilling" _this = {this}/>
-                                <SkillRatingSelection skillName = "Cooking" skill = "cooking" _this = {this}/>
-                            </View>
-
-                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
-                                <SkillRatingSelection skillName = "Bags" skill = "bags" _this = {this}/>
-                                <SkillRatingSelection skillName = "Golf" skill = "golf" _this = {this}/>
-                            </View>
-
-                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
-                                <SkillRatingSelection skillName = "Softball" skill = "softball" _this = {this}/>
-                                <SkillRatingSelection skillName = "Coaching" skill = "coaching" _this = {this}/>
-                            </View>
-
-                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
-                                <SkillRatingSelection skillName = "Generosity" skill = "generosity" _this = {this}/>
-                                <SkillRatingSelection skillName = "Looks" skill = "looks" _this = {this}/>
-                            </View>
-
-                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
-                                <SkillRatingSelection skillName = "Dad Factor" skill = "dad_factor" _this = {this}/>
-                                <SkillRatingSelection skillName = "Fantasy Football" skill = "fantasy_football" _this = {this}/>
-                            </View>
-
-                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
-                                <SkillRatingSelection skillName = "Humor" skill = "humor" _this = {this}/>
-                                <SkillRatingSelection skillName = "Emotional Stability" skill = "emotional_stability" _this = {this}/>
-                            </View>
-
-                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
-                                <SkillRatingSelection skillName = "Handiness" skill = "handiness" _this = {this}/>
-                                <SkillRatingSelection skillName = "Kid Skills" skill = "kids" _this = {this}/>
-                            </View>
-
-                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
-                              <SkillRatingSelection skillName = "Stealth Food Prep" skill= "stealth_food_preparation" _this = {this}/>
-                              <SkillRatingSelection skillName = "Technology" skill = "tech" _this = {this}/>
-                            </View>
-
-                            <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
-                              <SkillRatingSelection skillName = "Furniture Assembly" skill = "furniture_assembly" _this = {this}/>
-                              <SkillRatingSelection skillName = "Photography" skill = "photography" _this = {this}/>
-                            </View>
-
-                            <Text style={{ fontWeight: "bold", fontSize: 25, marginBottom: 20 }}>Location Info</Text>
-
-                            <Text style={{ fontWeight: "bold" }}>Country</Text>
-                            <TextInput placeholder="Country Here"
-                              placeholderTextColor="#ccc"
-                              onChangeText={(text) => this.setState({ country: text })}
-                              style={inputBoxStyle}/>
-
-                            <Text style={{ fontWeight: "bold" }}>Region</Text>
-                            <TextInput placeholder=" Region Here"
-                              placeholderTextColor="#ccc"
-                              onChangeText={(text) => this.setState({ region: text })}
-                              style={inputBoxStyle}/>
-
-                            <Text style={{ fontWeight: "bold" }}>Zip Code</Text>
-                            <TextInput placeholder="Zip Code Here"
-                                placeholderTextColor="#ccc"
-                                onChangeText={(text) => this.setState({ zip: text })}
-                                style={inputBoxStyle}/>
-                            <Body style={{ justifyContent: "center", alignItems: "center"}}>
-                                <Button block
-                                    onPress={() => this.createDadProfile()}
-                                    style={{ marginBottom: 400, width: "50%"}}>
-                                        <Text style={{ right: "50%", fontWeight: "bold"}}>Create Dad Profile</Text>
-                                </Button>
-                            </Body>
-                        </View>
-                    </ScrollView>
-                </View>
-            </Modal>
-        )
+        else if (status === 2) {
+            var inputBoxStyle = {
+                backgroundColor: "#f3fcd9",
+                height: 45,
+                marginTop: 10,
+                width: 300,
+                marginBottom: 15,
+                borderLeftWidth: 5,
+                borderRadius: 0,
+                padding: 10,
+                fontSize: 18,
+                textAlign: "center",
+                borderColor: "#dae6ba",
+                color: "#aaa",
+              }
+      
+              return (
+                  <Modal
+                      visible = {this.state.visibility}>
+                      <Header>
+                        <Left style={{flex:1}}>
+                          <Button transparent
+                            onPress = {() => this.closePopup()}>
+                            <Icon name="ios-arrow-back" style={{color: "black", fontSize: 25, paddingLeft: 15}} />
+                          </Button>
+                        </Left>
+                        <Body style = {{flex: 2}}>
+                          <Title>Create a Dad Profile</Title>
+                        </Body>
+                        <Right style = {{flex: 1}}>
+                        </Right>
+                      </Header>
+                      <View style={{marginTop: 0, height: "100%", alignItems: "center", backgroundColor: "#EFFCCC"}}>
+                          <ScrollView style={{ width: "100%" }}>
+                              <View style={{ marginTop: 25, justifyContent: "center", alignItems: "center", overflow: "auto"}}>
+                                  <Text style={{ fontWeight: "bold" }}>First Name</Text>
+                                  <TextInput placeholder="First Name"
+                                      placeholderTextColor="#ccc"
+                                      onChangeText={(text) => this.setState({ firstName: text })}
+                                      style={inputBoxStyle}/>
+      
+                                  <Text style={{ fontWeight: "bold" }}>Last Name</Text>
+                                  <TextInput placeholder="Last Name"
+                                      placeholderTextColor="#ccc"
+                                      onChangeText={(text) => this.setState({ lastName: text })}
+                                      style={inputBoxStyle}/>
+      
+                                  <Text style={{ fontWeight: "bold", fontSize: 25, marginBottom: 20 }}>Skills Ratings</Text>
+      
+                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                      <SkillRatingSelection skillName = "Grilling" skill = "grilling" _this = {this}/>
+                                      <SkillRatingSelection skillName = "Cooking" skill = "cooking" _this = {this}/>
+                                  </View>
+      
+                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                      <SkillRatingSelection skillName = "Bags" skill = "bags" _this = {this}/>
+                                      <SkillRatingSelection skillName = "Golf" skill = "golf" _this = {this}/>
+                                  </View>
+      
+                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                      <SkillRatingSelection skillName = "Softball" skill = "softball" _this = {this}/>
+                                      <SkillRatingSelection skillName = "Coaching" skill = "coaching" _this = {this}/>
+                                  </View>
+      
+                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                      <SkillRatingSelection skillName = "Generosity" skill = "generosity" _this = {this}/>
+                                      <SkillRatingSelection skillName = "Looks" skill = "looks" _this = {this}/>
+                                  </View>
+      
+                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                      <SkillRatingSelection skillName = "Dad Factor" skill = "dad_factor" _this = {this}/>
+                                      <SkillRatingSelection skillName = "Fantasy Football" skill = "fantasy_football" _this = {this}/>
+                                  </View>
+      
+                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                      <SkillRatingSelection skillName = "Humor" skill = "humor" _this = {this}/>
+                                      <SkillRatingSelection skillName = "Emotional Stability" skill = "emotional_stability" _this = {this}/>
+                                  </View>
+      
+                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                      <SkillRatingSelection skillName = "Handiness" skill = "handiness" _this = {this}/>
+                                      <SkillRatingSelection skillName = "Kid Skills" skill = "kids" _this = {this}/>
+                                  </View>
+      
+                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                    <SkillRatingSelection skillName = "Stealth Food Prep" skill= "stealth_food_preparation" _this = {this}/>
+                                    <SkillRatingSelection skillName = "Technology" skill = "tech" _this = {this}/>
+                                  </View>
+      
+                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                    <SkillRatingSelection skillName = "Furniture Assembly" skill = "furniture_assembly" _this = {this}/>
+                                    <SkillRatingSelection skillName = "Photography" skill = "photography" _this = {this}/>
+                                  </View>
+      
+                                  <Text style={{ fontWeight: "bold", fontSize: 25, marginBottom: 20 }}>Location Info</Text>
+      
+                                  <Text style={{ fontWeight: "bold" }}>Country</Text>
+                                  <TextInput placeholder="Country Here"
+                                    placeholderTextColor="#ccc"
+                                    onChangeText={(text) => this.setState({ country: text })}
+                                    style={inputBoxStyle}/>
+      
+                                  <Text style={{ fontWeight: "bold" }}>Region</Text>
+                                  <TextInput placeholder=" Region Here"
+                                    placeholderTextColor="#ccc"
+                                    onChangeText={(text) => this.setState({ region: text })}
+                                    style={inputBoxStyle}/>
+      
+                                  <Text style={{ fontWeight: "bold" }}>Zip Code</Text>
+                                  <TextInput placeholder="Zip Code Here"
+                                      placeholderTextColor="#ccc"
+                                      onChangeText={(text) => this.setState({ zip: text })}
+                                      style={inputBoxStyle}/>
+                                  <Body style={{ justifyContent: "center", alignItems: "center"}}>
+                                      <Button block
+                                          onPress={() => {
+                                              this.createDadProfile();}}
+                                          style={{ marginBottom: 400, width: "50%"}}>
+                                              <Text style={{ right: "50%", fontWeight: "bold"}}>Create Dad Profile</Text>
+                                      </Button>
+                                  </Body>
+                              </View>
+                          </ScrollView>
+                      </View>
+                  </Modal>
+               )
+        }
     }
 }
