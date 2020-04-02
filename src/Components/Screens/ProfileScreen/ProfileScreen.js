@@ -16,7 +16,7 @@ import Popup from "../Popup"
 
 var { height, width } = Dimensions.get('window');
 var skillLevel = 28+28;
-
+var server_url = "http://99.60.8.214:82";
 var buttonColor = {color: 'red'}
 
 const styles = StyleSheet.create
@@ -36,7 +36,6 @@ const styles = StyleSheet.create
   skillBarFill: {
     position: 'absolute',
     zIndex: -1,
-    width: skillLevel,
     height: '100%',
     borderRadius:3,
     borderWidth:0,
@@ -161,7 +160,8 @@ class Skill extends Component {
     {
       iconName = "chain-broken";
     }
-
+    var barWidth = (this.props.skillAmt/10) * 100 + "%"
+    console.log("[Skill] Bar width: " + barWidth)
     return(
       <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-start', height: 30, marginBottom: 10}}>
       {/*This is each icon and skill bar*/}
@@ -174,9 +174,18 @@ class Skill extends Component {
           <View  style={{float: 'right', width: 250}} >
             <View style={styles.skillBar}>
               <View style={styles.skillBarEmpty}/>
-              <View style={styles.skillBarFill} />
+              {/* Had trouble using the styles object and only changing the width style inline */}
+              <View style={
+                { position: 'absolute',
+                  zIndex: -1,
+                  height: '100%',
+                  width: barWidth,
+                  borderRadius:3,
+                  borderWidth:0,
+                  backgroundColor: '#B1CC74'
+                }} />
               <View style={{position:'absolute',left:skillLevel - 13, top:2.5}}>
-                <Text style={{fontSize:15, color:'black'}}>1</Text>
+                <Text style={{fontSize:15, color:'black'}}>{this.props.skillAmt}</Text>
               </View>
             </View>
           </View>
@@ -193,17 +202,40 @@ export default class ProfileScreen extends Component {
     super(props)
 
     this.updateParent = this.updateParent.bind(this);
-    this.checkStatus = this.checkStatus.bind(this); 
+    this.checkStatus = this.checkStatus.bind(this);
 
      this.state = {
        activeIndex: 0,
        modalVisible: false,
-       status: 0, 
+       status: 0,
        username: "",
        password: "",
        bottomMessage: "",
-       postLoginUsername: ""
+       postLoginUsername: "",
+       profile : {
+         name : "",
+         skills: {
+          "grilling": 0,
+          "cooking": 0,
+          "bags": 0,
+          "softball": 0,
+          "coaching": 0,
+          "generosity": 0,
+          "looks": 0,
+          "dad_factor": 0,
+          "fantasy_football": 0,
+          "humor": 0,
+          "emotional_stability": 0,
+          "handiness": 0,
+          "kids": 0,
+          "stealth_food_preparation": 0,
+          "tech": 0,
+          "furniture_assembly": 0,
+          "photography": 0
+         }
+       }
      }
+
   }
 
   segmentClicked(index) {
@@ -221,7 +253,7 @@ export default class ProfileScreen extends Component {
   }
 
   componentDidMount() {
-    this.checkStatus(); 
+    this.checkStatus();
   }
 
   checkStatus() {
@@ -239,7 +271,10 @@ export default class ProfileScreen extends Component {
 
       // 1 if logged in and dad profile created.
       else if (message === "You already have a profile created!") {
+
           this.setState({ status: 1 })
+          this.updateProfile()
+
       }
 
       // 2 if logged in but no dad profile created.
@@ -254,14 +289,14 @@ export default class ProfileScreen extends Component {
       "username": this.state.username,
       "password": this.state.password
     };
-    console.log("Login username:"); 
-    console.log(this.state.username); 
-    let loginUsername = this.state.username; 
+    console.log("Login username:");
+    console.log(this.state.username);
+    let loginUsername = this.state.username;
 
     var server_url = "http://99.60.8.214:82";
 
     fetch(server_url + "/user/login", {
-      method: 'POST', 
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -269,14 +304,14 @@ export default class ProfileScreen extends Component {
     })
     .then((response) => {
       if (response.status === 200) {
-        this.checkStatus(); 
+        this.checkStatus();
         this.setState({ postLoginUsername: loginUsername });
         console.log("Response postLoginUsername: ");
-        console.log(this.state.postLoginUsername); 
+        console.log(this.state.postLoginUsername);
       }
 
       else {
-        console.log("Invalid login"); 
+        console.log("Invalid login");
         this.setState({ username: "", password: "", bottomMessage: "The username or password was incorrect." });
       }
 
@@ -290,12 +325,11 @@ export default class ProfileScreen extends Component {
       "password": this.state.password
     };
 
-    var server_url = "http://99.60.8.214:82";
     fetch(server_url + "/user/register", {
-      method: 'POST', 
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-      }, 
+      },
       body: JSON.stringify(data)
     })
     .then((response) => {
@@ -309,6 +343,35 @@ export default class ProfileScreen extends Component {
         this.setState({ username: "", password: "", bottomMessage: "Username already exists." })
       }
     })
+  }
+
+  updateProfile() {
+    console.log("Updating profile.")
+    if(this.state.status  == 1){
+
+      console.log("Retrieving dad profile for user.")
+      try {
+        fetch(server_url + "/dad_profile/me", {method: 'POST'}).then(response => {
+          return response.json()
+        }).then(data => {
+          console.log(data)
+          this.setState({
+            profile: {
+              name: data.name.first + " " + data.name.last,
+              skills: data.skills
+            }
+
+          })
+
+          console.log("State profile:")
+          console.log(this.state)
+        })
+      } catch (e) {
+        console.log("Unable to parse JSON")
+        console.log(e)
+      }
+
+    }
   }
 
   //these will be the grid of photos
@@ -353,31 +416,29 @@ renderSection() {
         <View style={{paddingBottom:2, paddingLeft: '5%', paddingTop: '10%', alignContent:'flex-start', flexDirection:'column'}}>
 
               {/*Show Skills*/}
-              <Skill thisSkill="grilling"></Skill>
-              <Skill thisSkill="cooking"></Skill>
-              <Skill thisSkill="bags"></Skill>
-              <Skill thisSkill="golf"></Skill>
-              <Skill thisSkill="softball"></Skill>
-              <Skill thisSkill="coaching"></Skill>
-              <Skill thisSkill="generosity"></Skill>
-              <Skill thisSkill="looks"></Skill>
-              <Skill thisSkill="dad factor"></Skill>
-              <Skill thisSkill="fantasy football"></Skill>
-              <Skill thisSkill="humor"></Skill>
-              <Skill thisSkill="emotional stability"></Skill>
-              <Skill thisSkill="handiness"></Skill>
-              <Skill thisSkill="kid skills"></Skill>
-              <Skill thisSkill="stealth food prep"></Skill>
-              <Skill thisSkill="technology"></Skill>
-              <Skill thisSkill="furniture assembly"></Skill>
-
+              <Skill thisSkill="grilling" skillAmt = {this.state.profile.skills["grilling"]}></Skill>
+              <Skill thisSkill="cooking" skillAmt = {this.state.profile.skills["cooking"]}></Skill>
+              <Skill thisSkill="bags" skillAmt = {this.state.profile.skills["bags"]}></Skill>
+              <Skill thisSkill="softball" skillAmt = {this.state.profile.skills["softball"]}></Skill>
+              <Skill thisSkill="coaching" skillAmt = {this.state.profile.skills["coaching"]}></Skill>
+              <Skill thisSkill="generosity" skillAmt = {this.state.profile.skills["generosity"]}></Skill>
+              <Skill thisSkill="looks" skillAmt = {this.state.profile.skills["looks"]}></Skill>
+              <Skill thisSkill="dad factor" skillAmt = {this.state.profile.skills["dad_factor"]}></Skill>
+              <Skill thisSkill="fantasy football" skillAmt = {this.state.profile.skills["fantasy_football"]}></Skill>
+              <Skill thisSkill="humor" skillAmt = {this.state.profile.skills["humor"]}></Skill>
+              <Skill thisSkill="emotional stability" skillAmt = {this.state.profile.skills["emotional_stability"]}></Skill>
+              <Skill thisSkill="handiness" skillAmt = {this.state.profile.skills["handiness"]}></Skill>
+              <Skill thisSkill="kid skills" skillAmt = {this.state.profile.skills["kids"]}></Skill>
+              <Skill thisSkill="stealth food prep" skillAmt = {this.state.profile.skills["stealth_food_preparation"]}></Skill>
+              <Skill thisSkill="technology" skillAmt = {this.state.profile.skills["tech"]}></Skill>
+              <Skill thisSkill="furniture assembly" skillAmt = {this.state.profile.skills["furniture_assembly"]}></Skill>
         </View>
       )
     }
 }
   render() {
-    let status = this.state.status; 
-    console.log("Status in render: " + status); 
+    let status = this.state.status;
+    console.log("Status in render: " + status);
 
     if (status === 0) {
       var inputBoxStyle = {
@@ -449,15 +510,13 @@ renderSection() {
         justifyContent:'flex-start',
         alignItems:'center'
       }
-  
+
       var profileHeaderStatsIconStyle = {
         padding:5,
         color: '#7BCACE',
         fontSize: 20
       }
-  
-      console.log("Post Login Username:");
-      console.log(this.state.postLoginUsername); 
+
       return (
         <Container>
           <Popup
@@ -468,10 +527,10 @@ renderSection() {
             username={this.state.postLoginUsername}/>
           <Header>
             <Left>
-  
+
             </Left>
           <Body>
-            <Title>C. Dog</Title>
+            <Title>Dad Profile</Title>
           </Body>
           <Right>
             <Button transparent
@@ -480,22 +539,22 @@ renderSection() {
             </Button>
           </Right>
         </Header>
-  
+
         {/*Content of profile*/}
         <Content style={{backgroundColor:'#EFFCCC'}} >
           <View style={{ backgroundColor: 'white', borderTopWidth: 5, borderTopColor: '#B1CC74'  }}>
-  
+
           {/** User Photo Stats**/}
           <View style={{ flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
-  
+
            {/**User photo takes 1/3rd of view horizontally **/}
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start', paddingBottom: 0 }}>
               <Image source={images[0]} style={{ width: 75, height: 75, borderRadius: 37.5 }} />
           </View>
-  
+
           {/**User Stats take 2/3rd of view horizontally **/}
           <View style={{ flex: 3, backgroundColor: 'white', flexDirection: "row", alignItems: 'center'}}>
-  
+
           {/** Stats **/}
           <View
               style={{
@@ -503,7 +562,7 @@ renderSection() {
                   flexDirection: 'row',
                   justifyContent: 'space-around'
               }}>
-  
+
               {/**Rating Stat */}
               <View style={profileHeaderStatsViewStyle}>
                 <View style={{ alignItems: 'center', flexDirection:"row"}}>
@@ -512,7 +571,7 @@ renderSection() {
                 </View>
                 <Text style={{ paddingLeft:0, fontSize: 10, color: 'grey'}}>Rating</Text>
               </View>
-  
+
               {/**Total Love stat */}
               <View style={profileHeaderStatsViewStyle}>
                 <View style={{ alignItems: 'center', flexDirection:"row"}}>
@@ -521,7 +580,7 @@ renderSection() {
                 </View>
                 <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Love</Text>
               </View>
-  
+
               {/**Rank stat */}
               <View style={profileHeaderStatsViewStyle}>
               <View style={{ alignItems: 'center', flexDirection:"row"}}>
@@ -531,18 +590,18 @@ renderSection() {
               <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Global</Text>
               </View>
           </View>
-  
+
           {/**Edit profile and Settings Buttons
           <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingTop: 10 }}>
-  
+
               <View
                   style={{ flexDirection: 'row' }}>
-  
+
                   {/** Edit profile takes up 3/4th
                   <Button bordered dark
                       style={{ flex: 3, marginLeft: 10, paddingTop:4, justifyContent: 'center', height: 30 }}><Text>Edit Profile</Text></Button>
-  
-  
+
+
                   {/** Settings takes up  1/4th place
                   <Button bordered dark style={{
                       flex: 1,
@@ -555,32 +614,32 @@ renderSection() {
           </View>{/**End edit profile**/}
               </View>
           </View>
-  
+
           <View style={{ padding: 10, paddingTop: 30, paddingBottom: 15, borderTopWidth:1, borderTopColor:'#eae5e5' }}>
               <View style={{ paddingHorizontal: 10 }}>
-                  <Text style={{ paddingBottom:5, fontWeight: 'bold' }}>Courage T. Dog</Text>
+                  <Text style={{ paddingBottom:5, fontWeight: 'bold' }}>{this.state.profile.name}</Text>
                   <Text>This is my dad, Courage. He's pretty cool.</Text>
               </View>
           </View>
           </View>
-  
+
           {/**Buttons to navigate to different screens: media, quotes, and skills */}
           <View>
-  
+
           <View style={{ flexDirection: 'row', justifyContent: 'stretch', borderTopWidth: 1, borderTopColor: '#eae5e5' }}>
-  
+
               <Button transparent onPress = {() => this.segmentClicked(0)} active={this.state.activeIndex == 0} style = {this.state.activeIndex == 0 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
               <Icon name="gavel" style={[this.state.activeIndex == 0 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
               </Button>
-  
+
               <Button transparent onPress = {() => this.segmentClicked(1)} active={this.state.activeIndex == 1} style = {this.state.activeIndex == 1 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
               <Icon name="image" style={[this.state.activeIndex == 1 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
               </Button>
-  
+
               <Button transparent onPress = {() => this.segmentClicked(2)} active={this.state.activeIndex == 2} style = {this.state.activeIndex == 2 ? styles.profileNavButtonActive : styles.profileNavButtonInactive}>
               <Icon name="comment" style={[this.state.activeIndex == 2 ? {color:'#000058'} : {color: 'white'}] } size={25}></Icon>
               </Button>
-  
+
           </View>
           {this.renderSection()}
           </View>
