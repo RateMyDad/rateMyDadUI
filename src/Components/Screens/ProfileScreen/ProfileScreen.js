@@ -163,10 +163,10 @@ class Skill extends Component {
     {
       iconName = "chain-broken";
     }
-    
+
     var barWidth = (this.props.skillAmt/10) * 100 + "%"
     console.log("[Skill] Bar width: " + barWidth)
-    
+
     return(
       <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-start', height: 30, marginBottom: 10, paddingLeft:20}}>
       {/*This is each icon and skill bar*/}
@@ -508,15 +508,21 @@ renderSection() {
         </Container>
       )
     }
-    
+
     else {
-      
+
       var profileHeaderStatsIconStyle = {
         padding:5,
         color: '#7BCACE',
         fontSize: 20
       }
-      
+
+      var profileHeaderStatsViewStyle = {
+        flexDirection:'column',
+        justifyContent:'flex-start',
+        alignItems:'center'
+      }
+
       return (
         <Container>
           <Popup
@@ -551,7 +557,7 @@ renderSection() {
 
           <View style={{ padding: 10, paddingTop: 10, paddingBottom: 15, alignItems:'center' }}>
               <View style={{ paddingHorizontal: 10 }}>
-                  <Text style={{ paddingBottom:5, fontWeight: 'bold' }}>Courage T. Dog</Text>
+                  <Text style={{ paddingBottom:5, fontWeight: 'bold' }}>{this.state.profile.name}</Text>
               </View>
           </View>
 
@@ -627,56 +633,3 @@ renderSection() {
     }
   }
 }
-const styles = StyleSheet.create
-({
-
-  skillBar: {
-  },
-
-  skillBarEmpty: {
-    width: '100%',
-    height: '100%',
-    borderRadius:5,
-    borderWidth:1,
-    borderColor: 'black',
-  },
-
-  skillBarFill: {
-    position: 'absolute',
-    zIndex: -1,
-    width: skillLevel,
-    height: '100%',
-    borderRadius:3,
-    borderWidth:0,
-    backgroundColor: '#B1CC74',
-  },
-
-  yinyangAfter: {
-    position: 'absolute',
-    left: 28,
-    top:2,
-    width: 3,
-    height: 16,
-    backgroundColor: 'gray',
-    opacity:0.5,
-  },
-
-  profileNavButton: {
-
-  },
-
-  profileNavButtonActive: {
-    flex: 1,
-    justifyContent: 'center',
-    borderRadius: 0,
-    backgroundColor: '#70b8bc'
-  },
-
-  profileNavButtonInactive: {
-    flex: 1,
-    justifyContent: 'center',
-    borderRadius: 0,
-    backgroundColor: '#7BCACE'
-  }
-
-});
