@@ -93,6 +93,10 @@ export default class RankingsScreen extends Component {
 
 
 componentDidMount() {
+  this.getInitialRatings()
+}
+
+getInitialRatings() {
   var server_url = "http://99.60.8.214:82"
   // NOTE: You'll have to change this IP address to get it to work on your machine.
   console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
@@ -105,6 +109,20 @@ componentDidMount() {
       this.setState({ globalRatings: data.reverse() });
       var filter = "Global";
       this.filterRatings(filter);
+    })
+}
+
+getRatings() {
+  var server_url = "http://99.60.8.214:82"
+  // NOTE: You'll have to change this IP address to get it to work on your machine.
+  console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
+  fetch(server_url + "/dad_profile/ratings")
+    .then(response => {
+      console.log("[Ranking] Recieved server response.")
+      return response.json();
+    })
+    .then(data => {
+      this.setState({ globalRatings: data.reverse() });
     })
 }
 
@@ -135,6 +153,7 @@ checkStatus() {
 
  filterRatings(filter) {
     this.checkStatus(); 
+    this.getRatings();
     console.log("Inside of filterRatings() function"); 
  
     var ratings = this.state.globalRatings;
@@ -181,10 +200,8 @@ checkStatus() {
     }
 
     else {
-      console.log("Ratings:"); 
-      console.log(ratings); 
+      console.log("Inside of this thing")
       this.setState({ ratings: ratings, message: "" });
-      console.log("Inside of 'Global' condition"); 
     }
  }
   
