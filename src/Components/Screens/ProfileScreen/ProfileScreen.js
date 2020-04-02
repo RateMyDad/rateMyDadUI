@@ -8,13 +8,13 @@ import {
 } from "react-native";
 import { Container, Header, Tab, Tabs, TabHeading, Title, Content, Card, CardItem, Thumbnail, Text, Button, Right, Left, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 import Popup from "../Popup"
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 // import "../../../styles/common.css"
 
 var { height, width } = Dimensions.get('window');
 //the 1 here can be anything from 1-7
-var skillLevel = 1*30;
+var skillLevel = 1*40;
 
 var images = [
   require('../../../../assets/dog.jpg'),
@@ -105,14 +105,13 @@ class Skill extends Component {
       iconName = "chain-broken";
     }
     
-    
     return(
-      <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-start', height: 30, marginBottom: 10}}>
+      <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-start', height: 30, marginBottom: 10, paddingLeft:20}}>
       {/*This is each icon and skill bar*/}
         <View style={{justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}>
 
-          <View style = {{position: 'relative', paddingRight: 10, justifySelf: 'flex-start', flexBasis: '12%'}}>
-            <Icon name = {iconName} style={{fontSize: 25}}></Icon>
+          <View style = {{position: 'relative', justifySelf: 'flex-start', flexBasis: '12%'}}>
+          <Icon name = {iconName} style={{paddingRight:10}} size={25}></Icon>
           </View>
 
           <View  style={{float: 'right', width: 250}} >
@@ -181,14 +180,14 @@ export default class ProfileScreen extends Component {
 //renders each section based on button clicked
 renderSection() {
   //show grid of pictures
-  if (this.state.activeIndex == 0) {
+  if (this.state.activeIndex == 1) {
     return (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
       {this.renderPictures()}
     </View>)
   }
   //show dad posts
-  else if (this.state.activeIndex == 1) {
+  else if (this.state.activeIndex == 2) {
     return (
       <View style={{paddingBottom:2, alignContent:'stretch'}}>
         <Card>
@@ -261,7 +260,7 @@ renderSection() {
         )
     }
     //if the skill tab is selected
-    else if (this.state.activeIndex == 2) {
+    else if (this.state.activeIndex == 0) {
       return(
         <View style={{paddingBottom:2, alignContent:'stretch', flexDirection:'column'}}>
         <Card>
@@ -315,7 +314,7 @@ renderSection() {
 
           </Left>
         <Body>
-          <Title>C. Dog</Title>
+          <Title>Dad Profile</Title>
         </Body>
         <Right>
           <Button transparent
@@ -327,19 +326,26 @@ renderSection() {
 
       {/*Content of profile*/}
       <Content style={{backgroundColor:'#EFFCCC'}} >
-        <View style={{ backgroundColor: 'white', borderTopWidth: 5, borderTopColor: '#B1CC74'  }}>
+        <View style={{ backgroundColor: 'white', borderTopWidth: 10, borderTopColor: '#B1CC74'  }}>
+
+        {/**User photo takes 1/3rd of view horizontally **/}
+        <View style={{ paddingTop: 20, flex: 1, alignItems: 'center', justifyContent: 'flex-start', paddingBottom: 0 }}>
+            <Image source={images[0]} style={{ width: 150, height: 150, borderRadius: 100 }} />
+        </View>
+
+        <View style={{ padding: 10, paddingTop: 10, paddingBottom: 15, alignItems:'center' }}>
+            <View style={{ paddingHorizontal: 10 }}>
+                <Text style={{ paddingBottom:5, fontWeight: 'bold' }}>Courage T. Dog</Text>
+            </View>
+        </View>
 
         {/** User Photo Stats**/}
-        <View style={{ flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
-
-         {/**User photo takes 1/3rd of view horizontally **/}
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start', paddingBottom: 0 }}>
-            <Image source={images[0]} style={{ width: 75, height: 75, borderRadius: 37.5 }} />
-        </View>
+        <View style={{ flexDirection: 'row',  paddingBottom: 10}}>
 
         {/**User Stats take 2/3rd of view horizontally **/}
         <View style={{ flex: 3, backgroundColor: 'white', flexDirection: "row", alignItems: 'center'}}>
 
+        
         {/** Stats **/}
         <View
             style={{
@@ -376,36 +382,9 @@ renderSection() {
             </View>
         </View>
 
-        {/**Edit profile and Settings Buttons
-        <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingTop: 10 }}>
-
-            <View
-                style={{ flexDirection: 'row' }}>
-
-                {/** Edit profile takes up 3/4th
-                <Button bordered dark
-                    style={{ flex: 3, marginLeft: 10, paddingTop:4, justifyContent: 'center', height: 30 }}><Text>Edit Profile</Text></Button>
-
-
-                {/** Settings takes up  1/4th place
-                <Button bordered dark style={{
-                    flex: 1,
-                    height: 30,
-                    marginRight: 10, marginLeft: 5,
-                    justifyContent: 'center'
-                }}>
-                    <Icon name="globe" style={{ color: 'black' }} size={17}></Icon></Button>
-            </View>
-        </View>{/**End edit profile**/}
             </View>
         </View>
 
-        <View style={{ padding: 10, paddingTop: 30, paddingBottom: 15, borderTopWidth:1, borderTopColor:'#eae5e5' }}>
-            <View style={{ paddingHorizontal: 10 }}>
-                <Text style={{ paddingBottom:5, fontWeight: 'bold' }}>Courage T. Dog</Text>
-                <Text>This is my dad, Courage. He's pretty cool.</Text>
-            </View>
-        </View>
         </View>
 
         {/**Buttons to navigate to different screens: media, quotes, and skills */}
@@ -433,3 +412,56 @@ renderSection() {
     );
   }
 }
+const styles = StyleSheet.create
+({
+
+  skillBar: {
+  },
+
+  skillBarEmpty: {
+    width: '100%',
+    height: '100%',
+    borderRadius:5,
+    borderWidth:1,
+    borderColor: 'black',
+  },
+
+  skillBarFill: {
+    position: 'absolute',
+    zIndex: -1,
+    width: skillLevel,
+    height: '100%',
+    borderRadius:3,
+    borderWidth:0,
+    backgroundColor: '#B1CC74',
+  },
+
+  yinyangAfter: {
+    position: 'absolute',
+    left: 28,
+    top:2,
+    width: 3,
+    height: 16,
+    backgroundColor: 'gray',
+    opacity:0.5,
+  },
+
+  profileNavButton: {
+
+  },
+
+  profileNavButtonActive: {
+    flex: 1,
+    justifyContent: 'center',
+    borderRadius: 0,
+    backgroundColor: '#70b8bc'
+  },
+
+  profileNavButtonInactive: {
+    flex: 1,
+    justifyContent: 'center',
+    borderRadius: 0,
+    backgroundColor: '#7BCACE'
+  }
+
+});
