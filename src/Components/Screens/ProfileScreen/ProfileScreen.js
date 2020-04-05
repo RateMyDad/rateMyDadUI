@@ -19,7 +19,7 @@ var { height, width } = Dimensions.get('window');
 //the 1 here can be anything from 1-7
 var skillLevel = 1*40;
 
-var server_url = "http://99.60.8.214:82";
+let server_url = "http://10.0.0.180:82";
 var buttonColor = {color: 'red'}
 
 const styles = StyleSheet.create
@@ -261,7 +261,6 @@ export default class ProfileScreen extends Component {
   }
 
   checkStatus() {
-    var server_url = "http://99.60.8.214:82";
     fetch(server_url + "/user/check_status")
     .then(response => {
       return response.json();
@@ -275,10 +274,8 @@ export default class ProfileScreen extends Component {
 
       // 1 if logged in and dad profile created.
       else if (message === "You already have a profile created!") {
-
           this.setState({ status: 1 })
           this.updateProfile()
-
       }
 
       // 2 if logged in but no dad profile created.
@@ -296,8 +293,6 @@ export default class ProfileScreen extends Component {
     console.log("Login username:");
     console.log(this.state.username);
     let loginUsername = this.state.username;
-
-    var server_url = "http://99.60.8.214:82";
 
     fetch(server_url + "/user/login", {
       method: 'POST',

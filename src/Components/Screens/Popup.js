@@ -2,6 +2,8 @@ import React, {Component} from "react";
 import {Modal, Text, Alert, View, TextInput, ScrollView, Slider} from "react-native";
 import {Picker, Icon, Button, Body, Header, Left, Right, Title} from "native-base";
 
+let server_url = "http://10.0.0.180:82"
+
 class SkillRatingSelection extends Component {
 
   constructor(props) {
@@ -131,7 +133,6 @@ export default class Popup extends Component {
 
         console.log(dadProfile); 
 
-        var server_url = "http://99.60.8.214:82";
         fetch(server_url + "/dad_profile/create", {
             method: 'POST', 
             headers: {

@@ -18,6 +18,7 @@ var images = [
   require('../../../../assets/dog.jpg'),
   require('../../../../assets/dog.jpg'),
 ]
+let server_url = "http://10.0.0.180:82";
 
 //each ranking card, it takes name, rank, and location variable 
 class RankingCard extends Component {
@@ -80,7 +81,8 @@ export default class RankingsScreen extends Component {
       ratings: [],
       globalRatings: [],
       status: 0, 
-      message: ""
+      message: "",
+      zip: ""
     }
  }
 
@@ -96,8 +98,25 @@ componentDidMount() {
   this.getInitialRatings()
 }
 
+updateProfile() {
+  console.log("Updating profile.")
+  if(this.state.status  == 1){
+
+    console.log("Retrieving dad profile for user.")
+    try {
+      fetch(server_url + "/dad_profile/me", {method: 'POST'}).then(response => {
+        return response.json()
+      }).then(data => {
+        this.setState({ zip: data.zip });
+      })
+    } catch (e) {
+      console.log("Unable to parse JSON")
+      console.log(e)
+    }
+  }
+}
+
 getInitialRatings() {
-  var server_url = "http://99.60.8.214:82"
   // NOTE: You'll have to change this IP address to get it to work on your machine.
   console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
   fetch(server_url + "/dad_profile/ratings")
@@ -113,7 +132,6 @@ getInitialRatings() {
 }
 
 getRatings() {
-  var server_url = "http://99.60.8.214:82"
   // NOTE: You'll have to change this IP address to get it to work on your machine.
   console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
   fetch(server_url + "/dad_profile/ratings")
@@ -127,7 +145,6 @@ getRatings() {
 }
 
 checkStatus() {
-  var server_url = "http://99.60.8.214:82";
   fetch(server_url + "/user/check_status")
   .then(response => {
     return response.json();
@@ -142,6 +159,7 @@ checkStatus() {
     // 1 if logged in and dad profile created.
     else if (message === "You already have a profile created!") {
         this.setState({ status: 1 })
+        this.updateProfile()
     }
 
     // 2 if logged in but no dad profile created.
@@ -158,7 +176,15 @@ checkStatus() {
  
     var ratings = this.state.globalRatings;
 
-    var zip = 60491;
+    var zip = 6;
+
+    if (this.state.zip !== "") {
+      zip = this.state.zip;
+    }
+
+    console.log("Current zip:");
+    console.log(zip); 
+    
     var myFirstZipDigit = String(zip).charAt(0);
 
     var regionalRatings = []
@@ -182,6 +208,7 @@ checkStatus() {
     }
 
     else if (filter === "Regional" && this.state.status === 0) {
+      console.log("Inside of weird condition"); 
       this.setState({ ratings: [], message: "You must be logged in to access this feature."});
     }
 
@@ -206,20 +233,17 @@ checkStatus() {
  }
   
  createRankingCard(profile) {
-  let name = profile.name.first + " " + profile.name.last;
+  // let name = profile.name.first + " " + profile.name.last;
+  let username = profile.username + "'s" + " Dad"; 
   let rank = profile.meta.rating;
   let id = profile._id;
 
    return (
-     <RankingCard name={name} rank={rank} key={id}/>
+     <RankingCard name={username} rank={rank} key={id}/>
    )
  }
   render() {
-    console.log(this.props.title); 
-    console.log(this.props.options); 
     let ratings = this.state.ratings;
-    console.log("Profile ratings: ");
-    console.log(ratings);
 
     // Need this b/c the component re-renders once the state is set in componentDidMount().
     if (ratings.length !== 0) {
