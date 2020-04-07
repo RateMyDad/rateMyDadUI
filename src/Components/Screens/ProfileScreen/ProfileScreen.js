@@ -19,7 +19,7 @@ var { height, width } = Dimensions.get('window');
 //the 1 here can be anything from 1-7
 var skillLevel = 1*40;
 
-let server_url = "http://10.0.0.180:82";
+let server_url = "http://10.0.0.181:82";
 var buttonColor = {color: 'red'}
 
 const styles = StyleSheet.create
@@ -282,6 +282,9 @@ export default class ProfileScreen extends Component {
       else {
           this.setState({ status: 2 })
       }
+
+      console.log("Profile screen status:"); 
+      console.log(this.state.status); 
     })
   }
 
@@ -375,7 +378,6 @@ export default class ProfileScreen extends Component {
 
   //these will be the grid of photos
   renderPictures() {
-
     return images.map((image, index) => {
         return (
             <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
@@ -390,7 +392,6 @@ export default class ProfileScreen extends Component {
             </View>
         )
     })
-
 }
 
 //renders each section based on button clicked
@@ -505,7 +506,6 @@ renderSection() {
     }
 
     else {
-
       var profileHeaderStatsIconStyle = {
         padding:5,
         color: '#7BCACE',

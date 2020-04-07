@@ -18,7 +18,7 @@ var images = [
   require('../../../../assets/dog.jpg'),
   require('../../../../assets/dog.jpg'),
 ]
-let server_url = "http://10.0.0.180:82";
+let server_url = "http://10.0.0.181:82";
 
 //each ranking card, it takes name, rank, and location variable 
 class RankingCard extends Component {
@@ -126,53 +126,50 @@ getInitialRatings() {
     })
     .then(data => {
       this.setState({ globalRatings: data.reverse() });
+      console.log("Global ratings:"); 
+      console.log(this.state.globalRatings); 
       var filter = "Global";
       this.filterRatings(filter);
     })
 }
 
-getRatings() {
-  // NOTE: You'll have to change this IP address to get it to work on your machine.
-  console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
-  fetch(server_url + "/dad_profile/ratings")
-    .then(response => {
-      console.log("[Ranking] Recieved server response.")
-      return response.json();
-    })
-    .then(data => {
-      this.setState({ globalRatings: data.reverse() });
-    })
+async getRatings() {
+  const response = await fetch(server_url + "/dad_profile/ratings");
+  const data = await response.json(); 
+  this.setState({ globalRatings: data.reverse() });
 }
 
-checkStatus() {
-  fetch(server_url + "/user/check_status")
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-    let message = data.message;
-    // 0 if not logged in.
-    if (message === "You must be logged in to use this feature.") {
-        this.setState({ status: 0 })
-    }
+async checkStatus() {
+  const response = await fetch(server_url + "/user/check_status");
+  const data = await response.json();
+  
+  let message = data.message;
+  // 0 if not logged in.
+  if (message === "You must be logged in to use this feature.") {
+      this.setState({ status: 0 })
+  }
 
-    // 1 if logged in and dad profile created.
-    else if (message === "You already have a profile created!") {
-        this.setState({ status: 1 })
-        this.updateProfile()
-    }
+  // 1 if logged in and dad profile created.
+  else if (message === "You already have a profile created!") {
+      this.setState({ status: 1 })
+      this.updateProfile()
+  }
 
-    // 2 if logged in but no dad profile created.
-    else {
-        this.setState({ status: 2 })
-    }
-  })
+  // 2 if logged in but no dad profile created.
+  else {
+      this.setState({ status: 2 })
+  }
+
+  console.log("Rankings screen status:");
+  console.log(this.state.status);
 }
 
- filterRatings(filter) {
-    this.checkStatus(); 
-    this.getRatings();
+ async filterRatings(filter) {
+    await this.checkStatus(); 
+    await this.getRatings(); 
+
     console.log("Inside of filterRatings() function"); 
+    console.log("----------------------------------");
  
     var ratings = this.state.globalRatings;
 
@@ -204,7 +201,8 @@ checkStatus() {
         }
       }
 
-      this.setState({ ratings: regionalRatings, message: "" })
+      this.setState({ ratings: regionalRatings, message: "" });
+      console.log("Inside of proper condition");
     }
 
     else if (filter === "Regional" && this.state.status === 0) {
