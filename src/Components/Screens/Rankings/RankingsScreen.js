@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Text, Title, Left, Body, Right, Segment } from 'native-base';
-import { Image, View,Dimensions } from 'react-native';
+import { Image, View,Dimensions, AsyncStorage} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getStatus } from "../../../model";
 var { height, width } = Dimensions.get('window');
+var server_url = "http://192.168.1.76:82"
+
 var images = [
   require('../../../../assets/dog.jpg'),
   require('../../../../assets/dog.jpg'),
@@ -19,7 +21,7 @@ var images = [
   require('../../../../assets/dog.jpg'),
 ]
 
-//each ranking card, it takes name, rank, and location variable 
+//each ranking card, it takes name, rank, and location variable
 class RankingCard extends Component {
   constructor(props) {
     super(props);
@@ -79,7 +81,7 @@ export default class RankingsScreen extends Component {
       activeIndex:0,
       ratings: [],
       globalRatings: [],
-      status: 0, 
+      status: 0,
       message: ""
     }
  }
@@ -97,10 +99,15 @@ componentDidMount() {
 }
 
 getInitialRatings() {
-  var server_url = "http://99.60.8.214:82"
-  // NOTE: You'll have to change this IP address to get it to work on your machine.
-  console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
-  fetch(server_url + "/dad_profile/ratings")
+  AsyncStorage.getItem('id_token').then((token) => {
+
+    console.log("[Ranking] Sending request to " + server_url + "/api/protected/dad_profile/ratings");
+    fetch(server_url + "/api/protected/dad_profile/ratings", {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    })
     .then(response => {
       console.log("[Ranking] Recieved server response.")
       return response.json();
@@ -110,13 +117,20 @@ getInitialRatings() {
       var filter = "Global";
       this.filterRatings(filter);
     })
+  })
 }
 
 getRatings() {
-  var server_url = "http://99.60.8.214:82"
-  // NOTE: You'll have to change this IP address to get it to work on your machine.
   console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
-  fetch(server_url + "/dad_profile/ratings")
+  AsyncStorage.getItem('id_token').then((token) => {
+
+    console.log("[Ranking] Sending request to " + server_url + "/api/protected/dad_profile/ratings");
+    fetch(server_url + "/api/protected/dad_profile/ratings", {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    })
     .then(response => {
       console.log("[Ranking] Recieved server response.")
       return response.json();
@@ -124,38 +138,42 @@ getRatings() {
     .then(data => {
       this.setState({ globalRatings: data.reverse() });
     })
-}
-
-checkStatus() {
-  var server_url = "http://99.60.8.214:82";
-  fetch(server_url + "/user/check_status")
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-    let message = data.message;
-    // 0 if not logged in.
-    if (message === "You must be logged in to use this feature.") {
-        this.setState({ status: 0 })
-    }
-
-    // 1 if logged in and dad profile created.
-    else if (message === "You already have a profile created!") {
-        this.setState({ status: 1 })
-    }
-
-    // 2 if logged in but no dad profile created.
-    else {
-        this.setState({ status: 2 })
-    }
   })
 }
+
+  checkStatus() {
+    AsyncStorage.getItem('id_token').then((token) => {
+
+      fetch(server_url + "/api/protected/user/check_status", {
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + token }
+      })
+      .then(response => response.json())
+      .then(data => {
+        let message = data.message;
+        // 0 if not logged in.
+
+        // 1 if logged in and dad profile created.
+        if (message === "You already have a profile created!") {
+          console.log("Checking status... 1")
+          this.setState({ status: 1 })
+        }
+
+        // 2 if logged in but no dad profile created.
+        else {
+          console.log("Checking status... 2")
+          this.setState({ status: 2 })
+        }
+      })
+    })
+
+  }
 
  filterRatings(filter) {
-    this.checkStatus(); 
+    this.checkStatus();
     this.getRatings();
-    console.log("Inside of filterRatings() function"); 
- 
+    console.log("Inside of filterRatings() function");
+
     var ratings = this.state.globalRatings;
 
     var zip = 60491;
@@ -204,7 +222,7 @@ checkStatus() {
       this.setState({ ratings: ratings, message: "" });
     }
  }
-  
+
  createRankingCard(profile) {
   let name = profile.name.first + " " + profile.name.last;
   let rank = profile.meta.rating;
@@ -215,8 +233,8 @@ checkStatus() {
    )
  }
   render() {
-    console.log(this.props.title); 
-    console.log(this.props.options); 
+    console.log(this.props.title);
+    console.log(this.props.options);
     let ratings = this.state.ratings;
     console.log("Profile ratings: ");
     console.log(ratings);
@@ -305,7 +323,7 @@ checkStatus() {
          * to change the content area of this screen
         */}
         <Segment>
-          <Button first style={{borderColor:'#545F66'}} 
+          <Button first style={{borderColor:'#545F66'}}
            onPress={() => this.filterRatings("Local")}>
            <Text style={{color:'#545F66'}}>Local</Text>
 

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Modal, Text, Alert, View, TextInput, ScrollView, Slider, AsyncStorage} from "react-native";
 import {Picker, Icon, Button, Body, Header, Left, Right, Title} from "native-base";
-
+var server_url = "http://192.168.1.76:82"
 class SkillRatingSelection extends Component {
 
   constructor(props) {
@@ -129,7 +129,6 @@ export default class Popup extends Component {
 
         console.log(JSON.stringify(dadProfile));
 
-        var server_url = "http://192.168.1.76:82";
         AsyncStorage.getItem('id_token').then((token) => {
 
           fetch(server_url + "/api/protected/dad_profile/create", {
