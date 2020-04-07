@@ -236,10 +236,11 @@ export default class ProfileScreen extends Component {
           "tech": 0,
           "furniture_assembly": 0,
           "photography": 0
-         }
+         },
+         rating: 0,
+         skillScore: 0
        }
      }
-
   }
 
   segmentClicked(index) {
@@ -360,9 +361,10 @@ export default class ProfileScreen extends Component {
           this.setState({
             profile: {
               name: data.name.first + " " + data.name.last,
-              skills: data.skills
+              skills: data.skills,
+              rating: data.meta.rating, 
+              skillScore: data.meta.skillScore
             }
-
           })
 
           console.log("State profile:")
@@ -574,7 +576,7 @@ renderSection() {
             <View style={profileHeaderStatsViewStyle}>
               <View style={{ alignItems: 'center', flexDirection:"row"}}>
                   <Icon name="star" style={profileHeaderStatsIconStyle}></Icon>
-                  <Text style={{fontSize: 20}}>20</Text>
+                  <Text style={{fontSize: 20}}>{this.state.profile.skillScore}</Text>
               </View>
               <Text style={{ paddingLeft:0, fontSize: 10, color: 'grey'}}>Rating</Text>
             </View>
@@ -592,7 +594,7 @@ renderSection() {
             <View style={profileHeaderStatsViewStyle}>
             <View style={{ alignItems: 'center', flexDirection:"row"}}>
                 <Icon name="hashtag" style={profileHeaderStatsIconStyle}></Icon>
-                <Text style={{fontSize: 20}}>3560</Text>
+                <Text style={{fontSize: 20}}>{this.state.profile.rating}</Text>
             </View>
             <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Global</Text>
             </View>
