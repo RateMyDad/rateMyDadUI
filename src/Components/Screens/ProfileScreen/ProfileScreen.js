@@ -5,7 +5,9 @@ import {
   Image,
   Dimensions,
   TextInput,
-  FlatList
+  FlatList,
+  AsyncStorage,
+  ActivityIndicator
 } from "react-native";
 import { Container, Header, Tab, Tabs, TabHeading, Title, Content, Card, CardItem, Thumbnail, Text, Button, Right, Left, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -15,11 +17,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 // import "../../../styles/common.css"
 
 var { height, width } = Dimensions.get('window');
+var base64 = require('base64-js')
 
 //the 1 here can be anything from 1-7
 var skillLevel = 1*40;
 
-var server_url = "http://99.60.8.214:82";
+// var server_url = "http://99.60.8.214:82";
+var server_url = "http://192.168.1.76:82";
+
 var buttonColor = {color: 'red'}
 
 const styles = StyleSheet.create
@@ -165,7 +170,6 @@ class Skill extends Component {
     }
 
     var barWidth = (this.props.skillAmt/10) * 100 + "%"
-    console.log("[Skill] Bar width: " + barWidth)
 
     return(
       <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-start', height: 30, marginBottom: 10, paddingLeft:20}}>
@@ -216,6 +220,8 @@ export default class ProfileScreen extends Component {
        password: "",
        bottomMessage: "",
        postLoginUsername: "",
+       hasToken: false,
+       isLoaded: false,
        profile : {
          name : "",
          skills: {
@@ -257,11 +263,28 @@ export default class ProfileScreen extends Component {
   }
 
   componentDidMount() {
-    this.checkStatus();
+
+    AsyncStorage.getItem('id_token').then((token) => {
+      var status = 0
+
+      if(token !== null)
+      {
+        status = 1
+      }
+
+      this.setState({ hasToken: token !== null, isLoaded: true, status: status})
+    })
+    .then(() => {
+      this.updateProfile()
+    })
+
+
+
+    //this.checkStatus();
   }
 
   checkStatus() {
-    var server_url = "http://99.60.8.214:82";
+    /**
     fetch(server_url + "/user/check_status")
     .then(response => {
       return response.json();
@@ -286,40 +309,84 @@ export default class ProfileScreen extends Component {
           this.setState({ status: 2 })
       }
     })
+    **/
   }
 
-  login() {
+  updateProfile() {
+    console.log("Updating profile -- current state " + this.state.status)
+    if(this.state.status  == 1){
+
+      console.log("Retrieving dad profile for user.")
+      AsyncStorage.getItem('id_token').then((token) => {
+
+        fetch(server_url + "/api/protected/dad_profile/me", {
+          method: 'GET',
+          headers: { 'Authorization': 'Bearer ' + token }
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          this.setState({
+            profile: {
+              name: data.name.first + " " + data.name.last,
+              skills: data.skills
+            }
+
+          })
+
+          console.log("State profile:")
+          console.log(this.state)
+        })
+
+      })
+    }
+  }
+
+  async saveItem(item, selectedValue) {
+    try {
+      await AsyncStorage.setItem(item, selectedValue);
+    } catch (error) {
+      console.error('AsyncStorage error: ' + error.message);
+    }
+  }
+
+  async logout() {
+    console.log("Logging out user.");
+    AsyncStorage.removeItem("id_token");
+    this.setState({status : 0});
+
+  }
+
+  async login() {
     let data = {
       "username": this.state.username,
       "password": this.state.password
     };
-    console.log("Login username:");
-    console.log(this.state.username);
-    let loginUsername = this.state.username;
 
-    var server_url = "http://99.60.8.214:82";
 
     fetch(server_url + "/user/login", {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     })
-    .then((response) => {
-      if (response.status === 200) {
-        this.checkStatus();
-        this.setState({ postLoginUsername: loginUsername });
-        console.log("Response postLoginUsername: ");
-        console.log(this.state.postLoginUsername);
-      }
+    .then((response) => response.json())
+    .then((responseData) => {
 
-      else {
-        console.log("Invalid login");
-        this.setState({ username: "", password: "", bottomMessage: "The username or password was incorrect." });
-      }
+      var id_token = responseData.id_token
+      var username = this.state.username
+      this.saveItem("id_token", id_token)
+      //this.checkStatus();
+      this.setState({
+        postLoginUsername: username,
+        id_token: id_token,
+        access_token: responseData.access_token,
+        status: 1
+      });
 
-      return response.json();
+      console.log("Login username:");
+      console.log(this.state.postLoginUsername);
+      this.updateProfile();
+      return responseData;
     })
   }
 
@@ -349,34 +416,7 @@ export default class ProfileScreen extends Component {
     })
   }
 
-  updateProfile() {
-    console.log("Updating profile.")
-    if(this.state.status  == 1){
 
-      console.log("Retrieving dad profile for user.")
-      try {
-        fetch(server_url + "/dad_profile/me", {method: 'POST'}).then(response => {
-          return response.json()
-        }).then(data => {
-          console.log(data)
-          this.setState({
-            profile: {
-              name: data.name.first + " " + data.name.last,
-              skills: data.skills
-            }
-
-          })
-
-          console.log("State profile:")
-          console.log(this.state)
-        })
-      } catch (e) {
-        console.log("Unable to parse JSON")
-        console.log(e)
-      }
-
-    }
-  }
 
   //these will be the grid of photos
   renderPictures() {
@@ -442,6 +482,11 @@ renderSection() {
     }
 }
   render() {
+    if(!this.state.isLoaded){
+      return (
+        <ActivityIndicator />
+      )
+    }
     let status = this.state.status;
     console.log("Status in render: " + status);
 
@@ -533,7 +578,9 @@ renderSection() {
             username={this.state.postLoginUsername}/>
           <Header>
             <Left>
-
+              <Button transparent onPress = {() => this.logout()}>
+                <Icon name="cog" size={21} />
+              </Button>
             </Left>
           <Body>
             <Title>Dad Profile</Title>
