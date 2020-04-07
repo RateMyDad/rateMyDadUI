@@ -274,9 +274,7 @@ export default class ProfileScreen extends Component {
 
       this.setState({ hasToken: token !== null, isLoaded: true, status: status})
     })
-    .then(() => {
-      this.updateProfile()
-    })
+    .then(this.checkStatus()).then(this.updateProfile())
 
 
 
@@ -284,32 +282,33 @@ export default class ProfileScreen extends Component {
   }
 
   checkStatus() {
-    /**
-    fetch(server_url + "/user/check_status")
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      let message = data.message;
-      // 0 if not logged in.
-      if (message === "You must be logged in to use this feature.") {
-          this.setState({ status: 0 })
-      }
+    AsyncStorage.getItem('id_token').then((token) => {
 
-      // 1 if logged in and dad profile created.
-      else if (message === "You already have a profile created!") {
+      fetch(server_url + "/api/protected/user/check_status", {
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + token }
+      })
+      .then(response => response.json())
+      .then(data => {
+        let message = data.message;
+        // 0 if not logged in.
 
+        // 1 if logged in and dad profile created.
+        if (message === "You already have a profile created!") {
+          console.log("Checking status... 1")
           this.setState({ status: 1 })
           this.updateProfile()
 
-      }
+        }
 
-      // 2 if logged in but no dad profile created.
-      else {
+        // 2 if logged in but no dad profile created.
+        else {
+          console.log("Checking status... 2")
           this.setState({ status: 2 })
-      }
+        }
+      })
     })
-    **/
+
   }
 
   updateProfile() {
@@ -379,12 +378,12 @@ export default class ProfileScreen extends Component {
       this.setState({
         postLoginUsername: username,
         id_token: id_token,
-        access_token: responseData.access_token,
-        status: 1
+        access_token: responseData.access_token
       });
 
       console.log("Login username:");
       console.log(this.state.postLoginUsername);
+      this.checkStatus()
       this.updateProfile();
       return responseData;
     })
@@ -404,7 +403,7 @@ export default class ProfileScreen extends Component {
       body: JSON.stringify(data)
     })
     .then((response) => {
-      if (response.status === 200) {
+      if (response.status === 201) {
         console.log("Profile created!");
         this.login();
       }
