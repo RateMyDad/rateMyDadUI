@@ -22,8 +22,8 @@ var base64 = require('base64-js')
 //the 1 here can be anything from 1-7
 var skillLevel = 1*40;
 
-// var server_url = "http://99.60.8.214:82";
-var server_url = "http://192.168.1.76:82"
+var server_url = "http://99.60.8.214:82";
+//var server_url = "http://192.168.1.76:82"
 
 var buttonColor = {color: 'red'}
 

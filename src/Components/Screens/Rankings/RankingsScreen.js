@@ -4,7 +4,7 @@ import { Image, View,Dimensions, AsyncStorage} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getStatus } from "../../../model";
 var { height, width } = Dimensions.get('window');
-var server_url = "http://192.168.1.76:82"
+var server_url = "http://99.60.8.214:82"
 
 var images = [
   require('../../../../assets/dog.jpg'),

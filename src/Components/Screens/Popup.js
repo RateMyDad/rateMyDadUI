@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Modal, Text, Alert, View, TextInput, ScrollView, Slider, AsyncStorage} from "react-native";
 import {Picker, Icon, Button, Body, Header, Left, Right, Title} from "native-base";
-var server_url = "http://192.168.1.76:82"
+var server_url = "http://99.60.8.214:82"
 class SkillRatingSelection extends Component {
 
   constructor(props) {
