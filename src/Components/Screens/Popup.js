@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Modal, Text, Alert, View, TextInput, ScrollView, Slider} from "react-native";
 import {Picker, Icon, Button, Body, Header, Left, Right, Title} from "native-base";
 
-let server_url = "http://10.0.0.181:82"
+let server_url = "http://99.60.8.214:82"
 
 class SkillRatingSelection extends Component {
 
@@ -153,7 +153,30 @@ export default class Popup extends Component {
         })
         .then(data => {
             console.log(data);
-            this.props.checkStatus();              
+            this.props.checkStatus();         
+            
+            this.setState({ 
+                skills: {
+                    grilling: 1,
+                    cooking: 1,
+                    bags: 1,
+                    golf: 1,
+                    softball: 1,
+                    coaching: 1,
+                    generosity: 1,
+                    looks: 1,
+                    dad_factor: 1,
+                    fantasy_football: 1,
+                    humor: 1,
+                    emotional_stability: 1,
+                    handiness: 1,
+                    kids: 1,
+                    stealth_food_preparation: 1,
+                    tech: 1,
+                    furniture_assembly: 1,
+                    photography: 1
+                }
+            })
         })
     }
 

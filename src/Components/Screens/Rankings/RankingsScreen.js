@@ -18,7 +18,7 @@ var images = [
   require('../../../../assets/dog.jpg'),
   require('../../../../assets/dog.jpg'),
 ]
-let server_url = "http://10.0.0.181:82";
+let server_url = "http://99.60.8.214:82";
 
 //each ranking card, it takes name, rank, and location variable 
 class RankingCard extends Component {

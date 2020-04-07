@@ -19,7 +19,7 @@ var { height, width } = Dimensions.get('window');
 //the 1 here can be anything from 1-7
 var skillLevel = 1*40;
 
-let server_url = "http://10.0.0.181:82";
+let server_url = "http://99.60.8.214:82";
 var buttonColor = {color: 'red'}
 
 const styles = StyleSheet.create
@@ -72,7 +72,6 @@ const styles = StyleSheet.create
     borderRadius: 0,
     backgroundColor: '#7BCACE'
   }
-
 });
 
 var images = [
@@ -261,35 +260,37 @@ export default class ProfileScreen extends Component {
     this.checkStatus();
   }
 
-  checkStatus() {
-    fetch(server_url + "/user/check_status")
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      let message = data.message;
-      // 0 if not logged in.
-      if (message === "You must be logged in to use this feature.") {
-          this.setState({ status: 0 })
-      }
-
-      // 1 if logged in and dad profile created.
-      else if (message === "You already have a profile created!") {
-          this.setState({ status: 1 })
-          this.updateProfile()
-      }
-
-      // 2 if logged in but no dad profile created.
-      else {
-          this.setState({ status: 2 })
-      }
-
-      console.log("Profile screen status:"); 
-      console.log(this.state.status); 
-    })
+  async getRatings() {
+    await fetch(server_url + "/dad_profile/ratings");
   }
 
-  login() {
+  async checkStatus() {
+    const response = await fetch(server_url + "/user/check_status");
+    const data = await response.json(); 
+
+    console.log("Check status data:"); 
+    console.log(data); 
+
+    let message = data.message;
+    // 0 if not logged in.
+    if (message === "You must be logged in to use this feature.") {
+        this.setState({ status: 0 })
+    }
+
+    // 1 if logged in and dad profile created.
+    else if (message === "You already have a profile created!") {
+        this.setState({ status: 1 })
+        await this.getRatings(); 
+        await this.updateProfile(); 
+    }
+
+    // 2 if logged in but no dad profile created.
+    else {
+        this.setState({ status: 2 })
+    }
+  }
+
+  async login() {
     let data = {
       "username": this.state.username,
       "password": this.state.password
@@ -298,83 +299,85 @@ export default class ProfileScreen extends Component {
     console.log(this.state.username);
     let loginUsername = this.state.username;
 
-    fetch(server_url + "/user/login", {
+    const response = await fetch(server_url + "/user/login", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
-    })
-    .then((response) => {
-      if (response.status === 200) {
-        this.checkStatus();
-        this.setState({ postLoginUsername: loginUsername });
-        console.log("Response postLoginUsername: ");
-        console.log(this.state.postLoginUsername);
-      }
+    });
 
-      else {
-        console.log("Invalid login");
-        this.setState({ username: "", password: "", bottomMessage: "The username or password was incorrect." });
-      }
+    if (response.status === 200) {
+      // await this.checkStatus();
+      this.setState({ postLoginUsername: loginUsername });
+      console.log("Response postLoginUsername: ");
+      console.log(this.state.postLoginUsername);
+    }
 
-      return response.json();
-    })
+    else {
+      console.log("Invalid login");
+      this.setState({ username: "", password: "", bottomMessage: "The username or password was incorrect." });
+    }
   }
 
-  createAccount() {
+  async createAccount() {
     let data = {
       "username": this.state.username,
       "password": this.state.password
     };
 
-    fetch(server_url + "/user/register", {
+    const response = await fetch(server_url + "/user/register", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
     })
-    .then((response) => {
-      if (response.status === 200) {
-        console.log("Profile created!");
-        this.login();
-      }
 
-      else {
-        console.log("Something went wrong.");
-        this.setState({ username: "", password: "", bottomMessage: "Username already exists." })
-      }
-    })
+    if (response.status === 200) {
+      console.log("Profile created!");
+    }
+
+    else {
+      console.log("Something went wrong.");
+      this.setState({ username: "", password: "", bottomMessage: "Username already exists." })
+    }
   }
 
-  updateProfile() {
+  async createAccountAndLogin() {
+    await this.createAccount(); 
+    await this.login(); 
+    await this.checkStatus();
+    await this.updateProfile();
+  }
+
+  async loginAndUpdateProfile() {
+    await this.login();
+    await this.checkStatus(); 
+    await this.updateProfile(); 
+  }
+
+  async updateProfile() {
     console.log("Updating profile.")
-    if(this.state.status  == 1){
+    console.log("Retrieving dad profile for user.")
 
-      console.log("Retrieving dad profile for user.")
+    if (this.state.status === 1) {
       try {
-        fetch(server_url + "/dad_profile/me", {method: 'POST'}).then(response => {
-          return response.json()
-        }).then(data => {
-          console.log(data)
-          this.setState({
-            profile: {
-              name: data.name.first + " " + data.name.last,
-              skills: data.skills,
-              rating: data.meta.rating, 
-              skillScore: data.meta.skillScore
-            }
-          })
-
-          console.log("State profile:")
-          console.log(this.state)
+        const response = await fetch(server_url + "/dad_profile/me", {method: 'POST'});
+        const data = await response.json(); 
+        console.log(data);
+        this.setState({
+          profile: {
+            name: data.name.first + " " + data.name.last,
+            skills: data.skills,
+            rating: data.meta.rating, 
+            skillScore: data.meta.skillScore
+          }
         })
       } catch (e) {
-        console.log("Unable to parse JSON")
-        console.log(e)
+        console.log("Unable to parse JSON");
+        console.log(e); 
       }
-
     }
   }
 
@@ -489,13 +492,13 @@ renderSection() {
               <Body style={{ marginTop: 15, flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                 <Button success
                     style={{ marginBottom: 20, width: "40%"}}
-                    onPress={() => this.login()}>
+                    onPress={async () => await this.loginAndUpdateProfile()}>
                     <Text style={{ fontWeight: "bold", left: 45}}>Login</Text>
                 </Button>
                 <Text> </Text>
                 <Button block
                     style={{ marginBottom: 20, width: "40%"}}
-                    onPress={() => this.createAccount()}>
+                    onPress={async () => await this.createAccountAndLogin()}>
                     <Text style={{ fontWeight: "bold"}}>Create Account</Text>
                 </Button>
               </Body>
@@ -582,13 +585,15 @@ renderSection() {
             </View>
 
             {/**Total Love stat */}
-            <View style={profileHeaderStatsViewStyle}>
-              <View style={{ alignItems: 'center', flexDirection:"row"}}>
-                  <Icon name="heart" style={profileHeaderStatsIconStyle}></Icon>
-                  <Text style={{fontSize: 20}}>2,000</Text>
-              </View>
-              <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Love</Text>
-            </View>
+            {/*
+              <View style={profileHeaderStatsViewStyle}>
+                <View style={{ alignItems: 'center', flexDirection:"row"}}>
+                    <Icon name="heart" style={profileHeaderStatsIconStyle}></Icon>
+                    <Text style={{fontSize: 20}}>2,000</Text>
+                </View>
+                <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Love</Text>
+              </View> 
+            */}
 
             {/**Rank stat */}
             <View style={profileHeaderStatsViewStyle}>
@@ -596,7 +601,7 @@ renderSection() {
                 <Icon name="hashtag" style={profileHeaderStatsIconStyle}></Icon>
                 <Text style={{fontSize: 20}}>{this.state.profile.rating}</Text>
             </View>
-            <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Global</Text>
+                <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Global</Text>
             </View>
           </View>
 
