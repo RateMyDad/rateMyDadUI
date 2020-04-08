@@ -5,7 +5,9 @@ import {
   Image,
   Dimensions,
   TextInput,
-  FlatList
+  FlatList,
+  AsyncStorage,
+  ActivityIndicator
 } from "react-native";
 import { Container, Header, Tab, Tabs, TabHeading, Title, Content, Card, CardItem, Thumbnail, Text, Button, Right, Left, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -15,11 +17,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 // import "../../../styles/common.css"
 
 var { height, width } = Dimensions.get('window');
+var base64 = require('base64-js')
 
 //the 1 here can be anything from 1-7
 var skillLevel = 1*40;
 
-let server_url = "http://99.60.8.214:82";
+var server_url = "http://99.60.8.214:82";
+//var server_url = "http://192.168.1.76:82"
+
 var buttonColor = {color: 'red'}
 
 const styles = StyleSheet.create
@@ -72,6 +77,7 @@ const styles = StyleSheet.create
     borderRadius: 0,
     backgroundColor: '#7BCACE'
   }
+
 });
 
 var images = [
@@ -164,7 +170,6 @@ class Skill extends Component {
     }
 
     var barWidth = (this.props.skillAmt/10) * 100 + "%"
-    console.log("[Skill] Bar width: " + barWidth)
 
     return(
       <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-start', height: 30, marginBottom: 10, paddingLeft:20}}>
@@ -215,6 +220,8 @@ export default class ProfileScreen extends Component {
        password: "",
        bottomMessage: "",
        postLoginUsername: "",
+       hasToken: false,
+       isLoaded: false,
        profile : {
          name : "",
          skills: {
@@ -235,11 +242,10 @@ export default class ProfileScreen extends Component {
           "tech": 0,
           "furniture_assembly": 0,
           "photography": 0
-         },
-         rating: 0,
-         skillScore: 0
+         }
        }
      }
+
   }
 
   segmentClicked(index) {
@@ -257,37 +263,97 @@ export default class ProfileScreen extends Component {
   }
 
   componentDidMount() {
-    this.checkStatus();
+
+    AsyncStorage.getItem('id_token').then((token) => {
+      var status = 0
+
+      if(token !== null)
+      {
+        status = 1
+      }
+
+      this.setState({ hasToken: token !== null, isLoaded: true, status: status})
+    })
+    .then(this.checkStatus()).then(this.updateProfile())
+
+
+
+    //this.checkStatus();
   }
 
-  async getRatings() {
-    await fetch(server_url + "/dad_profile/ratings");
+  checkStatus() {
+    AsyncStorage.getItem('id_token').then((token) => {
+
+      fetch(server_url + "/api/protected/user/check_status", {
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + token }
+      })
+      .then(response => response.json())
+      .then(data => {
+        let message = data.message;
+        // 0 if not logged in.
+
+        // 1 if logged in and dad profile created.
+        if (message === "You already have a profile created!") {
+          console.log("Checking status... 1")
+          this.setState({ status: 1 })
+          this.updateProfile()
+
+        }
+
+        // 2 if logged in but no dad profile created.
+        else {
+          console.log("Checking status... 2")
+          this.setState({ status: 2 })
+        }
+      })
+    })
+
   }
 
-  async checkStatus() {
-    const response = await fetch(server_url + "/user/check_status");
-    const data = await response.json(); 
+  updateProfile() {
+    console.log("Updating profile -- current state " + this.state.status)
+    if(this.state.status  == 1){
 
-    console.log("Check status data:"); 
-    console.log(data); 
+      console.log("Retrieving dad profile for user.")
+      AsyncStorage.getItem('id_token').then((token) => {
 
-    let message = data.message;
-    // 0 if not logged in.
-    if (message === "You must be logged in to use this feature.") {
-        this.setState({ status: 0 })
+        fetch(server_url + "/api/protected/dad_profile/me", {
+          method: 'GET',
+          headers: { 'Authorization': 'Bearer ' + token }
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          this.setState({
+            profile: {
+              name: data.name.first + " " + data.name.last,
+              skills: data.skills
+            }
+
+          })
+
+          console.log("State profile:")
+          console.log(this.state)
+        })
+
+      })
     }
+  }
 
-    // 1 if logged in and dad profile created.
-    else if (message === "You already have a profile created!") {
-        this.setState({ status: 1 })
-        await this.getRatings(); 
-        await this.updateProfile(); 
+  async saveItem(item, selectedValue) {
+    try {
+      await AsyncStorage.setItem(item, selectedValue);
+    } catch (error) {
+      console.error('AsyncStorage error: ' + error.message);
     }
+  }
 
-    // 2 if logged in but no dad profile created.
-    else {
-        this.setState({ status: 2 })
-    }
+  async logout() {
+    console.log("Logging out user.");
+    AsyncStorage.removeItem("id_token");
+    this.setState({status : 0});
+
   }
 
   async login() {
@@ -295,94 +361,65 @@ export default class ProfileScreen extends Component {
       "username": this.state.username,
       "password": this.state.password
     };
-    console.log("Login username:");
-    console.log(this.state.username);
-    let loginUsername = this.state.username;
 
-    const response = await fetch(server_url + "/user/login", {
+
+    fetch(server_url + "/user/login", {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
-    });
+    })
+    .then((response) => response.json())
+    .then((responseData) => {
 
-    if (response.status === 200) {
-      // await this.checkStatus();
-      this.setState({ postLoginUsername: loginUsername });
-      console.log("Response postLoginUsername: ");
+      var id_token = responseData.id_token
+      var username = this.state.username
+      this.saveItem("id_token", id_token)
+      //this.checkStatus();
+      this.setState({
+        postLoginUsername: username,
+        id_token: id_token,
+        access_token: responseData.access_token
+      });
+
+      console.log("Login username:");
       console.log(this.state.postLoginUsername);
-    }
-
-    else {
-      console.log("Invalid login");
-      this.setState({ username: "", password: "", bottomMessage: "The username or password was incorrect." });
-    }
+      this.checkStatus()
+      this.updateProfile();
+      return responseData;
+    })
   }
 
-  async createAccount() {
+  createAccount() {
     let data = {
       "username": this.state.username,
       "password": this.state.password
     };
 
-    const response = await fetch(server_url + "/user/register", {
+    fetch(server_url + "/user/register", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
     })
-
-    if (response.status === 200) {
-      console.log("Profile created!");
-    }
-
-    else {
-      console.log("Something went wrong.");
-      this.setState({ username: "", password: "", bottomMessage: "Username already exists." })
-    }
-  }
-
-  async createAccountAndLogin() {
-    await this.createAccount(); 
-    await this.login(); 
-    await this.checkStatus();
-    await this.updateProfile();
-  }
-
-  async loginAndUpdateProfile() {
-    await this.login();
-    await this.checkStatus(); 
-    await this.updateProfile(); 
-  }
-
-  async updateProfile() {
-    console.log("Updating profile.")
-    console.log("Retrieving dad profile for user.")
-
-    if (this.state.status === 1) {
-      try {
-        const response = await fetch(server_url + "/dad_profile/me", {method: 'POST'});
-        const data = await response.json(); 
-        console.log(data);
-        this.setState({
-          profile: {
-            name: data.name.first + " " + data.name.last,
-            skills: data.skills,
-            rating: data.meta.rating, 
-            skillScore: data.meta.skillScore
-          }
-        })
-      } catch (e) {
-        console.log("Unable to parse JSON");
-        console.log(e); 
+    .then((response) => {
+      if (response.status === 201) {
+        console.log("Profile created!");
+        this.login();
       }
-    }
+
+      else {
+        console.log("Something went wrong.");
+        this.setState({ username: "", password: "", bottomMessage: "Username already exists." })
+      }
+    })
   }
+
+
 
   //these will be the grid of photos
   renderPictures() {
+
     return images.map((image, index) => {
         return (
             <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
@@ -397,6 +434,7 @@ export default class ProfileScreen extends Component {
             </View>
         )
     })
+
 }
 
 //renders each section based on button clicked
@@ -443,6 +481,11 @@ renderSection() {
     }
 }
   render() {
+    if(!this.state.isLoaded){
+      return (
+        <ActivityIndicator />
+      )
+    }
     let status = this.state.status;
     console.log("Status in render: " + status);
 
@@ -492,13 +535,13 @@ renderSection() {
               <Body style={{ marginTop: 15, flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                 <Button success
                     style={{ marginBottom: 20, width: "40%"}}
-                    onPress={async () => await this.loginAndUpdateProfile()}>
+                    onPress={() => this.login()}>
                     <Text style={{ fontWeight: "bold", left: 45}}>Login</Text>
                 </Button>
                 <Text> </Text>
                 <Button block
                     style={{ marginBottom: 20, width: "40%"}}
-                    onPress={async () => await this.createAccountAndLogin()}>
+                    onPress={() => this.createAccount()}>
                     <Text style={{ fontWeight: "bold"}}>Create Account</Text>
                 </Button>
               </Body>
@@ -511,6 +554,7 @@ renderSection() {
     }
 
     else {
+
       var profileHeaderStatsIconStyle = {
         padding:5,
         color: '#7BCACE',
@@ -533,7 +577,9 @@ renderSection() {
             username={this.state.postLoginUsername}/>
           <Header>
             <Left>
-
+              <Button transparent onPress = {() => this.logout()}>
+                <Icon name="cog" size={21} />
+              </Button>
             </Left>
           <Body>
             <Title>Dad Profile</Title>
@@ -579,29 +625,27 @@ renderSection() {
             <View style={profileHeaderStatsViewStyle}>
               <View style={{ alignItems: 'center', flexDirection:"row"}}>
                   <Icon name="star" style={profileHeaderStatsIconStyle}></Icon>
-                  <Text style={{fontSize: 20}}>{this.state.profile.skillScore}</Text>
+                  <Text style={{fontSize: 20}}>20</Text>
               </View>
               <Text style={{ paddingLeft:0, fontSize: 10, color: 'grey'}}>Rating</Text>
             </View>
 
             {/**Total Love stat */}
-            {/*
-              <View style={profileHeaderStatsViewStyle}>
-                <View style={{ alignItems: 'center', flexDirection:"row"}}>
-                    <Icon name="heart" style={profileHeaderStatsIconStyle}></Icon>
-                    <Text style={{fontSize: 20}}>2,000</Text>
-                </View>
-                <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Love</Text>
-              </View> 
-            */}
+            <View style={profileHeaderStatsViewStyle}>
+              <View style={{ alignItems: 'center', flexDirection:"row"}}>
+                  <Icon name="heart" style={profileHeaderStatsIconStyle}></Icon>
+                  <Text style={{fontSize: 20}}>2,000</Text>
+              </View>
+              <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Love</Text>
+            </View>
 
             {/**Rank stat */}
             <View style={profileHeaderStatsViewStyle}>
             <View style={{ alignItems: 'center', flexDirection:"row"}}>
                 <Icon name="hashtag" style={profileHeaderStatsIconStyle}></Icon>
-                <Text style={{fontSize: 20}}>{this.state.profile.rating}</Text>
+                <Text style={{fontSize: 20}}>3560</Text>
             </View>
-                <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Global</Text>
+            <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Global</Text>
             </View>
           </View>
 

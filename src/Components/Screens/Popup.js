@@ -1,9 +1,7 @@
 import React, {Component} from "react";
-import {Modal, Text, Alert, View, TextInput, ScrollView, Slider} from "react-native";
+import {Modal, Text, Alert, View, TextInput, ScrollView, Slider, AsyncStorage} from "react-native";
 import {Picker, Icon, Button, Body, Header, Left, Right, Title} from "native-base";
-
-let server_url = "http://99.60.8.214:82"
-
+var server_url = "http://99.60.8.214:82"
 class SkillRatingSelection extends Component {
 
   constructor(props) {
@@ -71,11 +69,9 @@ export default class Popup extends Component {
             if (data === "You must be logged in to use this feature.") {
                 this.setState({ profileStatus: 0 })
             }
-
             else if (data === "You already have a profile created!") {
                 this.setState({ profileStatus: 1 })
             }
-
             else {
                 this.setState({ profileStatus: 2 })
             }
@@ -94,9 +90,7 @@ export default class Popup extends Component {
     }
 
     createDadProfile() {
-        let dadProfile = {
-            username: this.props.username,
-
+        var dadProfile = {
             name: {
                 first: this.state.firstName,
                 last: this.state.lastName
@@ -131,57 +125,37 @@ export default class Popup extends Component {
             }
         }
 
-        console.log(dadProfile); 
+        console.log(JSON.stringify(dadProfile));
 
-        fetch(server_url + "/dad_profile/create", {
-            method: 'POST', 
+        AsyncStorage.getItem('id_token').then((token) => {
+
+          fetch(server_url + "/api/protected/dad_profile/create", {
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
-            },
+              'Authorization': 'Bearer ' + token ,
+              'Content-Type': 'application/json'},
             body: JSON.stringify(dadProfile)
-        })
-        .then((response) => {
-            if (response.status === 400) {
-                console.log("Something went wrong!")
-            }
+          })
+          .then((response) => {
+              if (response.status === 400) {
+                  console.log("Something went wrong!")
+              }
 
-            else if (response.status === 200) {
-                console.log("Dad profile successfully created!");
-            }
+              else if (response.status === 200) {
+                  console.log("Dad profile successfully created!");
+              }
 
-            return response.json();
-        })
-        .then(data => {
-            console.log(data);
-            this.props.checkStatus();         
-            
-            this.setState({ 
-                skills: {
-                    grilling: 1,
-                    cooking: 1,
-                    bags: 1,
-                    golf: 1,
-                    softball: 1,
-                    coaching: 1,
-                    generosity: 1,
-                    looks: 1,
-                    dad_factor: 1,
-                    fantasy_football: 1,
-                    humor: 1,
-                    emotional_stability: 1,
-                    handiness: 1,
-                    kids: 1,
-                    stealth_food_preparation: 1,
-                    tech: 1,
-                    furniture_assembly: 1,
-                    photography: 1
-                }
-            })
+              return response.json();
+          })
+          .then(data => {
+              console.log(data);
+              this.props.checkStatus();
+          })
         })
     }
 
     render() {
-        let status = this.props.status; 
+        let status = this.props.status;
 
         if (status === 1) {
             return (
@@ -219,7 +193,7 @@ export default class Popup extends Component {
                 borderColor: "#dae6ba",
                 color: "#aaa",
               }
-      
+
               return (
                   <Modal
                       visible = {this.state.visibility}>
@@ -244,74 +218,74 @@ export default class Popup extends Component {
                                       placeholderTextColor="#ccc"
                                       onChangeText={(text) => this.setState({ firstName: text })}
                                       style={inputBoxStyle}/>
-      
+
                                   <Text style={{ fontWeight: "bold" }}>Last Name</Text>
                                   <TextInput placeholder="Last Name"
                                       placeholderTextColor="#ccc"
                                       onChangeText={(text) => this.setState({ lastName: text })}
                                       style={inputBoxStyle}/>
-      
+
                                   <Text style={{ fontWeight: "bold", fontSize: 25, marginBottom: 20 }}>Skills Ratings</Text>
-      
+
                                   <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Grilling" skill = "grilling" _this = {this}/>
                                       <SkillRatingSelection skillName = "Cooking" skill = "cooking" _this = {this}/>
                                   </View>
-      
+
                                   <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Bags" skill = "bags" _this = {this}/>
                                       <SkillRatingSelection skillName = "Golf" skill = "golf" _this = {this}/>
                                   </View>
-      
+
                                   <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Softball" skill = "softball" _this = {this}/>
                                       <SkillRatingSelection skillName = "Coaching" skill = "coaching" _this = {this}/>
                                   </View>
-      
+
                                   <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Generosity" skill = "generosity" _this = {this}/>
                                       <SkillRatingSelection skillName = "Looks" skill = "looks" _this = {this}/>
                                   </View>
-      
+
                                   <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Dad Factor" skill = "dad_factor" _this = {this}/>
                                       <SkillRatingSelection skillName = "Fantasy Football" skill = "fantasy_football" _this = {this}/>
                                   </View>
-      
+
                                   <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Humor" skill = "humor" _this = {this}/>
                                       <SkillRatingSelection skillName = "Emotional Stability" skill = "emotional_stability" _this = {this}/>
                                   </View>
-      
+
                                   <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Handiness" skill = "handiness" _this = {this}/>
                                       <SkillRatingSelection skillName = "Kid Skills" skill = "kids" _this = {this}/>
                                   </View>
-      
+
                                   <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                     <SkillRatingSelection skillName = "Stealth Food Prep" skill= "stealth_food_preparation" _this = {this}/>
                                     <SkillRatingSelection skillName = "Technology" skill = "tech" _this = {this}/>
                                   </View>
-      
+
                                   <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                     <SkillRatingSelection skillName = "Furniture Assembly" skill = "furniture_assembly" _this = {this}/>
                                     <SkillRatingSelection skillName = "Photography" skill = "photography" _this = {this}/>
                                   </View>
-      
+
                                   <Text style={{ fontWeight: "bold", fontSize: 25, marginBottom: 20 }}>Location Info</Text>
-      
+
                                   <Text style={{ fontWeight: "bold" }}>Country</Text>
                                   <TextInput placeholder="Country Here"
                                     placeholderTextColor="#ccc"
                                     onChangeText={(text) => this.setState({ country: text })}
                                     style={inputBoxStyle}/>
-      
+
                                   <Text style={{ fontWeight: "bold" }}>Region</Text>
                                   <TextInput placeholder=" Region Here"
                                     placeholderTextColor="#ccc"
                                     onChangeText={(text) => this.setState({ region: text })}
                                     style={inputBoxStyle}/>
-      
+
                                   <Text style={{ fontWeight: "bold" }}>Zip Code</Text>
                                   <TextInput placeholder="Zip Code Here"
                                       placeholderTextColor="#ccc"

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Text, Title, Left, Body, Right, Segment } from 'native-base';
-import { Image, View,Dimensions } from 'react-native';
+import { Image, View,Dimensions, AsyncStorage} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getStatus } from "../../../model";
 var { height, width } = Dimensions.get('window');
+var server_url = "http://99.60.8.214:82"
+
 var images = [
   require('../../../../assets/dog.jpg'),
   require('../../../../assets/dog.jpg'),
@@ -18,9 +20,8 @@ var images = [
   require('../../../../assets/dog.jpg'),
   require('../../../../assets/dog.jpg'),
 ]
-let server_url = "http://99.60.8.214:82";
 
-//each ranking card, it takes name, rank, and location variable 
+//each ranking card, it takes name, rank, and location variable
 class RankingCard extends Component {
   constructor(props) {
     super(props);
@@ -80,9 +81,8 @@ export default class RankingsScreen extends Component {
       activeIndex:0,
       ratings: [],
       globalRatings: [],
-      status: 0, 
-      message: "",
-      zip: ""
+      status: 0,
+      message: ""
     }
  }
 
@@ -98,90 +98,85 @@ componentDidMount() {
   this.getInitialRatings()
 }
 
-updateProfile() {
-  console.log("Updating profile.")
-  if(this.state.status  == 1){
-
-    console.log("Retrieving dad profile for user.")
-    try {
-      fetch(server_url + "/dad_profile/me", {method: 'POST'}).then(response => {
-        return response.json()
-      }).then(data => {
-        this.setState({ zip: data.zip });
-      })
-    } catch (e) {
-      console.log("Unable to parse JSON")
-      console.log(e)
-    }
-  }
-}
-
 getInitialRatings() {
-  // NOTE: You'll have to change this IP address to get it to work on your machine.
-  console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
-  fetch(server_url + "/dad_profile/ratings")
+  AsyncStorage.getItem('id_token').then((token) => {
+
+    console.log("[Ranking] Sending request to " + server_url + "/api/protected/dad_profile/ratings");
+    fetch(server_url + "/api/protected/dad_profile/ratings", {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    })
     .then(response => {
       console.log("[Ranking] Recieved server response.")
       return response.json();
     })
     .then(data => {
       this.setState({ globalRatings: data.reverse() });
-      console.log("Global ratings:"); 
-      console.log(this.state.globalRatings); 
       var filter = "Global";
       this.filterRatings(filter);
     })
+  })
 }
 
-async getRatings() {
-  const response = await fetch(server_url + "/dad_profile/ratings");
-  const data = await response.json(); 
-  this.setState({ globalRatings: data.reverse() });
+getRatings() {
+  console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
+  AsyncStorage.getItem('id_token').then((token) => {
+
+    console.log("[Ranking] Sending request to " + server_url + "/api/protected/dad_profile/ratings");
+    fetch(server_url + "/api/protected/dad_profile/ratings", {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    })
+    .then(response => {
+      console.log("[Ranking] Recieved server response.")
+      return response.json();
+    })
+    .then(data => {
+      this.setState({ globalRatings: data.reverse() });
+    })
+  })
 }
 
-async checkStatus() {
-  const response = await fetch(server_url + "/user/check_status");
-  const data = await response.json();
-  
-  let message = data.message;
-  // 0 if not logged in.
-  if (message === "You must be logged in to use this feature.") {
-      this.setState({ status: 0 })
+  checkStatus() {
+    AsyncStorage.getItem('id_token').then((token) => {
+
+      fetch(server_url + "/api/protected/user/check_status", {
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + token }
+      })
+      .then(response => response.json())
+      .then(data => {
+        let message = data.message;
+        // 0 if not logged in.
+
+        // 1 if logged in and dad profile created.
+        if (message === "You already have a profile created!") {
+          console.log("Checking status... 1")
+          this.setState({ status: 1 })
+        }
+
+        // 2 if logged in but no dad profile created.
+        else {
+          console.log("Checking status... 2")
+          this.setState({ status: 2 })
+        }
+      })
+    })
+
   }
 
-  // 1 if logged in and dad profile created.
-  else if (message === "You already have a profile created!") {
-      this.setState({ status: 1 })
-      this.updateProfile()
-  }
+ filterRatings(filter) {
+    this.checkStatus();
+    this.getRatings();
+    console.log("Inside of filterRatings() function");
 
-  // 2 if logged in but no dad profile created.
-  else {
-      this.setState({ status: 2 })
-  }
-
-  console.log("Rankings screen status:");
-  console.log(this.state.status);
-}
-
- async filterRatings(filter) {
-    await this.checkStatus(); 
-    await this.getRatings(); 
-
-    console.log("Inside of filterRatings() function"); 
-    console.log("----------------------------------");
- 
     var ratings = this.state.globalRatings;
 
-    var zip = 6;
-
-    if (this.state.zip !== "") {
-      zip = this.state.zip;
-    }
-
-    console.log("Current zip:");
-    console.log(zip); 
-    
+    var zip = 60491;
     var myFirstZipDigit = String(zip).charAt(0);
 
     var regionalRatings = []
@@ -201,12 +196,10 @@ async checkStatus() {
         }
       }
 
-      this.setState({ ratings: regionalRatings, message: "" });
-      console.log("Inside of proper condition");
+      this.setState({ ratings: regionalRatings, message: "" })
     }
 
     else if (filter === "Regional" && this.state.status === 0) {
-      console.log("Inside of weird condition"); 
       this.setState({ ratings: [], message: "You must be logged in to access this feature."});
     }
 
@@ -229,19 +222,22 @@ async checkStatus() {
       this.setState({ ratings: ratings, message: "" });
     }
  }
-  
+
  createRankingCard(profile) {
-  // let name = profile.name.first + " " + profile.name.last;
-  let username = profile.username + "'s" + " Dad"; 
+  let name = profile.name.first + " " + profile.name.last;
   let rank = profile.meta.rating;
   let id = profile._id;
 
    return (
-     <RankingCard name={username} rank={rank} key={id}/>
+     <RankingCard name={name} rank={rank} key={id}/>
    )
  }
   render() {
+    console.log(this.props.title);
+    console.log(this.props.options);
     let ratings = this.state.ratings;
+    console.log("Profile ratings: ");
+    console.log(ratings);
 
     // Need this b/c the component re-renders once the state is set in componentDidMount().
     if (ratings.length !== 0) {
@@ -327,7 +323,7 @@ async checkStatus() {
          * to change the content area of this screen
         */}
         <Segment>
-          <Button first style={{borderColor:'#545F66'}} 
+          <Button first style={{borderColor:'#545F66'}}
            onPress={() => this.filterRatings("Local")}>
            <Text style={{color:'#545F66'}}>Local</Text>
 
