@@ -224,7 +224,7 @@ getRatings() {
  }
 
  createRankingCard(profile) {
-  let name = profile.name.first + " " + profile.name.last;
+  let name = profile.username + "'s Dad"; 
   let rank = profile.meta.rating;
   let id = profile._id;
 

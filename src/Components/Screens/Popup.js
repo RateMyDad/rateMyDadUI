@@ -32,7 +32,9 @@ export default class Popup extends Component {
 
         this.state = {
             visibility: props.modalVisible,
+
             profileStatus: 0,
+
             firstName: "",
             lastName: "",
             grilling: 1,
@@ -55,7 +57,9 @@ export default class Popup extends Component {
             photography: 1,
             country: "",
             region: "",
-            zip: ""
+            zip: "",
+
+            bottomMessage: ""
         };
     }
 
@@ -90,7 +94,11 @@ export default class Popup extends Component {
     }
 
     createDadProfile() {
+        console.log("====================");
+        console.log(this.props.username); 
         var dadProfile = {
+            username: this.props.username, 
+
             name: {
                 first: this.state.firstName,
                 last: this.state.lastName
@@ -126,6 +134,22 @@ export default class Popup extends Component {
         }
 
         console.log(JSON.stringify(dadProfile));
+        const skillValues = Object.values(dadProfile.skills); 
+        // Got this from this source: https://stackoverflow.com/questions/19395257/how-to-count-duplicate-value-in-an-array-in-javascript
+        var valueCounts = {};
+        skillValues.forEach(function(x) { valueCounts[x] = (valueCounts[x] || 0) + 1; });
+        if (valueCounts[7] > 6) {
+            this.setState({ bottomMessage: "You can only have up to 6 skills with ratings of 7." });
+
+            return 
+        }
+
+        else if (isNaN(dadProfile.zip)) {
+            this.setState({ bottomMessage: "You must enter a valid zip code" });
+
+            return 
+        }
+        
 
         AsyncStorage.getItem('id_token').then((token) => {
 
@@ -148,6 +172,7 @@ export default class Popup extends Component {
               return response.json();
           })
           .then(data => {
+              console.log("---------------------------------------------------------------------")
               console.log(data);
               this.props.checkStatus();
           })
@@ -295,10 +320,11 @@ export default class Popup extends Component {
                                       <Button block
                                           onPress={() => {
                                               this.createDadProfile();}}
-                                          style={{ marginBottom: 400, width: "50%"}}>
+                                          style={{ marginBottom: 40, width: "50%"}}>
                                               <Text style={{ right: "50%", fontWeight: "bold"}}>Create Dad Profile</Text>
                                       </Button>
                                   </Body>
+                                  <Text style={{ marginBottom: 400, color: "red" }}>{ this.state.bottomMessage }</Text>
                               </View>
                           </ScrollView>
                       </View>
