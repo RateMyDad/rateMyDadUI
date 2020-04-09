@@ -120,58 +120,51 @@ getInitialRatings() {
   })
 }
 
-getRatings() {
+async getRatings() {
   console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
-  AsyncStorage.getItem('id_token').then((token) => {
+  AsyncStorage.getItem('id_token').then(async (token) => {
 
-    console.log("[Ranking] Sending request to " + server_url + "/api/protected/dad_profile/ratings");
-    fetch(server_url + "/api/protected/dad_profile/ratings", {
+    const response = await fetch(server_url + "/api/protected/dad_profile/ratings", {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + token
       }
     })
-    .then(response => {
-      console.log("[Ranking] Recieved server response.")
-      return response.json();
-    })
-    .then(data => {
-      this.setState({ globalRatings: data.reverse() });
-    })
+
+    const data = await response.json(); 
+    this.setState({ globalRatings: data.reverse() });
   })
 }
 
-  checkStatus() {
-    AsyncStorage.getItem('id_token').then((token) => {
+  async checkStatus() {
+    AsyncStorage.getItem('id_token').then(async (token) => {
 
-      fetch(server_url + "/api/protected/user/check_status", {
+      const response = await fetch(server_url + "/api/protected/user/check_status", {
         method: 'GET',
         headers: { 'Authorization': 'Bearer ' + token }
-      })
-      .then(response => response.json())
-      .then(data => {
-        let message = data.message;
-        // 0 if not logged in.
+      });
 
-        // 1 if logged in and dad profile created.
-        if (message === "You already have a profile created!") {
-          console.log("Checking status... 1")
-          this.setState({ status: 1 })
-        }
+      const data = await response.json(); 
+      let message = data.message;
+      // 0 if not logged in.
 
-        // 2 if logged in but no dad profile created.
-        else {
-          console.log("Checking status... 2")
-          this.setState({ status: 2 })
-        }
-      })
+      // 1 if logged in and dad profile created.
+      if (message === "You already have a profile created!") {
+        console.log("Checking status... 1")
+        this.setState({ status: 1 })
+      }
+
+      // 2 if logged in but no dad profile created.
+      else {
+        console.log("Checking status... 2")
+        this.setState({ status: 2 })
+      }
     })
-
   }
 
- filterRatings(filter) {
-    this.checkStatus();
-    this.getRatings();
+ async filterRatings(filter) {
+    await this.checkStatus();
+    await this.getRatings();
     console.log("Inside of filterRatings() function");
 
     var ratings = this.state.globalRatings;
