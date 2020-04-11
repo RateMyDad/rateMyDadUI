@@ -441,6 +441,11 @@ export default class ProfileScreen extends Component {
       "password": this.state.password
     };
 
+    if (data["username"].length < 8 || data["password"].length < 8) {
+      this.setState({ bottomMessage: "Username/Password must be at least 8 characters long." });
+      return
+    }
+
     const response = await fetch(server_url + "/user/register", {
       method: 'POST',
       headers: {

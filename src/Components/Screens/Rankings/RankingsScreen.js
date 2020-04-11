@@ -3,6 +3,7 @@ import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Text, Ti
 import { Image, View,Dimensions, AsyncStorage} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getStatus } from "../../../model";
+import ProfilePopup from "./ProfilePopup";
 var { height, width } = Dimensions.get('window');
 //var server_url = "http://192.168.1.76:82"
 var server_url = "http://99.60.8.214:82"
@@ -28,13 +29,31 @@ class RankingCard extends Component {
     super(props);
 
     this.state = {
-      profiles: []
+      profiles: [],
+      modalVisible: false
     };
+
+    this.updateParent = this.updateParent.bind(this); 
+  }
+
+  updateParent() {
+    this.setState({ modalVisible: false })
+  }
+  
+  showPopup() {
+    this.setState( { modalVisible: true })
   }
 
   render() {
     return(
       <View style={{paddingBottom:2, alignContent:'stretch'}}>
+        <ProfilePopup
+            modalVisible={this.state.modalVisible}
+            updateParent={this.updateParent}
+            name={this.props.name}
+            rank={this.props.rank}
+            skillScore={this.props.skillScore}
+            skills={this.props.skills}/>
           <Card>
             <CardItem>
               <Left>
@@ -47,7 +66,8 @@ class RankingCard extends Component {
                       style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                       <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
-                        <Button small dark transparent>
+                        <Button small dark transparent
+                          onPress={() => this.showPopup()}>
                           <Text>{this.props.name}</Text>
                         </Button>
                         <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>{this.props.location}</Text>
@@ -86,14 +106,6 @@ export default class RankingsScreen extends Component {
       message: ""
     }
  }
-
- /*
- componentDidMount() {
-    var profileRatings = getRatings();
-    this.setState({ ratings: profileRatings });
- }
- */
-
 
 componentDidMount() {
   this.getInitialRatings()
@@ -213,10 +225,12 @@ async getRatings() {
  createRankingCard(profile) {
   let name = profile.username + "'s Dad";
   let rank = profile.meta.rating;
+  let skillScore = profile.meta.skillScore; 
   let id = profile._id;
+  let skills = profile.skills; 
 
    return (
-     <RankingCard name={name} rank={rank} key={id}/>
+     <RankingCard name={name} rank={rank} skillScore={skillScore} skills={skills} key={id}/>
    )
  }
   render() {
