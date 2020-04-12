@@ -81,7 +81,7 @@ const styles = StyleSheet.create
 });
 
 var images = [
-  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/emptyP.JPG'),
   require('../../../../assets/dog.jpg'),
   require('../../../../assets/dog.jpg'),
   require('../../../../assets/dog.jpg'),
