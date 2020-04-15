@@ -37,14 +37,14 @@ class Post extends Component {
                 {/*Mini profile pic and misc info*/}
                   <View 
                     style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
-                    <Image source={require('../../../../assets/dog.jpg')}
+                    <Image source={require('../../../../assets/blankProfile.png')}
                     style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                     <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
                       <Button small dark transparent>
-                        <Text>Courage T. Dog</Text>
+                        <Text>Mr. Sample Dad</Text>
                       </Button>
-                      <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>Rank #3 Global</Text>
+                      <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>Rank Unknown</Text>
                     </View>
                 </View>
               </View>
@@ -57,17 +57,14 @@ class Post extends Component {
                    <Button iconLeft small transparent>
                       <Icon name="arrow-circle-up" style={{ color: '#829399' }} size={30}></Icon>
                    </Button>
-                      <Text style={{ alignSelf: 'flex-end', fontSize: 10,  paddingRight:3, paddingTop:3, color: 'grey'}}>300</Text>
+                      <Text style={{ alignSelf: 'flex-end', fontSize: 10,  paddingRight:3, paddingTop:3, color: 'grey'}}>#</Text>
                 </View>
             </Right>
           </CardItem>
 
           {/*This is where card content goes*/}
           <CardItem cardBody>
-          <Image
-                style={{width: 370, height: 200}}
-                source={require('../../../../assets/dog.jpg')}
-          />
+          <Text style={{padding:15}}>This is a sample! Feature to post is still in development</Text>
           </CardItem>
           {/*Bottom of the card (left side) */}
           <CardItem>
@@ -76,12 +73,12 @@ class Post extends Component {
               <View style={{flexDirection:'row'}}>
               <Button transparent>
               <Icon name="heart" style={{ color: '#7BCACE' }} size={25}></Icon>
-                <Text style={{padding:0 ,color:'black'}}>4 million</Text>
+                <Text style={{padding:0 ,color:'black'}}>#</Text>
               </Button>
             
               <Button transparent>
                 <Icon name="comment" style={{ color: '#7BCACE' }} size={25}></Icon>
-                <Text style={{padding:0 ,color:'black'}}>1.2 million</Text>
+                <Text style={{padding:0 ,color:'black'}}>#</Text>
               </Button>
               </View>
             </Left>
@@ -138,10 +135,7 @@ export default class HomeScreen extends Component
       <Content>
 
       <Post> content="text" </Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
+      
 
       </Content>
     </Container>

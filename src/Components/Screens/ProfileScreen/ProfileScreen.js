@@ -7,7 +7,9 @@ import {
   TextInput,
   FlatList,
   AsyncStorage,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert,
+  DevSettings
 } from "react-native";
 import { Container, Header, Tab, Tabs, TabHeading, Title, Content, Card, CardItem, Thumbnail, Text, Button, Right, Left, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -17,7 +19,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 // import "../../../styles/common.css"
 
 var { height, width } = Dimensions.get('window');
-var base64 = require('base64-js')
+var base64 = require('base64-js');
+var description = "error";
 
 //the 1 here can be anything from 1-7
 var skillLevel = 1*40;
@@ -80,19 +83,92 @@ const styles = StyleSheet.create
 
 });
 
+//determine skill msg
+function determineMsg(name)
+{
+  if(name == "free-code-camp")
+  {
+    description = "grilling";
+  }
+  else if(name == "cutlery")
+  {
+    description = "cooking";
+  }
+  else if(name == "square-o")
+  {
+    description = "bags";
+  }
+  else if(name == "flag-o")
+  {
+    description = "golf";
+  }
+  else if(name == "diamond")
+  {
+    description = "softball";
+  }
+  else if(name == "comments-o")
+  {
+    description = "coaching";
+  }
+  else if(name == "connectdevelop")
+  {
+    description = "generosity";
+  }
+  else if(name == "heartbeat")
+  {
+    description = "looks";
+  }
+  else if(name == "hand-spock-o")
+  {
+    description = "dad factor";
+  }
+  else if(name == "lemon-o")
+  {
+    description = "fantasy football";
+  }
+  else if(name == "smile-o")
+  {
+    description = "humor";
+  }
+  else if(name == "compress")
+  {
+    description = "emotional stability";
+  }
+  else if(name == "bath")
+  {
+    description = "handiness";
+  }
+  else if(name == "child")
+  {
+    description = "kid skills";
+  }
+  else if(name == "apple")
+  {
+    description = "stealth food prep";
+  }
+  else if(name == "mobile")
+  {
+    description = "technology";
+  }
+  else if(name == "chain-broken")
+  {
+    description = "furniture assembly";
+  }
+}
+
+function createTwoButtonAlert(event, iconName) {
+  determineMsg(iconName);
+Alert.alert(
+  "This skill is:",
+  description,
+  [
+    
+    { text: "OK", onPress: () => console.log("OK Pressed") }
+  ],
+  { cancelable: false })
+}
 var images = [
-  require('../../../../assets/emptyP.JPG'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/blankProfile.png'),
 ]
 
 //This renders each skill takes type of skill and skill number variable
@@ -177,7 +253,10 @@ class Skill extends Component {
         <View style={{justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}>
 
           <View style = {{position: 'relative', justifySelf: 'flex-start', flexBasis: '12%'}}>
-          <Icon name = {iconName} style={{paddingRight:10}} size={25}></Icon>
+          <Button transparent onPress={(event) => createTwoButtonAlert(event, iconName)}>
+            <Icon name = {iconName} style={{paddingRight:10}} size={25}></Icon>
+          </Button>
+
           </View>
 
           <View  style={{float: 'right', width: 250}} >
@@ -465,25 +544,6 @@ export default class ProfileScreen extends Component {
     }
   }
 
-  //these will be the grid of photos
-  renderPictures() {
-
-    return images.map((image, index) => {
-        return (
-            <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
-                <Image style={{
-                    flex: 1,
-                    alignSelf: 'stretch',
-                    width: undefined,
-                    height: undefined,
-                }}
-                source={image}>
-                </Image>
-            </View>
-        )
-    })
-
-}
 
 //renders each section based on button clicked
 renderSection() {
