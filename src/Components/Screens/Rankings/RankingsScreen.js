@@ -5,22 +5,21 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { getStatus } from "../../../model";
 import ProfilePopup from "./ProfilePopup";
 var { height, width } = Dimensions.get('window');
-//var server_url = "http://192.168.1.76:82"
 var server_url = "http://99.60.8.214:82"
 
 var images = [
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
 ]
 
 //each ranking card, it takes name, rank, and location variable
@@ -62,7 +61,11 @@ class RankingCard extends Component {
                     <View
                       style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
 
+<<<<<<< HEAD
                       <Image source={require('../../../../assets/blankProfile.png')}
+=======
+                      <Image source={require('../../../../assets/emptyProfile.jpg')}
+>>>>>>> 19fd9e215cf293b60f9a8f7c41ee5adb94431efb
                       style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                       <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
@@ -113,6 +116,7 @@ componentDidMount() {
 
 getInitialRatings() {
   AsyncStorage.getItem('id_token').then((token) => {
+
       console.log("[Ranking] Sending request to " + server_url + "/api/dad_profile/ratings");
       fetch(server_url + "/api/dad_profile/ratings")
       .then(response => {
@@ -172,7 +176,7 @@ async getRatings() {
     await this.checkStatus();
     await this.getRatings();
     console.log("Inside of filterRatings() function");
-
+   
     var ratings = this.state.globalRatings;
 
     var zip = 60491;
