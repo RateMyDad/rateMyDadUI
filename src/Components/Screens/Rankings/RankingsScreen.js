@@ -8,18 +8,18 @@ var { height, width } = Dimensions.get('window');
 var server_url = "http://99.60.8.214:82"
 
 var images = [
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
 ]
 
 //each ranking card, it takes name, rank, and location variable
@@ -61,7 +61,7 @@ class RankingCard extends Component {
                     <View
                       style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
 
-                      <Image source={require('../../../../assets/dog.jpg')}
+                      <Image source={require('../../../../assets/emptyProfile.jpg')}
                       style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                       <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
