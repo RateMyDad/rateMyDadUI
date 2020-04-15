@@ -81,7 +81,7 @@ const styles = StyleSheet.create
 });
 
 var images = [
-  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
   require('../../../../assets/dog.jpg'),
   require('../../../../assets/dog.jpg'),
   require('../../../../assets/dog.jpg'),
@@ -241,11 +241,14 @@ export default class ProfileScreen extends Component {
           "stealth_food_preparation": 0,
           "tech": 0,
           "furniture_assembly": 0,
-          "photography": 0
+          "photography": 0,
+         },
+         meta: {
+          "rating": 0,
+          "skillScore": 0
          }
        }
      }
-
   }
 
   segmentClicked(index) {
@@ -263,8 +266,7 @@ export default class ProfileScreen extends Component {
   }
 
   componentDidMount() {
-
-    AsyncStorage.getItem('id_token').then((token) => {
+    AsyncStorage.getItem('id_token').then(async (token) => {
       var status = 0
 
       if(token !== null)
@@ -276,37 +278,51 @@ export default class ProfileScreen extends Component {
     })
     .then(this.checkStatus()).then(this.updateProfile())
 
-
-
     //this.checkStatus();
   }
 
-  checkStatus() {
-    AsyncStorage.getItem('id_token').then((token) => {
+  async getRatings() {
+    console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
+    AsyncStorage.getItem('id_token').then(async (token) => {
+  
+      console.log("[Ranking] Sending request to " + server_url + "/api/protected/dad_profile/ratings");
 
-      fetch(server_url + "/api/protected/user/check_status", {
+      await fetch(server_url + "/api/protected/dad_profile/ratings", {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      });
+    })
+  }
+
+  async checkStatus() {
+    AsyncStorage.getItem('id_token').then(async (token) => {  
+
+      await this.getRatings(); 
+
+      const response = await fetch(server_url + "/api/protected/user/check_status", {
         method: 'GET',
         headers: { 'Authorization': 'Bearer ' + token }
-      })
-      .then(response => response.json())
-      .then(data => {
-        let message = data.message;
-        // 0 if not logged in.
+      });
 
-        // 1 if logged in and dad profile created.
-        if (message === "You already have a profile created!") {
-          console.log("Checking status... 1")
-          this.setState({ status: 1 })
-          this.updateProfile()
+      const data = await response.json(); 
 
-        }
+      let message = data.message;
+      // 0 if not logged in.
 
-        // 2 if logged in but no dad profile created.
-        else {
-          console.log("Checking status... 2")
-          this.setState({ status: 2 })
-        }
-      })
+      // 1 if logged in and dad profile created.
+      if (message === "You already have a profile created!") {
+        console.log("Checking status... 1")
+        this.setState({ status: 1 })
+        await this.updateProfile()
+      }
+
+      // 2 if logged in but no dad profile created.
+      else {
+        console.log("Checking status... 2")
+        this.setState({ status: 2 })
+      }
     })
 
   }
@@ -356,20 +372,94 @@ export default class ProfileScreen extends Component {
 
   }
 
+  async updateProfile() {
+    console.log("Updating profile -- current state " + this.state.status)
+    if(this.state.status  === 1) {
+
+      console.log("Retrieving dad profile for user.")
+      AsyncStorage.getItem('id_token').then(async (token) => {
+        const response = await fetch(server_url + "/api/protected/dad_profile/me", {
+          method: 'GET',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        const data = await response.json(); 
+
+        console.log(data)
+        this.setState({
+          profile: {
+            name: data.name.first + " " + data.name.last,
+            skills: data.skills,
+            meta: data.meta
+          }
+        })
+      })
+    }
+  }
+
+  async saveItem(item, selectedValue) {
+    try {
+      await AsyncStorage.setItem(item, selectedValue);
+    } catch (error) {
+      console.error('AsyncStorage error: ' + error.message);
+    }
+  }
+
+  async logout() {
+    console.log("Logging out user.");
+    AsyncStorage.removeItem("id_token");
+    this.setState({
+      status : 0, 
+      profile: {
+        skills: {
+          "grilling": 0,
+          "cooking": 0,
+          "bags": 0,
+          "softball": 0,
+          "coaching": 0,
+          "generosity": 0,
+          "looks": 0,
+          "dad_factor": 0,
+          "fantasy_football": 0,
+          "humor": 0,
+          "emotional_stability": 0,
+          "handiness": 0,
+          "kids": 0,
+          "stealth_food_preparation": 0,
+          "tech": 0,
+          "furniture_assembly": 0,
+          "photography": 0
+         },
+         meta: {
+           "rating": 0,
+           "skillScore": 0
+         }
+      }
+    });
+  }
+  
   async login() {
     let data = {
       "username": this.state.username,
       "password": this.state.password
     };
 
+    console.log("Inside of login function:")
+    console.log(data); 
 
-    fetch(server_url + "/user/login", {
+    const response = await fetch(server_url + "/user/login", {
       method: 'POST',
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     })
-    .then((response) => response.json())
-    .then((responseData) => {
+
+    if (response.status === 400) {
+      this.setState({ username: "", password: "", bottomMessage: "Invalid login. Please try again." });
+      return 
+    }
+
+    else {
+      const responseData = await response.json(); 
 
       var id_token = responseData.id_token
       var username = this.state.username
@@ -380,42 +470,45 @@ export default class ProfileScreen extends Component {
         id_token: id_token,
         access_token: responseData.access_token
       });
-
-      console.log("Login username:");
+  
+      console.log("Post-login username:");
       console.log(this.state.postLoginUsername);
-      this.checkStatus()
-      this.updateProfile();
+      await this.checkStatus();
+      await this.updateProfile();
+      this.setState({ username: "", password: "", bottomMessage: "" });
       return responseData;
-    })
+    } 
   }
 
-  createAccount() {
+  async createAccount() {
     let data = {
       "username": this.state.username,
       "password": this.state.password
     };
 
-    fetch(server_url + "/user/register", {
+    if (data["username"].length < 8 || data["password"].length < 8) {
+      this.setState({ bottomMessage: "Username/Password must be at least 8 characters long." });
+      return
+    }
+
+    const response = await fetch(server_url + "/user/register", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
-    })
-    .then((response) => {
-      if (response.status === 201) {
-        console.log("Profile created!");
-        this.login();
-      }
+    });
 
-      else {
-        console.log("Something went wrong.");
-        this.setState({ username: "", password: "", bottomMessage: "Username already exists." })
-      }
-    })
+    if (response.status === 201) {
+      console.log("Profile created!");
+      await this.login();
+    }
+
+    else {
+      console.log("Something went wrong.");
+      this.setState({ username: "", password: "", bottomMessage: "Username already exists." })
+    }
   }
-
-
 
   //these will be the grid of photos
   renderPictures() {
@@ -535,13 +628,13 @@ renderSection() {
               <Body style={{ marginTop: 15, flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                 <Button success
                     style={{ marginBottom: 20, width: "40%"}}
-                    onPress={() => this.login()}>
+                    onPress={async () => await this.login()}>
                     <Text style={{ fontWeight: "bold", left: 45}}>Login</Text>
                 </Button>
                 <Text> </Text>
                 <Button block
                     style={{ marginBottom: 20, width: "40%"}}
-                    onPress={() => this.createAccount()}>
+                    onPress={async () => await this.createAccount()}>
                     <Text style={{ fontWeight: "bold"}}>Create Account</Text>
                 </Button>
               </Body>
@@ -625,12 +718,13 @@ renderSection() {
             <View style={profileHeaderStatsViewStyle}>
               <View style={{ alignItems: 'center', flexDirection:"row"}}>
                   <Icon name="star" style={profileHeaderStatsIconStyle}></Icon>
-                  <Text style={{fontSize: 20}}>20</Text>
+                  <Text style={{fontSize: 20}}>{this.state.profile.meta["skillScore"]}</Text>
               </View>
               <Text style={{ paddingLeft:0, fontSize: 10, color: 'grey'}}>Rating</Text>
             </View>
 
             {/**Total Love stat */}
+            {/* 
             <View style={profileHeaderStatsViewStyle}>
               <View style={{ alignItems: 'center', flexDirection:"row"}}>
                   <Icon name="heart" style={profileHeaderStatsIconStyle}></Icon>
@@ -638,12 +732,13 @@ renderSection() {
               </View>
               <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Love</Text>
             </View>
+            */}
 
             {/**Rank stat */}
             <View style={profileHeaderStatsViewStyle}>
             <View style={{ alignItems: 'center', flexDirection:"row"}}>
                 <Icon name="hashtag" style={profileHeaderStatsIconStyle}></Icon>
-                <Text style={{fontSize: 20}}>3560</Text>
+                <Text style={{fontSize: 20}}>{this.state.profile.meta["rating"]}</Text>
             </View>
             <Text style={{ paddingLeft:0,fontSize: 10, color: 'grey' }}>Global</Text>
             </View>

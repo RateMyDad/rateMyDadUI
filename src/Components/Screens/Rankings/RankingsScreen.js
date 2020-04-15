@@ -3,6 +3,7 @@ import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Text, Ti
 import { Image, View,Dimensions, AsyncStorage} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getStatus } from "../../../model";
+import ProfilePopup from "./ProfilePopup";
 var { height, width } = Dimensions.get('window');
 var server_url = "http://99.60.8.214:82"
 
@@ -27,13 +28,31 @@ class RankingCard extends Component {
     super(props);
 
     this.state = {
-      profiles: []
+      profiles: [],
+      modalVisible: false
     };
+
+    this.updateParent = this.updateParent.bind(this); 
+  }
+
+  updateParent() {
+    this.setState({ modalVisible: false })
+  }
+  
+  showPopup() {
+    this.setState( { modalVisible: true })
   }
 
   render() {
     return(
       <View style={{paddingBottom:2, alignContent:'stretch'}}>
+        <ProfilePopup
+            modalVisible={this.state.modalVisible}
+            updateParent={this.updateParent}
+            name={this.props.name}
+            rank={this.props.rank}
+            skillScore={this.props.skillScore}
+            skills={this.props.skills}/>
           <Card>
             <CardItem>
               <Left>
@@ -46,7 +65,8 @@ class RankingCard extends Component {
                       style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                       <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >
-                        <Button small dark transparent>
+                        <Button small dark transparent
+                          onPress={() => this.showPopup()}>
                           <Text>{this.props.name}</Text>
                         </Button>
                         <Text style={{ alignSelf:'flex-start', fontSize: 10,  paddingTop:0, padding:6, color: 'grey'}}>{this.props.location}</Text>
@@ -86,14 +106,6 @@ export default class RankingsScreen extends Component {
     }
  }
 
- /*
- componentDidMount() {
-    var profileRatings = getRatings();
-    this.setState({ ratings: profileRatings });
- }
- */
-
-
 componentDidMount() {
   this.getInitialRatings()
 }
@@ -101,55 +113,40 @@ componentDidMount() {
 getInitialRatings() {
   AsyncStorage.getItem('id_token').then((token) => {
 
-    console.log("[Ranking] Sending request to " + server_url + "/api/protected/dad_profile/ratings");
-    fetch(server_url + "/api/protected/dad_profile/ratings", {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    })
-    .then(response => {
-      console.log("[Ranking] Recieved server response.")
-      return response.json();
-    })
-    .then(data => {
-      this.setState({ globalRatings: data.reverse() });
-      var filter = "Global";
-      this.filterRatings(filter);
-    })
-  })
-}
-
-getRatings() {
-  console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
-  AsyncStorage.getItem('id_token').then((token) => {
-
-    console.log("[Ranking] Sending request to " + server_url + "/api/protected/dad_profile/ratings");
-    fetch(server_url + "/api/protected/dad_profile/ratings", {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    })
-    .then(response => {
-      console.log("[Ranking] Recieved server response.")
-      return response.json();
-    })
-    .then(data => {
-      this.setState({ globalRatings: data.reverse() });
-    })
-  })
-}
-
-  checkStatus() {
-    AsyncStorage.getItem('id_token').then((token) => {
-
-      fetch(server_url + "/api/protected/user/check_status", {
-        method: 'GET',
-        headers: { 'Authorization': 'Bearer ' + token }
+      console.log("[Ranking] Sending request to " + server_url + "/api/dad_profile/ratings");
+      fetch(server_url + "/api/dad_profile/ratings")
+      .then(response => {
+        console.log("[Ranking] Recieved server response.")
+        return response.json();
       })
-      .then(response => response.json())
       .then(data => {
+        this.setState({ globalRatings: data.reverse() });
+        var filter = "Global";
+        this.filterRatings(filter);
+      })
+  })
+}
+
+async getRatings() {
+  console.log("[Ranking] Sending request to " + server_url + "/api/dad_profile/ratings");
+  AsyncStorage.getItem('id_token').then(async (token) => {
+      const response = await fetch(server_url + "/api/dad_profile/ratings")
+
+      const data = await response.json();
+      this.setState({ globalRatings: data.reverse() });
+  })
+}
+
+  async checkStatus() {
+    AsyncStorage.getItem('id_token').then(async (token) => {
+
+      if(token != null) {
+        const response = await fetch(server_url + "/api/protected/user/check_status", {
+          method: 'GET',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        const data = await response.json();
         let message = data.message;
         // 0 if not logged in.
 
@@ -164,16 +161,18 @@ getRatings() {
           console.log("Checking status... 2")
           this.setState({ status: 2 })
         }
-      })
+      } else  {
+        console.log("Not logged in -- not getting rankings.")
+        this.setState({status: 0})
+      }
     })
-
   }
 
- filterRatings(filter) {
-    this.checkStatus();
-    this.getRatings();
+ async filterRatings(filter) {
+    await this.checkStatus();
+    await this.getRatings();
     console.log("Inside of filterRatings() function");
-
+   
     var ratings = this.state.globalRatings;
 
     var zip = 60491;
@@ -224,12 +223,14 @@ getRatings() {
  }
 
  createRankingCard(profile) {
-  let name = profile.name.first + " " + profile.name.last;
+  let name = profile.username + "'s Dad";
   let rank = profile.meta.rating;
+  let skillScore = profile.meta.skillScore; 
   let id = profile._id;
+  let skills = profile.skills; 
 
    return (
-     <RankingCard name={name} rank={rank} key={id}/>
+     <RankingCard name={name} rank={rank} skillScore={skillScore} skills={skills} key={id}/>
    )
  }
   render() {
