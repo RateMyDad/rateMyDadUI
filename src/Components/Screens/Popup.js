@@ -98,7 +98,7 @@ export default class Popup extends Component {
         console.log(this.props.username); 
         var dadProfile = {
             username: this.props.username, 
-
+          
             name: {
                 first: this.state.firstName,
                 last: this.state.lastName
@@ -134,6 +134,7 @@ export default class Popup extends Component {
         }
 
         console.log(JSON.stringify(dadProfile));
+      
         const skillValues = Object.values(dadProfile.skills); 
         // Got this from this source: https://stackoverflow.com/questions/19395257/how-to-count-duplicate-value-in-an-array-in-javascript
         var valueCounts = {};
@@ -149,8 +150,6 @@ export default class Popup extends Component {
 
             return 
         }
-        
-
         AsyncStorage.getItem('id_token').then((token) => {
 
           fetch(server_url + "/api/protected/dad_profile/create", {

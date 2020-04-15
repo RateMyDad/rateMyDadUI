@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { getStatus } from "../../../model";
 import ProfilePopup from "./ProfilePopup";
 var { height, width } = Dimensions.get('window');
-//var server_url = "http://192.168.1.76:82"
 var server_url = "http://99.60.8.214:82"
 
 var images = [
@@ -113,6 +112,7 @@ componentDidMount() {
 
 getInitialRatings() {
   AsyncStorage.getItem('id_token').then((token) => {
+
       console.log("[Ranking] Sending request to " + server_url + "/api/dad_profile/ratings");
       fetch(server_url + "/api/dad_profile/ratings")
       .then(response => {
@@ -172,7 +172,7 @@ async getRatings() {
     await this.checkStatus();
     await this.getRatings();
     console.log("Inside of filterRatings() function");
-
+   
     var ratings = this.state.globalRatings;
 
     var zip = 60491;

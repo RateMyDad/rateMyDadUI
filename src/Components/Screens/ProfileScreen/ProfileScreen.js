@@ -266,7 +266,6 @@ export default class ProfileScreen extends Component {
   }
 
   componentDidMount() {
-
     AsyncStorage.getItem('id_token').then(async (token) => {
       var status = 0
 
@@ -325,6 +324,52 @@ export default class ProfileScreen extends Component {
         this.setState({ status: 2 })
       }
     })
+
+  }
+
+  updateProfile() {
+    console.log("Updating profile -- current state " + this.state.status)
+    if(this.state.status  == 1){
+
+      console.log("Retrieving dad profile for user.")
+      AsyncStorage.getItem('id_token').then((token) => {
+
+        fetch(server_url + "/api/protected/dad_profile/me", {
+          method: 'GET',
+          headers: { 'Authorization': 'Bearer ' + token }
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          this.setState({
+            profile: {
+              name: data.name.first + " " + data.name.last,
+              skills: data.skills
+            }
+
+          })
+
+          console.log("State profile:")
+          console.log(this.state)
+        })
+
+      })
+    }
+  }
+
+  async saveItem(item, selectedValue) {
+    try {
+      await AsyncStorage.setItem(item, selectedValue);
+    } catch (error) {
+      console.error('AsyncStorage error: ' + error.message);
+    }
+  }
+
+  async logout() {
+    console.log("Logging out user.");
+    AsyncStorage.removeItem("id_token");
+    this.setState({status : 0});
+
   }
 
   async updateProfile() {
@@ -392,7 +437,7 @@ export default class ProfileScreen extends Component {
       }
     });
   }
-
+  
   async login() {
     let data = {
       "username": this.state.username,
@@ -415,7 +460,7 @@ export default class ProfileScreen extends Component {
 
     else {
       const responseData = await response.json(); 
-  
+
       var id_token = responseData.id_token
       var username = this.state.username
       this.saveItem("id_token", id_token)
