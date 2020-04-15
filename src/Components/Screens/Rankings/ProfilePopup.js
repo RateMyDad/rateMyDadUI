@@ -57,18 +57,18 @@ const styles = StyleSheet.create
 });
 
 var images = [
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
 ]
 
 var profileHeaderStatsIconStyle = {

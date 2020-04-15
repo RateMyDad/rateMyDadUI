@@ -82,17 +82,17 @@ const styles = StyleSheet.create
 
 var images = [
   require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
-  require('../../../../assets/dog.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/emptyProfile.jpg'),
 ]
 
 //This renders each skill takes type of skill and skill number variable
