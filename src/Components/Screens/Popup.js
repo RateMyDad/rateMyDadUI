@@ -93,7 +93,7 @@ export default class Popup extends Component {
         this.props.updateParent();
     }
 
-    createDadProfile() {
+    async createDadProfile() {
         console.log("====================");
         console.log(this.props.username); 
         var dadProfile = {
@@ -150,32 +150,24 @@ export default class Popup extends Component {
 
             return 
         }
-        AsyncStorage.getItem('id_token').then((token) => {
 
-          fetch(server_url + "/api/protected/dad_profile/create", {
-            method: 'POST',
-            headers: {
-              'Authorization': 'Bearer ' + token ,
-              'Content-Type': 'application/json'},
-            body: JSON.stringify(dadProfile)
-          })
-          .then((response) => {
-              if (response.status === 400) {
-                  console.log("Something went wrong!")
-              }
+        AsyncStorage.getItem('id_token').then(async (token) => {
 
-              else if (response.status === 200) {
-                  console.log("Dad profile successfully created!");
-              }
+            const response = await fetch(server_url + "/api/protected/dad_profile/create", {
+                method: 'POST',
+                headers: {
+                  'Authorization': 'Bearer ' + token ,
+                  'Content-Type': 'application/json'},
+                body: JSON.stringify(dadProfile)
+            })
 
-              return response.json();
-          })
-          .then(data => {
-              console.log("---------------------------------------------------------------------")
-              console.log(data);
-              this.props.checkStatus();
-          })
+            const data = await response.json();
+            console.log("---------------------------------------------------------------------");
+            console.log(data);
         })
+
+        await this.props.checkStatus();
+        console.log("Profile screen's check status has been called!");
     }
 
     render() {

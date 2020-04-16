@@ -61,11 +61,7 @@ class RankingCard extends Component {
                     <View
                       style={{flex: 1, alignItems: 'left', justifyContent: 'flex-start', flexDirection: 'row' }}>
 
-<<<<<<< HEAD
                       <Image source={require('../../../../assets/blankProfile.png')}
-=======
-                      <Image source={require('../../../../assets/emptyProfile.jpg')}
->>>>>>> 19fd9e215cf293b60f9a8f7c41ee5adb94431efb
                       style={{ width: 50, height: 50, borderRadius: 37.5 }} />
 
                       <View  style={{alignItems: 'flex-start', flexDirection: 'column', justifyContent:'space-around'}} >

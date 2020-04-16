@@ -167,23 +167,9 @@ Alert.alert(
   ],
   { cancelable: false })
 }
+
 var images = [
-<<<<<<< HEAD
   require('../../../../assets/blankProfile.png'),
-=======
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
->>>>>>> 19fd9e215cf293b60f9a8f7c41ee5adb94431efb
 ]
 
 //This renders each skill takes type of skill and skill number variable
@@ -376,17 +362,9 @@ export default class ProfileScreen extends Component {
   }
 
   async getRatings() {
-    console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
+    console.log("[Ranking] Sending request to " + server_url + "/api/dad_profile/ratings");
     AsyncStorage.getItem('id_token').then(async (token) => {
-  
-      console.log("[Ranking] Sending request to " + server_url + "/api/protected/dad_profile/ratings");
-
-      await fetch(server_url + "/api/protected/dad_profile/ratings", {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      });
+        await fetch(server_url + "/api/dad_profile/ratings")
     })
   }
 
@@ -409,6 +387,7 @@ export default class ProfileScreen extends Component {
       if (message === "You already have a profile created!") {
         console.log("Checking status... 1")
         this.setState({ status: 1 })
+        console.log("Going to update profile:")
         await this.updateProfile()
       }
 
@@ -419,36 +398,6 @@ export default class ProfileScreen extends Component {
       }
     })
 
-  }
-
-  updateProfile() {
-    console.log("Updating profile -- current state " + this.state.status)
-    if(this.state.status  == 1){
-
-      console.log("Retrieving dad profile for user.")
-      AsyncStorage.getItem('id_token').then((token) => {
-
-        fetch(server_url + "/api/protected/dad_profile/me", {
-          method: 'GET',
-          headers: { 'Authorization': 'Bearer ' + token }
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data)
-          this.setState({
-            profile: {
-              name: data.name.first + " " + data.name.last,
-              skills: data.skills
-            }
-
-          })
-
-          console.log("State profile:")
-          console.log(this.state)
-        })
-
-      })
-    }
   }
 
   async saveItem(item, selectedValue) {
@@ -463,45 +412,6 @@ export default class ProfileScreen extends Component {
     console.log("Logging out user.");
     AsyncStorage.removeItem("id_token");
     this.setState({status : 0});
-
-  }
-
-  async updateProfile() {
-    console.log("Updating profile -- current state " + this.state.status)
-    if(this.state.status  === 1) {
-
-      console.log("Retrieving dad profile for user.")
-      AsyncStorage.getItem('id_token').then(async (token) => {
-        const response = await fetch(server_url + "/api/protected/dad_profile/me", {
-          method: 'GET',
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
-
-        const data = await response.json(); 
-
-        console.log(data)
-        this.setState({
-          profile: {
-            name: data.name.first + " " + data.name.last,
-            skills: data.skills,
-            meta: data.meta
-          }
-        })
-      })
-    }
-  }
-
-  async saveItem(item, selectedValue) {
-    try {
-      await AsyncStorage.setItem(item, selectedValue);
-    } catch (error) {
-      console.error('AsyncStorage error: ' + error.message);
-    }
-  }
-
-  async logout() {
-    console.log("Logging out user.");
-    AsyncStorage.removeItem("id_token");
     this.setState({
       status : 0, 
       profile: {
@@ -531,7 +441,33 @@ export default class ProfileScreen extends Component {
       }
     });
   }
-  
+
+  async updateProfile() {
+    console.log("Updating profile -- current state " + this.state.status)
+    if(this.state.status  === 1) {
+
+      console.log("Retrieving dad profile for user.")
+      AsyncStorage.getItem('id_token').then(async (token) => {
+        const response = await fetch(server_url + "/api/protected/dad_profile/me", {
+          method: 'GET',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        const data = await response.json(); 
+
+        console.log("Update profile data:")
+        console.log(data)
+        this.setState({
+          profile: {
+            name: data.name.first + " " + data.name.last,
+            skills: data.skills,
+            meta: data.meta
+          }
+        })
+      })
+    }
+  }
+
   async login() {
     let data = {
       "username": this.state.username,
