@@ -250,42 +250,37 @@ export default class Popup extends Component {
 
                                   <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Bags" skill = "bags" _this = {this}/>
-                                      <SkillRatingSelection skillName = "Golf" skill = "golf" _this = {this}/>
-                                  </View>
-
-                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Softball" skill = "softball" _this = {this}/>
+                                  </View>
+
+                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Coaching" skill = "coaching" _this = {this}/>
-                                  </View>
-
-                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Generosity" skill = "generosity" _this = {this}/>
+                                  </View>
+
+                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Looks" skill = "looks" _this = {this}/>
-                                  </View>
-
-                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Dad Factor" skill = "dad_factor" _this = {this}/>
+                                  </View>
+
+                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Fantasy Football" skill = "fantasy_football" _this = {this}/>
-                                  </View>
-
-                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Humor" skill = "humor" _this = {this}/>
+                                  </View>
+
+                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Emotional Stability" skill = "emotional_stability" _this = {this}/>
-                                  </View>
-
-                                  <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
                                       <SkillRatingSelection skillName = "Handiness" skill = "handiness" _this = {this}/>
-                                      <SkillRatingSelection skillName = "Kid Skills" skill = "kids" _this = {this}/>
                                   </View>
 
                                   <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                    <SkillRatingSelection skillName = "Kid Skills" skill = "kids" _this = {this}/>
                                     <SkillRatingSelection skillName = "Stealth Food Prep" skill= "stealth_food_preparation" _this = {this}/>
-                                    <SkillRatingSelection skillName = "Technology" skill = "tech" _this = {this}/>
                                   </View>
 
                                   <View style={{ flex: 1, flexDirection: "row", marginBottom: 25 }}>
+                                    <SkillRatingSelection skillName = "Technology" skill = "tech" _this = {this}/>
                                     <SkillRatingSelection skillName = "Furniture Assembly" skill = "furniture_assembly" _this = {this}/>
-                                    <SkillRatingSelection skillName = "Photography" skill = "photography" _this = {this}/>
                                   </View>
 
                                   <Text style={{ fontWeight: "bold", fontSize: 25, marginBottom: 20 }}>Location Info</Text>
