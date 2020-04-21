@@ -7,7 +7,9 @@ import {
   TextInput,
   FlatList,
   AsyncStorage,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert,
+  DevSettings
 } from "react-native";
 import { Container, Header, Tab, Tabs, TabHeading, Title, Content, Card, CardItem, Thumbnail, Text, Button, Right, Left, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -17,7 +19,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 // import "../../../styles/common.css"
 
 var { height, width } = Dimensions.get('window');
-var base64 = require('base64-js')
+var base64 = require('base64-js');
+var description = "error";
 
 //the 1 here can be anything from 1-7
 var skillLevel = 1*40;
@@ -80,19 +83,93 @@ const styles = StyleSheet.create
 
 });
 
+//determine skill msg
+function determineMsg(name)
+{
+  if(name == "free-code-camp")
+  {
+    description = "grilling";
+  }
+  else if(name == "cutlery")
+  {
+    description = "cooking";
+  }
+  else if(name == "square-o")
+  {
+    description = "bags";
+  }
+  else if(name == "flag-o")
+  {
+    description = "golf";
+  }
+  else if(name == "diamond")
+  {
+    description = "softball";
+  }
+  else if(name == "comments-o")
+  {
+    description = "coaching";
+  }
+  else if(name == "connectdevelop")
+  {
+    description = "generosity";
+  }
+  else if(name == "heartbeat")
+  {
+    description = "looks";
+  }
+  else if(name == "hand-spock-o")
+  {
+    description = "dad factor";
+  }
+  else if(name == "lemon-o")
+  {
+    description = "fantasy football";
+  }
+  else if(name == "smile-o")
+  {
+    description = "humor";
+  }
+  else if(name == "compress")
+  {
+    description = "emotional stability";
+  }
+  else if(name == "bath")
+  {
+    description = "handiness";
+  }
+  else if(name == "child")
+  {
+    description = "kid skills";
+  }
+  else if(name == "apple")
+  {
+    description = "stealth food prep";
+  }
+  else if(name == "mobile")
+  {
+    description = "technology";
+  }
+  else if(name == "chain-broken")
+  {
+    description = "furniture assembly";
+  }
+}
+
+function createTwoButtonAlert(event, iconName) {
+  determineMsg(iconName);
+Alert.alert(
+  "This skill is:",
+  description,
+  [
+    
+    { text: "OK", onPress: () => console.log("OK Pressed") }
+  ],
+  { cancelable: false })
+}
+
 var images = [
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
-  require('../../../../assets/emptyProfile.jpg'),
+  require('../../../../assets/blankProfile.png'),
 ]
 
 //This renders each skill takes type of skill and skill number variable
@@ -177,7 +254,10 @@ class Skill extends Component {
         <View style={{justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}>
 
           <View style = {{position: 'relative', justifySelf: 'flex-start', flexBasis: '12%'}}>
-          <Icon name = {iconName} style={{paddingRight:10}} size={25}></Icon>
+          <Button transparent onPress={(event) => createTwoButtonAlert(event, iconName)}>
+            <Icon name = {iconName} style={{paddingRight:10}} size={25}></Icon>
+          </Button>
+
           </View>
 
           <View  style={{float: 'right', width: 250}} >
@@ -282,17 +362,9 @@ export default class ProfileScreen extends Component {
   }
 
   async getRatings() {
-    console.log("[Ranking] Sending request to " + server_url + "/dad_profile/ratings");
+    console.log("[Ranking] Sending request to " + server_url + "/api/dad_profile/ratings");
     AsyncStorage.getItem('id_token').then(async (token) => {
-  
-      console.log("[Ranking] Sending request to " + server_url + "/api/protected/dad_profile/ratings");
-
-      await fetch(server_url + "/api/protected/dad_profile/ratings", {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      });
+        await fetch(server_url + "/api/dad_profile/ratings")
     })
   }
 
@@ -315,6 +387,7 @@ export default class ProfileScreen extends Component {
       if (message === "You already have a profile created!") {
         console.log("Checking status... 1")
         this.setState({ status: 1 })
+        console.log("Going to update profile:")
         await this.updateProfile()
       }
 
@@ -325,36 +398,6 @@ export default class ProfileScreen extends Component {
       }
     })
 
-  }
-
-  updateProfile() {
-    console.log("Updating profile -- current state " + this.state.status)
-    if(this.state.status  == 1){
-
-      console.log("Retrieving dad profile for user.")
-      AsyncStorage.getItem('id_token').then((token) => {
-
-        fetch(server_url + "/api/protected/dad_profile/me", {
-          method: 'GET',
-          headers: { 'Authorization': 'Bearer ' + token }
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data)
-          this.setState({
-            profile: {
-              name: data.name.first + " " + data.name.last,
-              skills: data.skills
-            }
-
-          })
-
-          console.log("State profile:")
-          console.log(this.state)
-        })
-
-      })
-    }
   }
 
   async saveItem(item, selectedValue) {
@@ -369,45 +412,6 @@ export default class ProfileScreen extends Component {
     console.log("Logging out user.");
     AsyncStorage.removeItem("id_token");
     this.setState({status : 0});
-
-  }
-
-  async updateProfile() {
-    console.log("Updating profile -- current state " + this.state.status)
-    if(this.state.status  === 1) {
-
-      console.log("Retrieving dad profile for user.")
-      AsyncStorage.getItem('id_token').then(async (token) => {
-        const response = await fetch(server_url + "/api/protected/dad_profile/me", {
-          method: 'GET',
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
-
-        const data = await response.json(); 
-
-        console.log(data)
-        this.setState({
-          profile: {
-            name: data.name.first + " " + data.name.last,
-            skills: data.skills,
-            meta: data.meta
-          }
-        })
-      })
-    }
-  }
-
-  async saveItem(item, selectedValue) {
-    try {
-      await AsyncStorage.setItem(item, selectedValue);
-    } catch (error) {
-      console.error('AsyncStorage error: ' + error.message);
-    }
-  }
-
-  async logout() {
-    console.log("Logging out user.");
-    AsyncStorage.removeItem("id_token");
     this.setState({
       status : 0, 
       profile: {
@@ -437,7 +441,33 @@ export default class ProfileScreen extends Component {
       }
     });
   }
-  
+
+  async updateProfile() {
+    console.log("Updating profile -- current state " + this.state.status)
+    if(this.state.status  === 1) {
+
+      console.log("Retrieving dad profile for user.")
+      AsyncStorage.getItem('id_token').then(async (token) => {
+        const response = await fetch(server_url + "/api/protected/dad_profile/me", {
+          method: 'GET',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        const data = await response.json(); 
+
+        console.log("Update profile data:")
+        console.log(data)
+        this.setState({
+          profile: {
+            name: data.name.first + " " + data.name.last,
+            skills: data.skills,
+            meta: data.meta
+          }
+        })
+      })
+    }
+  }
+
   async login() {
     let data = {
       "username": this.state.username,
@@ -510,25 +540,6 @@ export default class ProfileScreen extends Component {
     }
   }
 
-  //these will be the grid of photos
-  renderPictures() {
-
-    return images.map((image, index) => {
-        return (
-            <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
-                <Image style={{
-                    flex: 1,
-                    alignSelf: 'stretch',
-                    width: undefined,
-                    height: undefined,
-                }}
-                source={image}>
-                </Image>
-            </View>
-        )
-    })
-
-}
 
 //renders each section based on button clicked
 renderSection() {
@@ -670,17 +681,17 @@ renderSection() {
             username={this.state.postLoginUsername}/>
           <Header>
             <Left>
-              <Button transparent onPress = {() => this.logout()}>
-                <Icon name="cog" size={21} />
+              <Button danger onPress = {() => this.logout()} style={{ height: "72.5%"}}>
+                <Text>Logout</Text>
               </Button>
             </Left>
           <Body>
             <Title>Dad Profile</Title>
           </Body>
           <Right>
-            <Button transparent
-              onPress = {() => this.showPopup()}>
-              <Icon name="bars" size={21} />
+            <Button success
+              onPress = {() => this.showPopup()} style={{ height: "75%"}}>
+              <Text>Create</Text>
             </Button>
           </Right>
         </Header>
