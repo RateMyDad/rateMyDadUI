@@ -681,17 +681,17 @@ renderSection() {
             username={this.state.postLoginUsername}/>
           <Header>
             <Left>
-              <Button transparent onPress = {() => this.logout()}>
-                <Icon name="cog" size={21} />
+              <Button danger onPress = {() => this.logout()} style={{ height: "72.5%"}}>
+                <Text>Logout</Text>
               </Button>
             </Left>
           <Body>
             <Title>Dad Profile</Title>
           </Body>
           <Right>
-            <Button transparent
-              onPress = {() => this.showPopup()}>
-              <Icon name="bars" size={21} />
+            <Button success
+              onPress = {() => this.showPopup()} style={{ height: "75%"}}>
+              <Text>Create</Text>
             </Button>
           </Right>
         </Header>
