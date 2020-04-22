@@ -102,7 +102,10 @@ export default class RankingsScreen extends Component {
       ratings: [],
       globalRatings: [],
       status: 0,
-      message: ""
+      message: "",
+      profile: {
+      zip: 0
+      }
     }
  }
 
@@ -168,14 +171,38 @@ async getRatings() {
     })
   }
 
+  async updateProfile() {
+    console.log("Updating profile -- current state " + this.state.status)
+    if(this.state.status  === 1) {
+
+      console.log("Retrieving dad profile for user.")
+      AsyncStorage.getItem('id_token').then(async (token) => {
+        const response = await fetch(server_url + "/api/protected/dad_profile/me", {
+          method: 'GET',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        const data = await response.json(); 
+
+        console.log("Update profile data:")
+        console.log(data)
+        this.setState({
+          zip: data.zip
+        })
+      })
+    }
+  }
+
  async filterRatings(filter) {
     await this.checkStatus();
     await this.getRatings();
+    await this.updateProfile();
     console.log("Inside of filterRatings() function");
    
     var ratings = this.state.globalRatings;
 
-    var zip = 60491;
+
+    var zip = this.state.zip;
     var myFirstZipDigit = String(zip).charAt(0);
 
     var regionalRatings = []
