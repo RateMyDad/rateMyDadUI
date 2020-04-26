@@ -22,7 +22,7 @@ var images = [
   require('../../../../assets/emptyProfile.jpg'),
 ]
 
-//each ranking card, it takes name, rank, and location variable
+// Each ranking card, which includes a dad profile's username and rank.
 class RankingCard extends Component {
   constructor(props) {
     super(props);
@@ -35,10 +35,12 @@ class RankingCard extends Component {
     this.updateParent = this.updateParent.bind(this); 
   }
 
+  // This gets called when the user closes a popup for viewing another user's dad profile.
   updateParent() {
     this.setState({ modalVisible: false })
   }
   
+  // This gets called when the user opens a popup for viewing another user's dad profile.  
   showPopup() {
     this.setState( { modalVisible: true })
   }
@@ -92,6 +94,7 @@ class RankingCard extends Component {
   }
 }
 
+// Represents the entire rankings screen.  
 export default class RankingsScreen extends Component {
 
  constructor(props)
@@ -102,7 +105,10 @@ export default class RankingsScreen extends Component {
       ratings: [],
       globalRatings: [],
       status: 0,
-      message: ""
+      message: "",
+      profile: {
+      zip: 0
+      }
     }
  }
 
@@ -110,6 +116,7 @@ componentDidMount() {
   this.getInitialRatings()
 }
 
+// Get all ratings (global ratings) initially.  
 getInitialRatings() {
   AsyncStorage.getItem('id_token').then((token) => {
 
@@ -127,6 +134,7 @@ getInitialRatings() {
   })
 }
 
+// Get all ratings.
 async getRatings() {
   console.log("[Ranking] Sending request to " + server_url + "/api/dad_profile/ratings");
   AsyncStorage.getItem('id_token').then(async (token) => {
@@ -137,102 +145,139 @@ async getRatings() {
   })
 }
 
-  async checkStatus() {
-    AsyncStorage.getItem('id_token').then(async (token) => {
+// Call this method to see if the user is one of three things: 
+// 0: not logged in
+// 1: logged in and has a dad profile created
+// 2: logged in and does not have a dad profile created
+async checkStatus() {
+  AsyncStorage.getItem('id_token').then(async (token) => {
 
-      if(token != null) {
-        const response = await fetch(server_url + "/api/protected/user/check_status", {
-          method: 'GET',
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
+    if(token != null) {
+      const response = await fetch(server_url + "/api/protected/user/check_status", {
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
 
-        const data = await response.json();
-        let message = data.message;
-        // 0 if not logged in.
+      const data = await response.json();
+      let message = data.message;
+      // 0 if not logged in.
 
-        // 1 if logged in and dad profile created.
-        if (message === "You already have a profile created!") {
-          console.log("Checking status... 1")
-          this.setState({ status: 1 })
-        }
-
-        // 2 if logged in but no dad profile created.
-        else {
-          console.log("Checking status... 2")
-          this.setState({ status: 2 })
-        }
-      } else  {
-        console.log("Not logged in -- not getting rankings.")
-        this.setState({status: 0})
+      // 1 if logged in and dad profile created.
+      if (message === "You already have a profile created!") {
+        console.log("Checking status... 1")
+        this.setState({ status: 1 })
       }
+
+      // 2 if logged in but no dad profile created.
+      else {
+        console.log("Checking status... 2")
+        this.setState({ status: 2 })
+      }
+    } else  {
+      console.log("Not logged in -- not getting rankings.")
+      this.setState({status: 0})
+    }
+  })
+}
+
+// Get the user's profile information for geographic filtering
+// (if the user is logged in and has a dad profile created).
+async updateProfile() {
+  console.log("Updating profile -- current state " + this.state.status)
+  if(this.state.status  === 1) {
+
+    console.log("Retrieving dad profile for user.")
+    AsyncStorage.getItem('id_token').then(async (token) => {
+      const response = await fetch(server_url + "/api/protected/dad_profile/me", {
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+
+      const data = await response.json(); 
+
+      console.log("Update profile data:")
+      console.log(data)
+      this.setState({
+        zip: data.zip
+      })
     })
   }
+}
 
- async filterRatings(filter) {
-    await this.checkStatus();
-    await this.getRatings();
-    console.log("Inside of filterRatings() function");
-   
-    var ratings = this.state.globalRatings;
+// Filter the ratings globaly, regionally (same first digit in zip code as your dad profile),
+// or locally (same zip code as your dad profile). 
+async filterRatings(filter) {
+  await this.checkStatus();
+  await this.getRatings();
+  await this.updateProfile();
+  console.log("Inside of filterRatings() function");
+  
+  var ratings = this.state.globalRatings;
 
-    var zip = 60491;
-    var myFirstZipDigit = String(zip).charAt(0);
 
-    var regionalRatings = []
-    var localRatings = []
+  var zip = this.state.zip;
+  var myFirstZipDigit = String(zip).charAt(0);
 
-    if (filter === "Regional" && this.state.status !== 0) {
-      for (var i = 0 ; i < ratings.length; i++) {
-        var currentZip = ratings[i].zip;
+  var regionalRatings = []
+  var localRatings = []
 
-        var currentFirstZipDigit = undefined;
-        if (currentZip !== undefined) {
-          currentFirstZipDigit = String(currentZip).charAt(0);
-        }
+  // Filter regionally if the user is logged in and dad profile created.
+  if (filter === "Regional" && this.state.status !== 0) {
+    for (var i = 0 ; i < ratings.length; i++) {
+      var currentZip = ratings[i].zip;
 
-        if (myFirstZipDigit === currentFirstZipDigit) {
-          regionalRatings.push(ratings[i]);
-        }
+      var currentFirstZipDigit = undefined;
+      if (currentZip !== undefined) {
+        currentFirstZipDigit = String(currentZip).charAt(0);
       }
 
-      this.setState({ ratings: regionalRatings, message: "" })
-    }
-
-    else if (filter === "Regional" && this.state.status === 0) {
-      this.setState({ ratings: [], message: "You must be logged in to access this feature."});
-    }
-
-    else if (filter === "Local" && this.state.status !== 0) {
-      for (var i = 0; i < ratings.length; i++) {
-        if (zip === ratings[i].zip) {
-          localRatings.push(ratings[i]);
-        }
+      if (myFirstZipDigit === currentFirstZipDigit) {
+        regionalRatings.push(ratings[i]);
       }
-
-      this.setState({ ratings: localRatings, message: "" });
     }
 
-    else if (filter === "Local" && this.state.status === 0) {
-      this.setState({ ratings: [], message: "You must be logged in to access this feature."});
+    this.setState({ ratings: regionalRatings, message: "" })
+  }
+
+  // Can't access regional ratings is not logged in.
+  else if (filter === "Regional" && this.state.status === 0) {
+    this.setState({ ratings: [], message: "You must be logged in to access this feature."});
+  }
+
+  // Filter locally if the user is logged in and dad profile created. 
+  else if (filter === "Local" && this.state.status !== 0) {
+    for (var i = 0; i < ratings.length; i++) {
+      if (zip === ratings[i].zip) {
+        localRatings.push(ratings[i]);
+      }
     }
 
-    else {
-      console.log("Inside of this thing")
-      this.setState({ ratings: ratings, message: "" });
-    }
- }
+    this.setState({ ratings: localRatings, message: "" });
+  }
 
- createRankingCard(profile) {
-  let name = profile.username + "'s Dad";
-  let rank = profile.meta.rating;
-  let skillScore = profile.meta.skillScore; 
-  let id = profile._id;
-  let skills = profile.skills; 
+  // Can't access local ratings if not logged in.  
+  else if (filter === "Local" && this.state.status === 0) {
+    this.setState({ ratings: [], message: "You must be logged in to access this feature."});
+  }
 
-   return (
-     <RankingCard name={name} rank={rank} skillScore={skillScore} skills={skills} key={id}/>
-   )
- }
+  else {
+    this.setState({ ratings: ratings, message: "" });
+  }
+}
+
+// Create ranking card for each user to display on the screen.  
+createRankingCard(profile) {
+let name = profile.username + "'s Dad";
+let rank = profile.meta.rating;
+let skillScore = profile.meta.skillScore; 
+let id = profile._id;
+let skills = profile.skills; 
+
+  return (
+    <RankingCard name={name} rank={rank} skillScore={skillScore} skills={skills} key={id}/>
+  )
+}
+
   render() {
     console.log(this.props.title);
     console.log(this.props.options);

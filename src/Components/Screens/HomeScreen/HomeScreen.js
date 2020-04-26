@@ -3,6 +3,7 @@ import { Image, View, ImageBackground, Dimensions } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Text, Button, Title, Left, Body, Right } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+// Represents what a user post would look like on the "feed".
 class Post extends Component {
   render() {
  
@@ -101,6 +102,7 @@ class Post extends Component {
   }
 }
 
+// Represents the home screen, or the "feed", of the app.  
 export default class HomeScreen extends Component 
 {
   constructor(props)

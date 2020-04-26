@@ -16,7 +16,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { getStatus } from "../../../model";
 import Popup from "../Popup"
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-// import "../../../styles/common.css"
 
 var { height, width } = Dimensions.get('window');
 var base64 = require('base64-js');
@@ -83,7 +82,7 @@ const styles = StyleSheet.create
 
 });
 
-//determine skill msg
+// Determine skill description based on the icon on the screen.
 function determineMsg(name)
 {
   if(name == "free-code-camp")
@@ -172,7 +171,7 @@ var images = [
   require('../../../../assets/blankProfile.png'),
 ]
 
-//This renders each skill takes type of skill and skill number variable
+// This renders each skill based on the type of skill and its rating for the current profile. 
 class Skill extends Component {
   render() {
 
@@ -284,6 +283,7 @@ class Skill extends Component {
   }
 }
 
+// Represents the entire profile screen.
 export default class ProfileScreen extends Component {
   constructor(props)
   {
@@ -337,10 +337,12 @@ export default class ProfileScreen extends Component {
     })
   }
 
+  // This is called when the popup for creating a dad profile is closed.
   updateParent() {
     this.setState({ modalVisible: false });
   }
 
+  // This is called when the "Create" button for creating a dad profile is clicked on.
   showPopup(){
     this.setState({ modalVisible: true });
   }
@@ -361,6 +363,7 @@ export default class ProfileScreen extends Component {
     //this.checkStatus();
   }
 
+  // Call this method to update the profile's rank.  
   async getRatings() {
     console.log("[Ranking] Sending request to " + server_url + "/api/dad_profile/ratings");
     AsyncStorage.getItem('id_token').then(async (token) => {
@@ -368,6 +371,10 @@ export default class ProfileScreen extends Component {
     })
   }
 
+  // Call this method to see if the user is one of three things: 
+  // 0: not logged in
+  // 1: logged in and has a dad profile created
+  // 2: logged in and does not have a dad profile created
   async checkStatus() {
     AsyncStorage.getItem('id_token').then(async (token) => {  
 

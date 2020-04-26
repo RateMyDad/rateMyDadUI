@@ -195,6 +195,7 @@ class Skill extends Component {
     }
   }
 
+  // Represents the popup for viewing another dad profile from the rankings screen.  
   export default class ProfilePopup extends Component {
     constructor(props) {
         super(props); 
@@ -211,8 +212,8 @@ class Skill extends Component {
             this.setState({ visibility: this.props.modalVisible })
         }
     }
-
-    
+ 
+    // Call this when the user goes back to the profile screen.  
     closePopup() { 
         this.setState({ visibility: false });
 
