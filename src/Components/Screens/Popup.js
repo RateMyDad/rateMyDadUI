@@ -2,6 +2,8 @@ import React, {Component} from "react";
 import {Modal, Text, Alert, View, TextInput, ScrollView, Slider, AsyncStorage} from "react-native";
 import {Picker, Icon, Button, Body, Header, Left, Right, Title} from "native-base";
 var server_url = "http://99.60.8.214:82"
+
+// Represents each slider for the user to rate each skill.  
 class SkillRatingSelection extends Component {
 
   constructor(props) {
@@ -64,24 +66,6 @@ export default class Popup extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        /*
-        fetch("http://10.0.0.180:82/user/check_status")
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            if (data === "You must be logged in to use this feature.") {
-                this.setState({ profileStatus: 0 })
-            }
-            else if (data === "You already have a profile created!") {
-                this.setState({ profileStatus: 1 })
-            }
-            else {
-                this.setState({ profileStatus: 2 })
-            }
-        })
-        */
-
         if (prevProps.modalVisible !== this.props.modalVisible) {
             this.setState({ visibility: this.props.modalVisible })
         }
@@ -93,6 +77,7 @@ export default class Popup extends Component {
         this.props.updateParent();
     }
 
+    // Call this function once the user is finished creating their account's dad profile.  
     async createDadProfile() {
         console.log("====================");
         console.log(this.props.username); 
@@ -136,9 +121,12 @@ export default class Popup extends Component {
         console.log(JSON.stringify(dadProfile));
       
         const skillValues = Object.values(dadProfile.skills); 
+
         // Got this from this source: https://stackoverflow.com/questions/19395257/how-to-count-duplicate-value-in-an-array-in-javascript
         var valueCounts = {};
         skillValues.forEach(function(x) { valueCounts[x] = (valueCounts[x] || 0) + 1; });
+
+        // Limit the amount of skills rated 7 to six.  
         if (valueCounts[7] > 6) {
             this.setState({ bottomMessage: "You can only have up to 6 skills with ratings of 7." });
 
@@ -173,6 +161,7 @@ export default class Popup extends Component {
     render() {
         let status = this.props.status;
 
+        // If the current user already has a dad profile created, then don't let them create another one.  
         if (status === 1) {
             return (
                 <Modal
@@ -194,6 +183,7 @@ export default class Popup extends Component {
             )
         }
 
+        // Let the user createa a dad profile for their account if they have not already.  
         else if (status === 2) {
             var inputBoxStyle = {
                 backgroundColor: "#f3fcd9",
