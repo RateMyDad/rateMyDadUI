@@ -462,8 +462,6 @@ export default class ProfileScreen extends Component {
 
         const data = await response.json(); 
 
-        console.log("Update profile data:")
-        console.log(data)
         this.setState({
           profile: {
             name: data.name.first + " " + data.name.last,
@@ -480,9 +478,6 @@ export default class ProfileScreen extends Component {
       "username": this.state.username,
       "password": this.state.password
     };
-
-    console.log("Inside of login function:")
-    console.log(data); 
 
     const response = await fetch(server_url + "/user/login", {
       method: 'POST',
@@ -508,8 +503,6 @@ export default class ProfileScreen extends Component {
         access_token: responseData.access_token
       });
   
-      console.log("Post-login username:");
-      console.log(this.state.postLoginUsername);
       await this.checkStatus();
       await this.updateProfile();
       this.setState({ username: "", password: "", bottomMessage: "" });
@@ -598,7 +591,6 @@ renderSection() {
       )
     }
     let status = this.state.status;
-    console.log("Status in render: " + status);
 
     if (status === 0) {
       var inputBoxStyle = {

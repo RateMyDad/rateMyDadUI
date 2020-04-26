@@ -79,8 +79,6 @@ export default class Popup extends Component {
 
     // Call this function once the user is finished creating their account's dad profile.  
     async createDadProfile() {
-        console.log("====================");
-        console.log(this.props.username); 
         var dadProfile = {
             username: this.props.username, 
           
@@ -117,8 +115,6 @@ export default class Popup extends Component {
                 region: this.state.region
             }
         }
-
-        console.log(JSON.stringify(dadProfile));
       
         const skillValues = Object.values(dadProfile.skills); 
 
@@ -150,12 +146,9 @@ export default class Popup extends Component {
             })
 
             const data = await response.json();
-            console.log("---------------------------------------------------------------------");
-            console.log(data);
         })
 
         await this.props.checkStatus();
-        console.log("Profile screen's check status has been called!");
     }
 
     render() {

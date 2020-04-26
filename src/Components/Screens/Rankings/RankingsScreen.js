@@ -195,8 +195,6 @@ async updateProfile() {
 
       const data = await response.json(); 
 
-      console.log("Update profile data:")
-      console.log(data)
       this.setState({
         zip: data.zip
       })
@@ -210,7 +208,6 @@ async filterRatings(filter) {
   await this.checkStatus();
   await this.getRatings();
   await this.updateProfile();
-  console.log("Inside of filterRatings() function");
   
   var ratings = this.state.globalRatings;
 
@@ -279,11 +276,7 @@ let skills = profile.skills;
 }
 
   render() {
-    console.log(this.props.title);
-    console.log(this.props.options);
     let ratings = this.state.ratings;
-    console.log("Profile ratings: ");
-    console.log(ratings);
 
     // Need this b/c the component re-renders once the state is set in componentDidMount().
     if (ratings.length !== 0) {
